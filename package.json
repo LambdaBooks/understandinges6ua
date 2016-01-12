@@ -4,7 +4,8 @@
   "description": "Ukrainian translation of “Understanding ES6”",
   "scripts": {
     "start": "gitbook serve",
-    "build": "gitbook build"
+    "build": "gitbook build",
+    "deploy": "npm run build && ./deploy.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,8 @@
     "url": "https://github.com/denysdovhan/understandinges6ua/issues"
   },
   "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
-  "dependencies": {
+  "devDependencies": {
+    "gh-pages": "^0.8.0",
     "gitbook-cli": "^1.0.1"
   }
 }

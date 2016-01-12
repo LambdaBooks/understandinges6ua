@@ -1,0 +1,14 @@
+# Common rules:
+.DS_Store
+
+# Node rules:
+node_modules
+npm-debug.log
+
+# Book build output
+_book
+
+# eBook build output
+*.epub
+*.mobi
+*.pdf
