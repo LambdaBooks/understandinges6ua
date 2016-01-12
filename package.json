@@ -5,7 +5,7 @@
   "scripts": {
     "start": "gitbook serve",
     "build": "gitbook build",
-    "deploy": "npm run build && gh-pages -d _book -a -m `date`"
+    "deploy": "npm run build && gh-pages -d _book -a -m \"Updated at `date +'%a, %d %b %Y, %T, %Z'`\""
   },
   "repository": {
     "type": "git",
