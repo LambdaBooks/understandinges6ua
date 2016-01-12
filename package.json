@@ -1,0 +1,27 @@
+{
+  "name": "understandinges6ua",
+  "version": "0.0.0",
+  "description": "Ukrainian translation of “Understanding ES6”",
+  "scripts": {
+    "start": "gitbook serve",
+    "build": "gitbook build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denysdovhan/understandinges6ua.git"
+  },
+  "keywords": [
+    "book",
+    "documentation",
+    "guide"
+  ],
+  "author": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
+  "license": "CC BY-NC-ND 3.0",
+  "bugs": {
+    "url": "https://github.com/denysdovhan/understandinges6ua/issues"
+  },
+  "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
+  "dependencies": {
+    "gitbook-cli": "^1.0.1"
+  }
+}
