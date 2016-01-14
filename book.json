@@ -1,11 +1,15 @@
 {
   "gitbook": "2.x.x",
   "plugins": [
-    "edit-link"
+    "edit-link", "github"
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/denysdovhan/understandinges6ua/tree/master"
+      "base": "https://github.com/denysdovhan/understandinges6ua/tree/master",
+      "label": "Редагувати"
+    },
+    "github": {
+      "url": "https://github.com/denysdovhan/understandinges6ua"
     }
   }
 }
