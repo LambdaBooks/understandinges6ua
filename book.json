@@ -1,7 +1,7 @@
 {
   "gitbook": "2.x.x",
   "plugins": [
-    "edit-link", "github"
+    "edit-link", "github", "yametrika", "ga"
   ],
   "pluginsConfig": {
     "edit-link": {
@@ -10,6 +10,12 @@
     },
     "github": {
       "url": "https://github.com/denysdovhan/understandinges6ua"
+    },
+    "yametrika": {
+      "number": "34703815"
+    },
+    "ga": {
+      "token": "UA-40496885-6"
     }
   }
 }
