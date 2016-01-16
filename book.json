@@ -1,7 +1,7 @@
 {
   "gitbook": "2.x.x",
   "plugins": [
-    "edit-link", "github", "yametrika", "ga"
+    "edit-link", "github", "yametrika", "ga", "rss"
   ],
   "pluginsConfig": {
     "edit-link": {
@@ -16,6 +16,22 @@
     },
     "ga": {
       "token": "UA-40496885-6"
+    },
+    "rss": {
+      "title": "Рoзуміння ECMAScript 6",
+      "description": "Український переклад книги «Understanding ES6».",
+      "author": "Denys Dovhan and Terry Sahaidak",
+      "site_url": "http://understandinges6.denysdovhan.com/",
+      "managingEditor": "email@denysdovhan.com (Denys Dovhan)",
+      "webMaster": "email@denysdovhan.com (Denys Dovhan)",
+      "categories": [
+        "frontend",
+        "js",
+        "javascript",
+        "es6",
+        "es2015",
+        "ecmascript"
+      ]
     }
   }
 }
