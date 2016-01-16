@@ -17,7 +17,10 @@
     "documentation",
     "guide"
   ],
-  "author": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
+  "authors": [
+    "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
+    "Terry Sahaidak <terrysahaidak@gmail.com> (https://github.com/terrysahaidak)"
+  ],
   "license": "CC BY-NC-ND 3.0",
   "bugs": {
     "url": "https://github.com/denysdovhan/understandinges6ua/issues"
