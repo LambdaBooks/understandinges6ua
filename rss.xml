@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 16 Jan 2016 23:01:16 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 17 Jan 2016 13:49:30 GMT</lastBuildDate>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
         <webMaster><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></webMaster>
@@ -16,7 +16,9 @@
         <category><![CDATA[ecmascript]]></category>
         <item>
             <title><![CDATA[Рoзуміння ECMAScript 6]]></title>
-            <description><![CDATA[Build Status]]></description>
+            <description><![CDATA[Build Status
+Twitter
+RSS]]></description>
             <link>http://understandinges6.denysdovhan.com/</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
