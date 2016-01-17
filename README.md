@@ -1,6 +1,8 @@
 # Рoзуміння ECMAScript 6
 
 [![Build Status][travis-image]][travis-url]
+[![Twitter][twitter-image]][twitter-url]
+[![RSS][rss-image]][rss-url]
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
 > Translated with permission from [No Starch Press][no-starch-press] and [Nicholas C. Zakas](https://www.nczonline.net/).
@@ -28,7 +30,7 @@ ECMASctipt 6 відображає найбільш ґрунтовні зміни
 
 Ви можете замовити електронну копію оригінальної версії книги через [Leanpub](https://leanpub.com/understandinges6). Детальніше дізнавайтесь [за посиланням](https://github.com/nzakas/understandinges6/blob/master/README.md#purchasing-a-copy).
 
-Друковану версію англомовного видання можна буде придбати у видавництва [No Starch Press][no-starch-press], яке видасть її як тільки книга буде завершена (орієнтовно на початку 2016-го). 
+Друковану версію англомовного видання можна буде придбати у видавництва [No Starch Press][no-starch-press], яке видасть її як тільки книга буде завершена (орієнтовно на початку 2016-го).
 
 На жаль, друковану версію перекладу придбати неможливо, через відсутність видавця. Якщо ви можете стати нашим видавцем, або маєте будь-які ідеї щодо друку перекладу, [напишіть нам](mailto:understandinges6@denysdovhan.com).
 
@@ -60,18 +62,18 @@ ECMASctipt 6 відображає найбільш ґрунтовні зміни
 
 ## Ліцензія
 
-[CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com) and [Terry Sahaidak](https://github.com/terrysahaidak) 
+[CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com) and [Terry Sahaidak](https://github.com/terrysahaidak)
 
 <!-- References -->
 
 [cc-by-nc-nd-3.0]: http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_US
 [no-starch-press]: https://www.nostarch.com/
 
-[npm-url]: https://npmjs.org/package/understandinges6ua
-[npm-image]: https://img.shields.io/npm/v/understandinges6ua.svg?style=flat-square
-
 [travis-url]: https://travis-ci.org/denysdovhan/understandinges6ua
 [travis-image]: https://img.shields.io/travis/denysdovhan/understandinges6ua.svg?style=flat-square
 
-[depstat-url]: https://david-dm.org/denysdovhan/understandinges6ua
-[depstat-image]: https://david-dm.org/denysdovhan/understandinges6ua.svg?style=flat-square
+[twitter-url]: https://twitter.com/es6ua
+[twitter-image]: https://img.shields.io/badge/twitter-%40es5ua-00ACEE.svg?style=flat-square
+
+[rss-url]: http://understandinges6.denysdovhan.com/rss.xml
+[rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
