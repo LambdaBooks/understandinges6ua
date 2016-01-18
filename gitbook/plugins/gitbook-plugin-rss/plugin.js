@@ -5,7 +5,7 @@ require([ 'gitbook' ], function (gitbook) {
       label: 'RSS',
       position: 'right',
       onClick: function () {
-        window.open(config.rss.site_url + '/rss.xml');
+        window.open(config.rss.feed_url);
       }
     });
   });
