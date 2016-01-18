@@ -22,6 +22,7 @@
       "description": "Український переклад книги «Understanding ES6».",
       "author": "Denys Dovhan and Terry Sahaidak",
       "site_url": "http://understandinges6.denysdovhan.com/",
+      "feed_url": "http://understandinges6.denysdovhan.com/rss.xml",
       "managingEditor": "email@denysdovhan.com (Denys Dovhan)",
       "webMaster": "email@denysdovhan.com (Denys Dovhan)",
       "categories": [
