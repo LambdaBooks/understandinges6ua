@@ -1,61 +1,64 @@
-# Introduction
+# Вступ
 
-The JavaScript core language features are defined in a standard called ECMA-262. The language defined in this standard is called ECMAScript, of which the JavaScript in the browser and Node.js environments are a superset. While browsers and Node.js may add more capabilities through additional objects and methods, the core of the language remains as defined in ECMAScript, which is why the ongoing development of ECMA-262 is vital to the success of JavaScript as a whole.
+Особливості ядра мови JavaScript визначені у стандарті під назвою ECMA-262. Мова, яку визначає цей стандарт, називається ECMAScript, з якої JavaScript у браузерах та оточенні Node.js є надбудовою. Поки браузери та Node.js можуть розширювати можливості з допомогою додаткових об’єктів та методів, ядро мови залишається таким, як воно визначене у ECMAScript, тому розвиток ECMA-262 є життєво важливим для успіху JavaScript в цілому.
 
-In 2007, JavaScript was at a crossroads. The popularity of Ajax was ushering in a new age of dynamic web applications while JavaScript hadn't changed since the third edition of ECMA-262 was published in 1999. TC-39, the committee responsible for driving the ECMAScript process, put together a large draft specification for ECMAScript 4. ECMAScript 4 was massive in scope, introducing changes both small and large to the language. Language features included new syntax, modules, classes, classical inheritance, private object members, optional type annotations, and more.
+У 2007 році JavaScript опинився на роздоріжжі. Популярність Ajax породила нову епоху динамічних веб–додатків у той час, як JavaScript не змінювався зі своєї третьої редакції ECMA-262, опублікованої у 1999. TC-39, комітет відповідальний за розвиток ECMAScript, зібрав великий проект специфікації ECMAScript 4. ECMAScript 4 був всеохоплюючим, вносячи у мову як маленькі так і великі зміни. Нововведення включали новий синтаксис, модулі, класи, класичне наслідування, приватні методи, можливість оголошувати власні типи та інше.
 
-The scope of the ECMAScript 4 changes caused a rift to form in TC-39, with some members feeling that the fourth edition was trying to accomplish too much. A group of leaders from Yahoo, Google, and Microsoft came up with an alternate proposal for the next version of ECMAScript that they initially called ECMAScript 3.1. The "3.1" was intended to show that this was an incremental change to the existing standard.
+Зміни, що охоплювали ECMAScript 4 викликали розкол у TC-39: деякі учасники вважали, що чертверта редакція надто радикальна. Група лідерів з Yahoo, Google, та Microsoft запропонували альтернативу наступній версії ECMAScript, що носила назву ECMAScript 3.1. Версія «3.1» мала демонструвати поступові зміни у існуючому стандарті.
 
-ECMAScript 3.1 introduced very few syntax changes, instead focusing on property attributes, native JSON support, and adding methods to already-existing objects. Although there was an early attempt to reconcile ECMAScript 3.1 and ECMAScript 4, this ultimately failed as the two camps had difficulty with the very different perspectives on how the language should grow.
+ECMAScript 3.1 вводив кілька синтаксичних змін, але не фокусувався на властивостях атрибутів, вбудованій підтримці JSON, додаванні медодів до вже існуючих об’єктів. Незважаючи на спроби узгодити ECMAScript 3.1 та ECMAScript 4, в врешті–решт це не вдалось, оскільки обидва табори мали дуже різні погляди на те, в якому напрямку повинна розвиватись мова.
 
-In 2008, Brendan Eich, the creator of JavaScript, announced that TC-39 would focus its efforts on standardizing ECMAScript 3.1. They would table the major syntax and feature changes of ECMAScript 4 until after the next version of ECMAScript was standardized, and all members of the committee would work to bring the best pieces of ECMAScript 3.1 and 4 together after that point into an effort initially nicknamed ECMAScript Harmony.
+У 2008, Брендан Айк, творець JavaScript, анонсував, що TC-39 зосередить свої зусилля на стандартизації ECMAScript 3.1. Вони представлять мажорні синтаксичні та функціональні зміни ECMAScript 4 тільки після того, як нова версія ECMAScript буде стандартизованою, і всі члени комітету будуть працювати для того, щоб зібрати найкраще з ECMAScript 3.1 та 4 разом — ці зусилля були названі ECMAScript Harmony.
 
-ECMAScript 3.1 was eventually standardized as the fifth edition of ECMA-262, also described as ECMAScript 5. The committee never released an ECMAScript 4 standard to avoid confusion with the now-defunct effort of the same name. Work then began on ECMAScript Harmony, with ECMAScript 6 being the first standard released in this new "harmonious" spirit.
+Зрештою, ECMAScript 3.1 був стандартизований п’ятою версією ECMA-262, також відомою як ECMAScript 5. Комітет прийняв рішення не випускати стандарт ECMAScript 4, щоб уникнути плутанини зі стандартом, який мав таке ж ім’я, проте припинив своє існування. Потім розпочалась робота над ECMAScript Harmony, а ECMAScript 6 став першим стандартом, випущеним у цьому новому «гармонійному» руслі.
 
-ECMAScript 6 reached feature complete status in 2015 was formally dubbed "ECMAScript 2015" (though this text still refers to it as ECMAScript 6, the name most familiar to developers). The features vary widely from completely new objects and patterns to syntax changes to new methods on existing objects. The exciting thing about ECMAScript 6 is that all of these changes are geared towards problems that developers are actually facing. And while it will still take time for adoption and implementation to reach the point where ECMAScript 6 is the minimum that developers can expect, there's a lot to be gained from a good understanding of what the future of JavaScript looks like.
+ECMAScript 6 досягнув функціонально завершеного статусу у 2015 та був офіційно названим «ECMAScript 2015» (хоча це текст досі називає його ECMAScript 6, оскільки така назва більш звична розробникам). Нововведення варіюються від повністю нових об’єктів та патернів до синтаксичних змін нових методів вже існуючих об’єктів. Найцікавіша річ у ECMAScript 6 — це те, що всі ці зміни спрямовані на проблеми, з якими розробники зустрічаються безпосередньо. Тож хоча й пройде ще деякий час прийняття та реалізації, допоки ECMAScript 6 стане таким яким його очікують розробники, потрібно набратись великого досвіду для розуміння того, яким виглядає майбутнє JavaScript.
 
-## Browser and Node.js Compatibility
+## Сумісність з баузерами та Node.js
 
-Many JavaScript environments, such as web browsers and Node.js, are actively working on implementing ECMAScript 6. This book does not attempt to address the inconsistencies between implementations and instead focuses on what the specification defines as the correct behavior. As such, it's possible that your JavaScript environment may not conform to the behavior described in this book.
+Багато оточень JavaScript, як от веб–браузери та Node.js, активно працюють над імплементацією ECMAScript 6. Ця книга не має на меті порівнювати різні реалізації, натомість вона сфокусована на тому, що визначається специфікацією в якості коректного поводження. Таким чином, цілком можливо, що поведінка вашого оточення JavaScript може не відповідати тому поводженню, яке описане у цій книзі.
 
-## Who This Book is For
+## Для кого ця книга
 
-This book is intended as a guide for those who are already familiar with JavaScript and ECMAScript 5. While a deep understanding of the language isn't necessary to use this book, it is helpful in understanding the differences between ECMAScript 5 and 6. In particular, this book is aimed at intermediate-to-advanced JavaScript developers (both browser and Node.js environments) who want to learn about the future of the language.
+Ця книга є керівництвом для тих, хто вже знайомий з JavaScript та ECMAScript 5. Глибокі знання мови не є необхідними для читання, проте стануть у нагоді для розуміння відмінностей між ECMAScript 5 та 6. Зокрема, ця книга націлена на розробників середнього та високого (незалежно від браузерного чи Node.js оточення), які хочуть дізнатись про майбутнє цієї мови.
 
-This book is not for beginners who have never written JavaScript. You will need to have a good basic understanding of the language to make use of this book.
+Ця книга не для початківців, які ніколи не писали на JavaScript. Вам потрібні хороше, ґрунтовне розуміння мови, щоб користуватись цією книгою.
 
-## Overview
+## Огляд
 
-**Chapter 1: Block Bindings** talks about `let` and `const`, the block-level replacement for `var`.
+**Глава 1: Блочне зв’язування** розповідає про `let` та `const` — замінники `var` з блочною областю видимості.
 
-**Chapter 2: Strings and Regular Expressions** covers the additions to string manipulation and inspection as well as the introduction of template strings.
+**Глава 2: Рядки та регулярні вирази** охоплює розширенні можливості маніпуляції рядками та вступ до шаблонних рядків.
 
-**Chapter 3: Functions** discusses the various changes to functions. This includes the arrow function form, default parameters, rest parameters, and more.
+**Глава 3: Функції** розбирає різноманітні зміни у функціях. Включаює arrow-функції, параметри за замовчуванням, залишкові параметри та інше.
 
-**Chapter 4: Objects** explains the changes to how objects are created, modified, and used. Topics include changes to object literal syntax, and new reflection methods.
+**Глава 4: Об’єкти** пояснює зміни у створенні, модифікації та зміні об’єктів. Тема включає зміни у синтаксі об’єктних літералів та нові методи відображення.
 
-**Chapter 5: Destructuring** introduces object and array destructuring, which allow you to decompose objects and arrays using a concise syntax.
+**Глава 5: Деструктурування** вводить в деструктурування об’єктів та масивів, що дає нам можливість розкладати об’єкти та масиви використовуючи короткий синтаксис.
 
-**Chapter 6: Symbols** introduces the concept of symbols, a new way to define properties. Symbols are a new primitive type that can be used to obscure (but not hide) object properties and methods.
+**Глава 6: Символи** вводить нас в концепцію символів — новий спосіб задання властивостей. Символи — новий примітивний тип, що може бути використаним для оголошення неявних (але не прихованих) властивостей та методів об’єкта.
 
-**Chapter 7: Sets and Maps** details the new collection types of `Set`, `WeakSet`, `Map`, and `WeakMap`. These types expand on the usefulness of arrays by adding semantics, de-duping, and memory management designed specifically for JavaScript.
+**Глава 7: Sets та Maps** розповідає про тонкощі роботи з новими типами колекцій: `Set`, `WeakSet`, `Map`, та `WeakMap`. Ці типи розширюють можливості масивів додаючи семантику, дедублікацію та керування пам’яттю, розроблену спеціально для JavaScript.
 
-**Chapter 8: Iterators and Generators** discusses the addition of iterators and generators to the language. These features allow you to work with collections of data in powerful ways that were not possible in previous versions of JavaScript.
+**Глава 8: Ітератори та генератори** пояснює яким чином працювати з ітераторами та генераторами, що дають нам можливість оперувати колекціями данних способом, який був недоступний у попередніх версіях JavaScript.
 
-**Chapter 9: Classes** introduces the first formal concept of classes in JavaScript. Often a point of confusion for those coming from other languages, the addition of class syntax in JavaScript makes the language more approachable to others and more concise for enthusiasts.
+**Глава 9: Класи** вводить у початкову концепцію класів у JavaScript. Це часто викликало плутанину у тих, хто переходив з інших мов програмування. Введення синтаксису класів у JavaScript робить мову більш доступною для новачків та більш виразною для ентузіастів.
 
-**Chapter 10: Arrays** details the changes to native arrays and the interesting new ways they can be used in JavaScript.
+**Глава 10: Масиви** розповідає про зміни, які стосуються масивів та нові шляхи їх застосування у JavaScript.
 
-**Chapter 11: Promises** introduces promises as a new part of the language. Promises were a grassroots effort that eventually took off and gained in popularity due to extensive library support. ECMAScript 6 formalizes promises and makes them available by default.
+**Глава 11: Проміси** пояснює про нову частину мови — проміси. Проміси були звичайними розробниками та набули популярності завдяки зручності та розширеній підтримці іншими бібліотеками. ECMAScript 6 формалізує проміси та робить їх доступними за замовчуванням.
 
-**Chapter 12: Reflection** introduces the formalized reflection API for JavaScript. Similar to other languages, ECMAScript 6 reflection allows you to inspect objects at a granular level, even if you didn't create the object.
+**Глава 12: Рефлексія** вводить формалізоване API рефлексії в JavaScript. Так само як і в інших мовах, рефлексія в ECMAScript 6 дає нам можливість інспектувати об’єкти на найменшому рівні, навіть якщо ви не створювали об’єкт.
 
-**Chapter 13: Proxies** discusses the new proxy object that allows you to intercept every operation performed on an object. Proxies give developers unprecedented control over objects and, as such, unlimited possibilities for defining new interaction patterns.
+**Глава 13: Проксі** охоплює новий об’єкт — проксі, що дозволяє нам перехоплювати кожну операцію, яка виконана над об’єктом. Проксі дають розробникам безпрецедентний контроль над об’єктами, як от необмешені можливості для визначення нових патернів взаємодії.
 
-**Chapter 14: Modules** details the official module format for JavaScript. The intent is that these modules can replace the numerous ad-hoc module definition formats that have appeared over the years.
+**Глава 14: Модулі** деталізує офіційний формат модулів для JavaScript. Модулі покликані стати єдиною заміною численним способам задання модулів, що виникли останніми роками.
 
-## Help and Support
+## Допомога та підтримка
 
-You can file issues, suggest changes, and open pull requests against this book by visiting: [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
+Ви можете написати про помилку, порадити зміни та відкрити pull requests до цієї книги завітавши сюди:
 
-For anything else, please send a message to the mailing list: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
+* [https://github.com/denysdovhan/understandinges6ua](https://github.com/denysdovhan/understandinges6ua) (Переклад)
+* [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6) (Оригінал)
+
+Стосовно будь-чого іншого, будь-ласка надсилайте повідомлення сюди: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
