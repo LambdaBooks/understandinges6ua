@@ -2,19 +2,19 @@
 
 Можливо, рядки є найбільш важливими типами даних в програмуванні. Вони є майже у всіх язиках програмування віщого рівня, і вміння працювати з ними ефективно є необхідністю для розробника, при створенні корисних програм. Але, якщо подивитися ширше, регулярні вирази є не менш важливими, тому що вони  дають розробнику додаткові потужні можливості при роботі з рядками. Пам'ятаючи це, засновники  ECMAScript 6 вдосконалили рядки і регулярні вирази,   додавши нові можливості та довго-очікувану функціональність. Цей розділ розгляне обидва типи змін.
 
-## Better Unicode Support
+## Краща підтримка Unicode (Юнікод)
 
-Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding. All string properties and methods, like the `length` property and the `charAt()` method, were based on the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines choose from two encoding options: either UCS-2 or UTF-16. (Both systems use 16-bit *code units*, making all observable operations work the same.) But 16 bits used to be enough to contain any character, that's no longer true thanks to the expanded character set introduced by Unicode.
+До появи ECMAScript 6, рядки в JavaScript оберталися навколо 16-бітної системи  кодування символів. Усі властивості і методи рядків, як, наприклад, властивість `length`та метод `charAt()`, базувалися на ідеї, що 16-бітна послідовність представляє єдиній символ. ECMAScript 5 дозволяв JavaScript інтерпретаторам поміж двома варіантами кодування: UCS-2 або UTF-16. (Обидві системи використовують 16-бітні *блоки коду*, однаково обробляючі усі відстежувані операції.) Але вважалося що для кодування символів не потрібно більше ніж 16 біт, на щастя це більше не є абсолютом, дякуючи введенню розширеного набору символів Unicode.
 
-### UTF-16 Code Points
+### Кодові пункти UTF-16
 
-Limiting character length to 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0.
+Обмеження довжини кодування символів до 16 біт не дає можливості реалізувати основну мету Unicode з надання глобального унікального ідентифікатора кожному символу у світі. Ці глобальні унікальні ідентифікатори, так звані *кодові пункти*, просто номери, які починаються з 0.
 
-Code points are like character codes, but there's a subtle difference. A character encoding translates code points into code units that are internally consistent. While UCS-2 has a one-to-one mapping of code points to code units, UTF-16 mappings aren't always one-to-one.
+Кодові пункти схожі на коди символів, між ними існує невелика різниця. Кодування символів перекладає кодові пункті в кодові блоки, які внутрішньо несуперечливі. В той час як UCS-2 зв’язує кодові пункти з кодовими блоками у співставленні один до одного, зв’язування в UTF-16 відбувається не завжди один до одного.
 
-The first 2^16 code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in a *supplementary plane*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
+Перші 2^16 кодові пункти в UTF-16 представлені як одиничні 16-бітні кодові блоки. Цей діапазон називається *Основна Багатомовна Матриця* (ОБМ). Все, що поза межами цього діапазону вважається *додактовою матрицею*, де кодові блоки більше не можуть бути представлені лише у 16 бітах. UTF-16 вирішує цю проблему за допомогою *сурогатних пар*, в яких один кодовій пункт представлений двома 16-бітними кодовими блоками. Це означає, що будь який символ у рядку може бути представленій як одним кодовим блоком для ОБМ символів, даючи в сумі 16 біт, або ж двома кодовими блоками для символів в додактової матриці, даючи в сумі 32 біта.
 
-In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs. For example:
+У ECMAScript 5, всі рядкові операції працюють в діапазоні 16-бітних кодових блоків, припускаючи, що ви можете отримати неочікувані результати у рядку кодованому в UTF-16, який містить сурогатні пари. Наприклад:
 
 ```js
 var text = "𠮷";
@@ -27,19 +27,19 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means:
+В даному прикладі, єдиній Unicode символ представлений сурогатною парою, і як наслідок, JavaScript операції з рядком відбуваються, як з таким, що має два 16-бітні символи. Це означає:
 
-* The `length` of `text` is 2.
-* A regular expression trying to match a single character fails.
-* The `charAt()` method is unable to return a valid character string.
+* Властивість `length` у змінної `text` буде 2.
+* Регулярний вираз, як спробує знайти одиничний символ, дасть `false`.
+* Метод `charAt()` не в змозі повернуті рядок.
 
-The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
+Метод `charCodeAt()` повертає відповідний 16-бітний для кожного кодового блоку, але це тільки наближене до реального значення, яке ви можете отримати з ECMAScript 5.
 
-ECMAScript 6 enforces UTF-16 string encoding. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
+ECMAScript 6 забезпечую повну підтримку кодування рядків в UTF-16. Стандартизація операцій з рядками заснованими на цьому кодуванні, означає що JavaScript може підтримувати функціонал розроблений спеціально для роботи з сурогатними парами. Решта цього підрозділу розглядає кілька ключових прикладів цієї функціональності.
 
-### The codePointAt() Method
+### Метод codePointAt()
 
-One method ECMAScript 6 added to fully support UTF-16 is the `codePointAt()` method, which retrieves the Unicode code point that maps to a given position in a string. This method accepts the code unit position rather than the character position and returns an integer value, as these `console.log()` examples show:
+Одним з методів доданих в ECMAScript 6 для повної підтримки UTF-16 є метод `codePointAt()`, який отримує кодові пункти Unicode, які зв’язані з відповідною позицією у рядку. Цей метод отримую позицію кодового пункту замість позиції символу та повертає числове значення, як показує цей приклад `console.log()`:
 
 ```js
 var text = "𠮷a";
@@ -53,9 +53,9 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the string is three characters long rather than two. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
+Метод `codePointAt()` повертає те саме значення, що й метод `charCodeAt()` за винятком того, що він оперує також не-ОБМ символами. Перший символ змінної `text` є не-ОБМ символом і він представлений двома кодовими блоками, таким чином рядок має довжину трьох символів замість двох. Метод `charCodeAt()` повертає тільки перший кодовий блок для позиції 0, але`codePointAt()` повертає повний кодовий пункт незважаючи на те, що він містить два кодові блоки. Обидва методи повертають таке саме значення для позиції 1 (другий кодовий блок для першого символу) та 2 (символ `"a"`).
 
-Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code points. Here's a function you could write to check:
+Виклик методу `codePointAt()` для символу є найкращим засобом, щоб дізнатися з складається символ з одного або двох кодових блоків. Ось функція, яку ви можете написати для перевірки:
 
 ```js
 function is32Bit(c) {
@@ -66,32 +66,32 @@ console.log(is32Bit("𠮷"));         // true
 console.log(is32Bit("a"));          // false
 ```
 
-The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so any code point above that number must be represented by two code units, for a total of 32 bits.
+Верхня межа 16-бітових символів представлених в шістнадцятковому вигляді є `FFFF`, так що будь-який кодовий пункт вище цього числа має бути представлений двома кодовими блоками, в цілому 32 біта.
 
-### The String.fromCodePoint() Method
+### Метод String.fromCodePoint()
 
-When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string, while `String.fromCodePoint()` produces a single-character string from a given code point. For example:
+Коли ECMAScript надає можливість щось роботи, він також надає можливість роботи те саме у зворотному порядку. Ви можете використати `codePointAt()` щоб визначити кодовій пункт для символу в рядку, в той час коли `String.fromCodePoint()` дає значення символу у рядку відповідно кодового пункту. Наприклад:
 
 ```js
 console.log(String.fromCodePoint(134071));  // "𠮷"
 ```
 
-Think of `String.fromCodePoint()` as a more complete version of the `String.fromCharCode()` method. Both give the same result for all characters in the BMP. There's only a difference when you pass code points for characters outside of the BMP.
+Думайте про `String.fromCodePoint()`, як про вдосконалену версію метода  `String.fromCharCode()`. Обидва дають ті самі результати для символів в межах ОБМ. Різниця буде лише коли ви працюєте з символами за межами ОБМ.
 
-### The normalize() Method
+### Метод normalize()
 
-Another interesting aspect of Unicode is that different characters may be considered equivalent for the purpose of sorting or other comparison-based operations. There are two ways to define these relationships. First, *canonical equivalence* means that two sequences of code points are considered interchangeable in all respects. For example, a combination of two characters can be canonically equivalent to one character. The second relationship is *compatibility*. Two compatible sequences of code points look different but can be used interchangeably in certain situations.
+Іншим цікавим аспектом Unicode є те, що різні символи можуть вважатися еквівалентними для сортування або інших операцій заснованих на порівнянні. Є два шляхи визначення цих відносин. Перший, *канонічна рівність* має на увазі, що дві послідовності кодових пунктів є взаємозамінними у всіх відносинах. Наприклад, комбінація двох символів може бути канонічним еквівалентом одного символу. Друге співвідношення — *сумісність*. Дві сумісні послідовності кодових пунктів можуть виглядати різними, але можуть бути взаємозамінними в певних ситуаціях.
 
-Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the two-character string "ae" may be used interchangeably but are strictly not equivalent unless normalized in some way.
+Відповідно до цих відносин рядки, які відображають з одного боку той самий текст, можуть мати різну послідовність кодових пунктів. Наприклад символ "æ" та рядок с двох символів "ae" можуть бути використані з взаємним успіхом, але не є повністю еквівалентними, поки їх певним чином не нормалізувати.
 
-ECMAScript 6 supports Unicode normalization forms by giving strings a `normalize()` method. This method optionally accepts a single string parameter indicating one of the  following Unicode normalization forms to apply:
+ECMAScript 6 підтримує нормалізацію форм Unicode, передаючі рядку метод `normalize()`. Цей метод опціонально приймає один параметр у вигляді рядка, який має містити одну з наступних форм Unicode нормалізації для подальшого використання:
 
-* Normalization Form Canonical Composition (`"NFC"`), which is the default
-* Normalization Form Canonical Decomposition (`"NFD"`)
-* Normalization Form Compatibility Composition (`"NFKC"`)
-* Normalization Form Compatibility Decomposition (`"NFKD"`)
+* Форма Нормалізації Канонічна Композиція (`"NFC"`), використовується за замовчуванням
+* Форма Нормалізації Канонічна Декомпозиція (`"NFD"`)
+* Форма Нормалізації Сумісна Композиція (`"NFKC"`)
+* Форма Нормалізації Сумісна Декомпозиція (`"NFKD"`)
 
-It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that when comparing strings, both strings must be normalized to the same form. For example:
+Пояснення відмінностей між цими чотирма формами виходіть за межи цієї книги. Просто майте на увазі, що коли порівнюєте рядки, обидва рядки мають бути нормалізовані до однієї форми. Наприклад:
 
 ```js
 var normalized = values.map(function(text) {
@@ -109,7 +109,7 @@ normalized.sort(function(first, second) {
 });
 ```
 
-This code converts the strings in the `values` array into a normalized form so that the array can be sorted appropriately. You can also sort the original array by calling `normalize()` as part of the comparator, as follows:
+Цей код конвертує рядки в масив `values` у нормалізованній формі, таким чином масив може бути правильно відсортований. Ви також можете відсортувати оригінальний масив, використовуючи метод `normalize()` як частину *компаратора*, наприклад:
 
 ```js
 values.sort(function(first, second) {
@@ -126,7 +126,7 @@ values.sort(function(first, second) {
 });
 ```
 
-Once again, the most important thing to note about this code is that both `first` and `second` are normalized in the same way. These examples have used the default, NFC, but you can just as easily specify one of the others, like this:
+Повторимо це раз, що найважливішим в цьому коді є те, що обидва аргументи, `first` та `second`, будуть нормалізовані однаковим чином. Ці приклади використовують форму нормалізации за замовченням, NFC, але ви можете легко визначити іншу, наприклад:
 
 ```js
 values.sort(function(first, second) {
@@ -143,15 +143,15 @@ values.sort(function(first, second) {
 });
 ```
 
-If you've never worried about Unicode normalization before, then you probably won't have much use for this method now. But if you ever work on an internationalized application, you'll definitely find the `normalize()` method helpful.
+Якщо ви не піклувалися про нормалізацію Unicode раніше, певно тоді цей метод буде не досить корисним для вас. Але якщо ви колись будете працювати з кодом для інтернаціональних програм, метод `normalize()` станеться вам у нагоді.
 
-Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also offers two new syntax elements.
+Методи не єдині поліпшення, які ECMAScript 6 впроваджує для роботи з рядками Unicode. Стандарт також пропонує два нові елементи синтаксису.
 
-### The Regular Expression u Flag
+### Опція пошуку (flag) u в Регулярних Виразах
 
-You can accomplish many common string operations through regular expressions. But remember, regular expressions assume 16-bit code units, where each represents a single character. To address this problem, ECMAScript 6 defines a `u` flag for regular expressions, which stands for Unicode.
+За допомогою регулярних виразів ви можете виконати багато базових операцій з рядками. Але треба пам’ятати, що регулярні вирази використовують 16-бітні кодові блоки, де кожен представляє один символ. Щоб зарадити цій проблемі, ECMAScript 6 вводить опцію пошуку `u` для регулярних виразів, які працюють з Unicode.
 
-When a regular expression has the `u` flag set, it switches modes to work on characters, not code units. That means the regular expression should no longer get confused about surrogate pairs in strings and should behave as expected. For example, consider this code:
+Коли регулярний вираз має опцію `u`, він переключається в стан роботи з символами, а не з кодовими блоками. Це означає, що регулярний вираз більше не буде збентежений сурогатними парами в рядку і має поводитись як треба. Як приклад, розглянемо цей код:
 
 ```js
 var text = "𠮷";
@@ -161,9 +161,9 @@ console.log(/^.$/.test(text));      // false
 console.log(/^.$/u.test(text));     // true
 ```
 
-The regular expression `/^.$/` matches any input string with a single character. When used without the `u` flag, this regular expression matches on code units, and so the Japanese character (which is represented by two code units) doesn't match the regular expression. When used with the `u` flag, the regular expression compares characters instead of code units and so the Japanese character matches.
+Регулярний вираз `/^.$/` не знаходить жодного рядку, який би складався з одного символу. Використаний без опції `u`, цей регулярний вираз порівнює кодові блоки, тому Японський символ (якій представлений двома кодовими блоками) не відповідає регулярному виразу. Коли ж використовується опція `u`, регулярний вираз порівнює символи замість кодових блоків і таким чином Японський символ відповідає виразу.
 
-Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
+Нажаль, ECMAScript 6 не може визначити скільки кодових пунктів містить рядок, але з визначеною опцією `u`, ви можете використати регулярний вираз, щоб реалізувати це таким чином:
 
 ```js
 function codePointLength(text) {
@@ -175,11 +175,11 @@ console.log(codePointLength("abc"));    // 3
 console.log(codePointLength("𠮷bc"));   // 3
 ```
 
-This example calls `match()` to check `text` for both whitespace and non-whitespace characters, using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
+У цьому прикладі використовується `match()`, щоб перевірити `text` на символи пробілів і не пробілів, за допомогою регулярного виразу, який застосовано глобально та з підтримкою Unicode. Результат містить масив збігів, якщо наявний хоча б один збіг, то довжина масиву буде числом кодових пунктів у рядку. В Unicode, рядки `"abc"` та `"𠮷bc"` мають три символи, тому довжина масиву буде три.
 
-W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully, ECMAScript 7 will include a built-in, efficient way to count code points.
+W> Даний підхід працює, але не дуже швидко, особливо коли його застосувати до довгих рядків. Тому намагайтеся зменшити підрахунок кодових пунктів, якщо це можливо. Дякувати Господу, ECMAScript 7 буде мати вбудований метод підрахунку кодових пунктів.
 
-Since the `u` flag is a syntax change, attempting to use it in JavaScript engines that aren't compatible with ECMAScript 6 throws a syntax error. The safest way to determine if the `u` flag is supported is with a function, like this one:
+Оскільки опція `u` є синтаксичною зміною, спроби використання її в JavaScript інтерпретаторах які не сумісні з ECMAScript 6 будуть провокувати синтаксичну помилку. Найнебезпечнішим шляхом встановити, чи підтримується опція `u` буде функція, на кшталт цієї:
 
 ```js
 function hasRegExpU() {
@@ -192,23 +192,23 @@ function hasRegExpU() {
 }
 ```
 
-This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This syntax is valid even in older JavaScript engines, but the constructor will throw an error if `u` isn't supported.
+Ця функція використовує конструктор `RegExp`, щоб передати опцію `u` як аргумент. Такий синтаксис підтримується навіть старими JavaScript інтерпретаторами, але конструктор буде видавати помилку, якщо `u` не підтримується.
 
-I> If your code still needs to work in older JavaScript engines, always use the `RegExp` constructor when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+I> Якщо ваш код має працювати зі старими JavaScript інтерпретаторами, завжди використовуйте конструктор `RegExp` при використанні опції `u`. Це попередить виникнення синтаксичних помилок і дозволить визначити чи підтримується опція `u`без скасування виконання коду.
 
-## Other String Changes
+## Інші зміни для рядків
 
-JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending JavaScript's capacity to parse strings with new functionality.
+Функціонал рядків JavaScript завжди відставав від аналогічного в інших мовах. Тільки в ECMAScript 5 рядки, нарешті, отримали метод `trim()`. ECMAScript 6 продовжує розвивати функціонал JavaScript для роботи з рядками.
 
-### Methods for Identifying Substrings
+### Методи для визначення підрядків
 
-Developers have used the `indexOf()` method to identify strings inside other strings since JavaScript was first introduced. ECMAScript 6 includes the following three methods, which are designed to do just that:
+З того часу, коли JavaScript був вперше представлений, розробники використовували метод `indexOf()` щоб визначити рядок всередині рядка. ECMAScript 6 містить слідуючі три методи для реалізації цієї дії:
 
-* The `includes()` method returns true if the given text is found anywhere within the string. It returns false if not.
-* The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
-* The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
+* Метод `includes()` повертає `true`, якщо даний тест знайдений деінде у рядку. Та повертає `false`, якщо ні.
+* Метод `startsWith()` повертає `true`, якщо даний текст знайдено на початку рядка. Та повертає `false`, якщо ні.
+* Метод `endsWith()` повертає `true`, якщо даний текст знайдено у кінці рядка. Та повертає `false`, якщо ні.
 
-Each of these methods accepts two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Кожен з цих методів приймає два аргументи: текст, який треба знайти, та необов'язковий аргумент у вигляді індексу рядка з якого треба шукати. Коли надано другий аргумент, `includes()` та `startsWith()` починає пошук з вказаного індексу, в той час як `endsWith()` починає шукати з індексу, який рівний довжині рядка мінус вказаний аргумент; коли другий аргумент не надано, `includes()` та `startsWith()` шукають з початку рядка, в той час як `endsWith()` починає з кінця. Кажучи інакше, другий аргумент зменшує діапазон пошуку в рядку. Ось кілька прикладів цих методів в дії:
 
 ```js
 var msg = "Hello world!";
@@ -226,15 +226,15 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of `msg` (which is the "o" in "Hello"); the call to `msg.endsWith("o", 8)` starts the match at index 4 as well because the `8` argument is subtracted from the string length (12); the call to `msg.includes("o", 8)` starts the match from index 8 (which is the "r" in "world").
+В перших трьох викликах другий аргумент не вказано, тож пошук ведеться по всій довжині рядка. Останні три виклики перевіряють лише частину рядка. Виклик `msg.startsWith("o", 4)` починає шукати з індексу 4 змінної `msg` (що є "o" в "Hello"); виклик`msg.endsWith("o", 8)` починає шукати з індексу 4, тому що аргумент `8` віднімаємо від довжини рядка (12); виклик `msg.includes("o", 8)` починає шукати з індексу 8 (що буде "r" в "world").
 
-While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
+Не зважаючи на те, що ці методи роблять визначення підрядка у рядку легшим, кожен з них повертає лише булеве значення. Якщо вам потрібно знайти дійсну позицію підрядка в рядку, треба використовувати методи `indexOf()` або `lastIndexOf()`.
 
-W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+W> Методи `startsWith()`, `endsWith()`, та `includes()` будуть видавати помилку, якщо ви передасте регулярний вираз замість рядка в якості аргументу. На відміну від `indexOf()` та `lastIndexOf()`, котрі конвертують регулярний вираз в рядок і потім шукають цей рядок.
 
-### The repeat() Method
+### Метод repeat()
 
-ECMAScript 6 also adds a `repeat()` method to strings, which accepts the number of times to repeat the string as an argument. It returns a new string containing the original string repeated the specified number of times. For example:
+ECMAScript 6 також додає до рядків метод `repeat()`, який в якості аргументу приймає число рівне кількості повторів рядку. Він повертає новий рядок, який містить оригінальний рядок повторений вказану кількість разів. Наприклад:
 
 ```js
 console.log("x".repeat(3));         // "xxx"
@@ -242,7 +242,7 @@ console.log("hello".repeat(2));     // "hellohello"
 console.log("abc".repeat(4));       // "abcabcabcabc"
 ```
 
-This method is a convenience function above all else, and it can be especially useful when manipulating text. It's particularly useful in code formatting utilities that need to create indentation levels, like this:
+Цей метод надає важливий функціонал, який може бути надзвичайно корисним при маніпулюванні текстом. Це важливо в інструментах для форматування коду, наприклад:
 
 ```js
 // indent using a specified number of spaces
@@ -253,17 +253,17 @@ var indent = " ".repeat(4),
 var newIndent = indent.repeat(++indentLevel);
 ```
 
-The first `repeat()` call creates a string of four spaces, and the `indentLevel` variable keeps track of the indent level. Then, you can just call `repeat()` with an incremented `indentLevel` to change the number of spaces.
+Перший виклик `repeat()` створить рядок з чотирма пробілами, а змінна `indentLevel` буде записувати рівень відступів. Тепер ви можете просто викликати `repeat()` зі збільшеним `indentLevel`, щоб змінити кількість відступів.
 
-ECMAScript 6 also makes some useful changes to regular expression functionality that don't fit into a particular category. The next section highlights a few.
+ECMAScript 6 також надає деякі корисні зміни до регулярних виразів, які не можна виділити в окрему категорію. Наступний розділ розгляне деякі з них.
 
-## Other Regular Expression Changes
+## Інші зміни у регулярних виразах
 
-Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, they haven't changed much in recent versions. ECMAScript 6, however, makes several improvements to regular expressions to go along with the updates to strings.
+регулярні вирази важлива частина роботи з рядками в JavaScript, і як більшість частин язику, вони не змінювались істотним чином у попередніх версіях. ECMAScript 6, пропонує деякі покрашення для регулярних виразів, принаймні, щоб йти поруч рядками.
 
-### The Regular Expression y Flag
+### Опція (flag) `y` для регулярних виразів
 
-ECMAScript 6 standardized the `y` flag after it was implemented in Firefox as a proprietary extension to regular expressions. The `y` flag affects a regular expression search's `sticky` property, and it tells the search to start matching characters in a string at the position specified by the regular expression's `lastIndex` property. If there is no match at that location, then the regular expression stops matching. To see how this works, consider the following code:
+ECMAScript 6 зробив опцію `y`стандартом flag після того, як вона була запроваджена в Firefox в якості пропрієтароного доповнення для опрацювання регулярних виразів. Опція `y` стосується такої властивості регулярних виразів, як `sticky`, і він каже пошуку почати шукати відповідні символи в рядку з позиції, зазначеної у властивості `lastIndex` регулярного виразу. Якщо в цій позиції немає збігів, то регулярний вираз зупиняє пошук відповідностей. Щоб побачити, як це працює, розглянемо наступний код:
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -291,11 +291,11 @@ console.log(globalResult[0]);   // "hello2 "
 console.log(stickyResult[0]);   // Error! stickyResult is null
 ```
 
-This example has three regular expressions. The expression in `pattern` has no flags, the one in `globalPattern` uses the `g` flag, and the one in `stickyPattern` uses the `y` flag. In the first trio of `console.log()` calls, all three regular expressions should return `"hello1 "` (with a space at the end).
+Цей приклад має три регулярні вирази. Вираз в `pattern` не має опцій, другий в `globalPattern` використовує опцію `g`, останній `stickyPattern` використовує опцію `y`. У перших трьох викликах `console.log()`, усі три регулярні вирази мають повернути  `"hello1 "` (з пробілом у кінці).
 
-After that, the `lastIndex` property is changed to 1 on all three patterns, meaning that the regular expression should start matching from the second character on all of them. The regular expression with no flags completely ignores the change to `lastIndex` and still matches `"hello1 "` without incident. The regular expression with the `g` flag goes on to match `"hello2 "` because it is searching forward from the second character of the string (`"e"`). The sticky regular expression doesn't match anything beginning at the second character so `stickyResult` is `null`.
+Після цього властивість `lastIndex` було змінено на 1 у всіх трьох шаблонах, маючи на увазі, що регулярний вираз повинен шукати збіги з другого символу у всіх випадках. Регулярний вираз без опцій повністю ігнорує зміни у `lastIndex` та все ще повертає `"hello1 "` без проблем. Регулярний вираз з опцією `g` повертає збіг з `"hello2 "`, тому що він починає пошук з другого символу рядка (`"e"`). Регулярний вираз з опцією `y` не знаходить жодних збігів починаючи з другого символу рядка, тому `stickyResult` є `null`.
 
-The sticky flag saves the index of the next character after the last match in `lastIndex` whenever an operation is performed. If an operation results in no match, then `lastIndex` is set back to 0. The global flag behaves the same way, as demonstrated here:
+Опція `y` зберігає індекс слідуючого символу після останнього в `lastIndex` під час виконання операції. Якщо в результаті операції не має збігів, тоді `lastIndex` повертається до 0. Опція `g` поводиться таким чином, як показано тут:
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -327,14 +327,14 @@ console.log(globalPattern.lastIndex);   // 14
 console.log(stickyPattern.lastIndex);   // 14
 ```
 
-The value of `lastIndex` changes to 7 after the first call to `exec()` and to 14 after the second call, for both the `stickyPattern` and `globalPattern` variables.
+Значення `lastIndex` змінюється на 7 після першого виклику `exec()` та на 14 після другого виклику, як для змінної `stickyPattern` так і для `globalPattern`.
 
-There are two more subtle details about the sticky flag to keep in mind:
+Є дві важливі деталі, які треба мати на увазі стосовно опціі `y`:
 
-1. The `lastIndex` property is only honored when calling methods that exist on the regular expression object, like the `exec()` and `test()` methods. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
-1. When using the `^` character to match the start of a string, sticky regular expressions only match from the start of the string (or the start of the line in multiline mode). While `lastIndex` is 0, the `^` makes a sticky regular expression no different from a non-sticky one. If `lastIndex` doesn't correspond to the beginning of the string in single-line mode or the beginning of a line in multiline mode, the sticky regular expression will never match.
+1. Властивість `lastIndex` буде враховуватися тільки при використанні з методами, які існують для регулярних виразів, на кшталт `exec()` або `test()`. Передавання  регулярного виразу до рядкового методу, як `match()`, не поверне результату.
+2. Коли ми використовуємо символ `^` щоб початі пошук з початку рядка, регулярний вираз з опцією `y` шукає збіги тільки з початку рядка (або початку лінії в багатолінійному коді). Якщо `lastIndex` є 0, символ `^` робить регулярний вираз такм самим як і загального типу. Якщо `lastIndex` не відповідає початку рядка або початку лінії в багатолінійному коді, регулярний вираз з опцією `y` ніколи не поверне збіг.
 
-As with other regular expression flags, you can detect the presence of `y` by using a property. In this case, you'd check the `sticky` property, as follows:
+Так само як і з іншими опціями регулярних виразів, ви можете визначити наявність опції `y`, використовуючи властивість `sticky`. В цьому разі ви маєте перевірити наявність властивості `sticky`, як показано у коді:
 
 ```js
 var pattern = /hello\d/y;
@@ -342,9 +342,9 @@ var pattern = /hello\d/y;
 console.log(pattern.sticky);    // true
 ```
 
-The `sticky` property is set to true if the sticky flag is present, and the property is false if not. The `sticky` property is read-only based on the presence of the flag and cannot be changed in code.
+Перевірка на властивість `sticky` буде повертати `true`, якщо опція `y` наявна у виразі, та `false`, якщо ні. Властивість `sticky` є доступною тільки для читання і не може буди зміненою в коді.
 
-Similar to the `u` flag, the `y` flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the following approach to detect support:
+Так само як опція `u`, опція `y` є синтаксичною зміною, тому вона буде викликати синтаксичну помилку у старих інтерпретаторах JavaScript. Ви можете використати наступний підхід для перевірки підтримки:
 
 ```js
 function hasRegExpY() {
@@ -357,18 +357,18 @@ function hasRegExpY() {
 }
 ```
 
-Just like the `u` check, this returns false if it's unable to create a regular expression with the `y` flag. In one final similarity to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
+Так само як перевірка на опцію `u`, код повертає `false`, якщо невзмозі створити регулярний вираз з опцією `y`. Подібно до використання `u`, якщо вам треба використати `y` в коді, який обробляється у старих інтерпретаторах JavaScript, будьте певними, що використовуєте конструктор `RegExp`, коли визначаєте регулярний вираз, щоб уникнути помилок.
 
-### Duplicating Regular Expressions
+### Дублювання Regular Expressions
 
-In ECMAScript 5, you can duplicate regular expressions by passing them into the `RegExp` constructor like this:
+В ECMAScript 5, ви можете дублювати регулярні вирази, передаючи до конструктору `RegExp` таким чином:
 
 ```js
 var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
-The `re2` variable is justa  copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, an error is thrown, as in this example:
+Змінна `re2` є простою копією змінної `re1`. Але якщо ви передасте другий аргумент до конструктору `RegExp`, який буде визначати опцію для вашого регулярного виразу, ви отримаєте помилку, як в цьому прикладі:
 
 ```js
 var re1 = /ab/i,
@@ -377,7 +377,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1, "g");
 ```
 
-If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and overrides whichever flags are present on the first argument. For example:
+Якщо ви виконаєте цей код в оточенні ECMAScript 5, ви отримаєте помилку, яка казатиме, що другий аргумент не може бути використаний, якщо перший аргумент є регулярним виразом . ECMAScript 6 змінює цю поведінку таким чином, що другий аргумент є дозволеним та  буде переписувати будь-яку опцію, яка буде міститися у першому аргументі. Наприклад:
 
 ```js
 var re1 = /ab/i,
@@ -397,11 +397,11 @@ console.log(re2.test("AB"));            // false
 
 ```
 
-In this code, `re1` has the case-insensitive `i` flag while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and substituted the `g` flag for the `i` flag. Without the second argument, `re2` would have the same flags as `re1`.
+В цьому коді, `re1` має чутливу до регістру опцію `i`, в той час як `re2` має тільки опцію `g`. Конструктор `RegExp` дублює вираз по шаблону `re1` та змінює опцію `g` на опцію `i`. Без другого аргументу, `re2` буде мати ті самі опції, що й `re1`.
 
-### The `flags` Property
+### Властивість `flags`
 
-Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a new property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
+Разом з доданням нової опції та зміни засобів роботи з опціями, ECMAScript 6 додає нову властивість зв’язану з ними. В ECMAScript 5, ви могли отримати текст регулярного виразу, використовуючи властивість `source`, але щоб отримати рядкове відображення опції, ви мали парсити результат метода `toString()`, як показано нижче:
 
 ```js
 function getFlags(re) {
@@ -415,11 +415,11 @@ var re = /ab/g;
 console.log(getFlags(re));          // "g"
 ```
 
-This code converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
+Цей код конвертує регулярний вираз в рядок, а потім повертає символи знайдені після останнього `/`. Ці символ і є опції.
 
-ECMAScript 6 makes fetching flags easier by adding a `flags` property to go along with the `source` property. Both properties are prototype accessor properties with only a getter assigned, making them read-only. The `flags` property makes inspecting regular expressions easier for both debugging and inheritance purposes.
+ECMAScript 6 робить визначення опцій легше, додаючи властивість `flags` до існуючої властивості `source`. Обидві властивості є засобами доступу до властивостей прототипу, що робить їх доступними тільки до зчитування. Властивість `flags` робить опрацювання регулярних виразів легшим, як для дебагінгу так і для можливостей наслідування.
 
-A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression. For example:
+Додана до ECMAScript 6 в останню чергу, властивість `flags` повертає рядкове відображення будь-якої опції доданої до регулярного виразу, наприклад:
 
 ```js
 var re = /ab/g;
@@ -428,27 +428,27 @@ console.log(re.source);     // "ab"
 console.log(re.flags);      // "g"
 ```
 
-This fetches all flags on `re` and prints them to the console with far fewer lines of code than the `toString()` technique can. Using `source` and `flags` together allows you to extract the pieces of the regular expression that you need without parsing the regular expression string directly.
+Код отримує всі опції від `re` та виводить їх до консолі у значно легший шлях, аніж це робить техніка з використанням методу `toString()`. Використання `source` та `flags` разом дозволить вам отримувати частини регулярного виразу без використання технік з парсингом.
 
-All of the changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a new type of literal to the table that makes strings more flexible.
+Всі зміни до рядків і регулярних виразів, які розглянуті в цьому розділі є безумовно потужними, але ECMAScript 6 вдосконалює ваші можливості роботи з рядками ще більше. Він добавляє новий літерал до таблиці, що робить рядки більш гнучкими.
 
-## Template Literals
+## Літерали Шаблону
 
-JavaScript's strings have always been fairly limited when compared to those in other languages. Since JavaScript's inception, strings have lacked the methods covered so far in this chapter and string concatenation is as simple as possible. *Template literals* add new syntax for creating domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. DSLs are languages designed for a specific, narrow purpose (as opposed to JavaScript, which is a general-purpose language) and the ability to create DSLs inside of JavaScript was desired to deal with some of the more complex problems facing JavaScript developers. The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
+Рядки в JavaScript's завжди були досить обмеженими в порівнянні з іншими мовами. З початку становлення JavaScript, рядкам не вистачало методів розглянутих вище в цьому розділі, а конконтенація рядків є досить простою. *Літерали шаблону* додаюсть новий синтаксис для створення специфічної до домену мови (DSLs) для того, щоб працювати з контентом у біль безпечний спосіб ніж ми робимо це зараз. DSLs мова розроблена для специфічного, вузького використання (на відміну від JavaScript, який є мовою широкого використання) і можливість створювати DSLs в середені JavaScript була дуже бажаною для розробників JavaScript, для розв’язання найбільш складних проблем. Вікі ECMAScript пропонує наступне визначення для  [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
 
-> This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
+> Ця схема розширює синтаксис ECMAScript додаванням синтаксичного цукру, щоб дозволити іншим бібліотекам впроваджувати DSLs для легкого створення запитів та маніпулювання контентом з інших мов, які стійкі для ін’єкцій та атак, як XSS, SQL Ін’єкції, та інші.
 
-In reality, though, template literals are ECMAScript 6's answer to the following features that JavaScript lacked all the way through ECMAScript 5:
+Насправді, літерали шаблонів є відповіддю ECMAScript 6' усім недолікам які мав JavaScript в цьому плані з моменту виходу ECMAScript 5:
 
-* **Multiline strings** A formal concept of multiline strings.
-* **Basic string formatting** The ability to substitute parts of the string for values contained in variables.
-* **HTML escaping** The ability to transform a string such that it is safe to insert into HTML.
+* **Богатолінійні рядки** формальна концепція багатолінійних рядків.
+* **Базове форматування рядків** можливість заміщувати частину рядка значеннями з певних змінних.
+* **HTML escaping** можливість трансформування рядки, щоб безпечно вставити іх в HTML.
 
-Rather than trying to add more functionality to JavaScript's already-existing strings, template literals represent an entirely new approach to solving these problems.
+Замість того, щоб додати більше можливостей існуючому функціоналу по опрацюванню рядків JavaScript, літерали рядків пропонують повністю новий підхід для вирішення цих проблем.
 
-### Basic Syntax
+### Загальний синтаксис
 
-At their simplest, template literals act like regular strings delimited by backticks (`` ` ``) instead of double or single quotes. For example, consider the following:
+Дякуючи своїй простоті, літерали шаблону працюють як звичайні рядка оточенні зворотніми лапками (`` ` ``) замість подвійних або одинарних. Розглянемо цей приклад:
 
 ```js
 let message = `Hello world!`;
@@ -458,9 +458,9 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only is used to create the string value, which is then assigned to the `message` variable.
+Цей код показує, що змінна `message` містить звичайний рядок JavaScript. В даному випадку синтаксис літералу шаблона використано тільки для того, щоб створити рядкове значення, яке згодом буде прив’язане до змінної `message`.
 
-If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
+Якщо ви хочете використовувати зворотні лапки в подальшому у рядку, тоді треба екранувати їх зворотнім слешем (`\`), як в цьому варіанті змінної `message`:
 
 ```js
 let message = `\`Hello\` world!`;
@@ -470,15 +470,15 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 14
 ```
 
-There's no need to escape either double or single quotes inside of template literals.
+Ви не повинні екранувати подвійні або одинарні лапки в синтаксисі літералу шаблона.
 
-### Multiline Strings
+### Багатолінійні рядки
 
-JavaScript developers have wanted a way to create multiline strings since the first version of the language. But when using double or single quotes, strings must be completely contained on a single line.
+JavaScript розробники шукали можливість створювати багатолінійні рядки з моменту створення мови. Але коли ми використовуємо подвійні або одинарні лапки, рядок має бути розташований тільки на одній лінії коду.
 
-#### Pre-ECMAScript 6 Workarounds
+#### Обхідні шляхи до появи ECMAScript 6
 
-Thanks to a long-standing syntax bug, JavaScript does have a workaround. You can create multiline strings if there's a backslash (`\`) before a newline. Here's an example:
+Дякуючи давно відомому синтаксичному багу, JavaScript має обхідні шлячи. Ви можете створювати багатолінійні рядки, якщо перед новою лінією коду ставити зворотній слеш (`\`). Ось, наприклад:
 
 ```js
 var message = "Multiline \
@@ -487,7 +487,7 @@ string";
 console.log(message);       // "Multiline string"
 ```
 
-The `message` string has no newlines present when printed to the console because the backslash is treated as a continuation rather than a newline. In order to show a newline in output, you'd need to manually include it:
+Рядок `message` не має нових ліній в консолі, тому що зворотній слеш сприймаєтеся як продовження поточної лінії а не початок нової. Для того щоб визначити нову лінію, вам потрібно її позначити:
 
 ```js
 var message = "Multiline \n\
@@ -497,9 +497,9 @@ console.log(message);       // "Multiline
                             //  string"
 ```
 
-This should print `Multiline String` on two separate lines in all major JavaScript engines, but the behavior is defined as a bug and many developers recommend avoiding it.
+Це має вивести `Multiline String` на двох роздільних лініях у більшості JavaScript інтерпретаторів, але по суті така поведінки визначається як баг, і більшість розробників радять не користатися тикам трюком.
 
-Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
+Іншими шляхами створити багатолінійні рядки до появи ECMAScript 6 було звернення до масивів або конкантенація рядків, наприклад:
 
 ```js
 var message = [
@@ -511,11 +511,11 @@ let message = "Multiline \n" +
     "string";
 ```
 
-All of the ways developers worked around JavaScript's lack of multiline strings left something to be desired.
+Але всі ці обхідні шляхи не є те, що насправді було потрібно розробникам.
 
-#### Multiline Strings the Easy Way
+#### Багатолінійні рядки простим чином
 
-ECMAScript 6's template literals make multiline strings easy because there's no special syntax. Just include a newline where you want, and it shows up in the result. For example:
+Літерали шаблонів ECMAScript 6 роблять багатолінійні рядки досить легко доступними, тому що не мають спеціального синтаксису. Просто робіть нову лінію де вам треба і вона буде оброблена. Наприклад:
 
 ```js
 let message = `Multiline
@@ -526,7 +526,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 16
 ```
 
-All whitespace inside the backticks is part of the string, so be careful with indentation. For example:
+Усі пробіли всередині зворотних лапок є частиною рядка, тому будьте уважними в відступами. Наприклад:
 
 ```js
 let message = `Multiline
@@ -537,7 +537,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 31
 ```
 
-In this code, all whitespace before the second line of the template literal is considered part of the string itself. If making the text line up with proper indentation is important to you, then consider leaving nothing on the first line of a multiline template literal and then indenting after that, as follows:
+У цьому коді, всі пробіли перед другою лінією шаблону буквальному вважається частиною самого рядка. Якщо зробити текстову лінію з правильними відступами для вас важливо, потрібно залиши пустою першу лінію багатолінійного літералу шаблону, а потім починати робити відступи в нових лініях, а саме:
 
 ```js
 let html = `
@@ -546,9 +546,9 @@ let html = `
 </div>`.trim();
 ```
 
-This code begins the template literal on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial empty line.
+Цей код починає літерал шаблону на першій лінії, але вона не має ніякого тексту аж до другої. Теги HTML мають відступи для гарного вигляду, а потім метод `trim()` викликається щоб видалити пусту першу лінію.
 
-A> If you prefer, you can also use `\n` in a template literal to indicate where a newline should be inserted:
+A> Якщо ви бажаєте, ви також можете використовувати символ `\n` в літералі шаблону, щоб показати де має буду створена нова лінія:
 A> {:lang="js"}
 A> ~~~~~~~~
 A>
@@ -559,11 +559,11 @@ A>                                 //  string"
 A> console.log(message.length);    // 16
 A> ~~~~~~~~
 
-### Making Substitutions
+### Робимо заміщення
 
-At this point, template literals may look like fancier versions of normal JavaScript strings. The real difference between the two lies in template literal *substitutions*. Substitutions allow you to embed any valid JavaScript expression inside a template literal and output the result as part of the string.
+В цьому сенсі, можуть виглядати як більш вдосконалена версія звичайних JavaScript рядків. Реальна різниця між ними якраз і міститься в літералі шаблону *заміщення*. Заміщення дозволяють вам помістити любий валідний JavaScript вираз в середину літералу шаблона і вивести результат як частину рядка.
 
-Substitutions are delimited by an opening `${` and a closing `}` that can have any JavaScript expression inside. The simplest substitutions let you embed local variables directly into a resulting string, like this:
+Заміщення оточені відкриваючим `${` і закриваючим `}`, що може містити будь-який JavaScript вираз. Найпростіше заміщення дозволить вам помістити локальні змінні в підсумковий рядок , наприклад:
 
 ```js
 let name = "Nicholas",
@@ -572,11 +572,11 @@ let name = "Nicholas",
 console.log(message);       // "Hello, Nicholas."
 ```
 
-The substitution `${name}` accesses the local variable `name` to insert `name` into the `message` string. The `message` variable then holds the result of the substitution immediately.
+Заміщення в `${name}` має доступ до локальної змінної `name` щоб вставити `name` в рядок `message`. Змінна `message` одразу ж виводить результат заміщення.
 
-I> A template literal can access any variable accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template literal throws an error in both strict and non-strict modes.
+I> Літерал шаблону може мати доступ до будь-якої наявної змінної в області видимості, до якої він належить. Спроба використати в літералі шаблону не визначену змінну призведе до помилки як у строгому, так і не строгому режимі.
 
-Since all substitutions are JavaScript expressions, you can substitute more than just simple variable names. You can easily embed calculations, function calls, and more. For example:
+Оскільки всі заміщення є JavaScript виразами, ви можете заміщувати не тільки прості імена змінних. Ви можете легко використати результати обчислень або функцій. Наприклад:
 
 ```js
 let count = 10,
@@ -586,23 +586,23 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This code performs a calculation as part of the template literal. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
+Цей код виконує обчислення, як частину літералу шаблону. До змінних `count` та`price` застосовується операція множення, щоб отримати результат, а потім форматування до двох символів після комі за допомогою `.toFixed()`. Знак долару перед другим заміщенням виводиться як є, тому що після нього немає відкриваючої фігурної дужки.
 
-### Tagged Templates
+### Теговані шаблони
 
-Now you've seen how template literals can create multiline strings and insert values into strings without concatenation. But the real power of template literals comes from tagged templates. A *template tag* performs a transformation on the template literal and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, as shown here:
+Ви побачили як літерали шаблону можуть створювати багатолінійні рядки та вставляти значення в рядки без конкантенації. Але справжню силу літералів шаблону можна відчути з тегованими шаблонами. *Тег шаблону* виконує трансформацію літералу шаблона і повертає остаточне значення рядка. Такий тег визначається на початку рядка, одразу перед першим символом `` ` ``, як показано тут:
 
 ```js
 let message = tag`Hello world`;
 ```
 
-In this example, `tag` is the template tag to apply to the `` `Hello world` `` template literal.
+В цьому прикладі, `tag` є тегом шаблону щоб застосувати літерал шаблону `` `Hello world` ``.
 
-#### Defining Tags
+#### Визначаємо теги
 
-A *tag* is simply a function that is called with the processed template literal data. The tag receives data about the template literal as individual pieces and must combine the pieces to create the result. The first argument is an array containing the literal strings as interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution.
+Насправді *тег* це просто функція яка виконується при обробці даних літералу шаблона. Тег отримує данні про літерали шаблону як окремі частини коду і має зібрати ці частини разом. Перший аргумент це масив рядків літералу як їх інтерпретує JavaScript. Кожен наступний аргумент це відтворене значення кожного заміщення.
 
-Tag functions are typically defined using rest arguments as follows, to make dealing with the data easier:
+Функції тегів як правило викликаються з аргументами, як показано нижче, щоб полегшити роботу з даними:
 
 ```js
 function tag(literals, ...substitutions) {
@@ -610,7 +610,7 @@ function tag(literals, ...substitutions) {
 }
 ```
 
-To better understand what gets passed to tags, consider the following:
+Щоб краще зрозуміти що передається до тегів, розглянемо наступне:
 
 ```js
 let count = 10,
@@ -618,17 +618,17 @@ let count = 10,
     message = passthru`${count} items cost $${(count * price).toFixed(2)}.`;
 ```
 
-If you had a function called `passthru()`, that function would receive three arguments. First, it would get a `literals` array, containing the following elements:
+Якщо ви матимете функцію з назвою `passthru()`, то вона отримає три аргументи. По-перше, вона отримає масив `literals`, який матиме наступні елементи:
 
-* The empty string before the first substitution (`""`)
-* The string after the first substitution and before the second (`" items cost $"`)
-* The string after the second substitution (`"."`)
+* Пустий рядок перед першим заміщенням (`""`)
+* Рядок після першого і перед другим заміщенням (`" items cost $"`)
+* Рядок після другого заміщення (`"."`)
 
-The next argument would be `10`, which is the interpreted value for the `count` variable. This becomes the first element in a `substitutions` array. The final argument would be `"2.50"`, which is the interpreted value for `(count * price).toFixed(2)` and the second element in the `substitutions` array.
+Наступний аргумент буде `10`, що є значенням змінної `count`. Він стає перши елементом в масиві `substitutions`. Останнім аргументом буде `"2.50"`, що є здобутим значенням для `(count * price).toFixed(2)` та другого елементу в масиві `substitutions`.
 
-Note that the first item in `literals` is an empty string. This ensures that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which means the expression `substitutions.length === literals.length - 1` is always true.
+Зауважте, що перший елемент в `literals` є пустий рядок. Таким чином мі впевнені, що  `literals[0]` є завжди початком рядка, так само як `literals[literals.length - 1]` завжди кінець рядка. Заміщень завжди на один менше ніж літералів, таким чином вираз `substitutions.length === literals.length - 1` завжди правильний.
 
-Using this pattern, the `literals` and `substitutions` arrays can be interwoven to create a resulting string. The first item in `literals` comes first, the first item in `substitutions` is next, and so on, until the string is complete. As an example, you can mimic the default behavior of a template literal by alternating values from these two arrays:
+Використовуючи цей шаблон, масиви `literals` та `substitutions` можуть бути зв’язані щоб утворити підсумковий рядок. Перший елемент в `literals` йде першим, перший елемент `substitutions` йде за ним, і так далі, поки рядок не буде завершено. Наприклад, ви можете імітувати поведінку літералу шаблону, чергуючи значення цих двох масивів:
 
 ```js
 function passthru(literals, ...substitutions) {
@@ -653,13 +653,13 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This example defines a `passthru` tag that performs the same transformation as the default template literal behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of the `substitutions` array. This works because the relationship between `literals` and `substitutions` is well-defined in ECMAScript 6.
+В цьому прикладі визначається  тег `passthru` який виконує ту ж саму трансформацію що й літерал шаблону по замовчуванню. Єдина хитрість тут — це використання `substitutions.length` для циклу замість `literals.length` щоб уникнути ненавмисного виходу за рамки масиву `substitutions`. Це працює тому, що відношення між  `literals` та `substitutions` добре визначені в ECMAScript 6.
 
-I> The values contained in `substitutions` are not necessarily strings. If an expression evaluates to a number, as in the previous example, then the numeric value is passed in. Determining how such values should output in the result is part of the tag's job.
+I> Значення в `substitutions` не обов'язково мають бути рядками. Якщо у виразі виконується число, як в попередньому прикладі, тоді буде передаватися числове значення. Визначення кількості значень, що мають буду виведені в результаті частина роботи тегів.
 
-#### Using Raw Values in Template Literals
+#### Використання вихідних (первинних) значень у літералах шаблону
 
-Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to use the built-in `String.raw()` tag. For example:
+Теги шаблонів також мають доступ до первинної інформації, що в першу чергу означає доступ до символів екранування перш ніж вони будуть трансформовані в їх символьні еквіваленти. Найпростішим засобом для роботи з первинними значеннями рядків е використання вбудованого тегу `String.raw()`. Наприклад:
 
 ```js
 let message1 = `Multiline\nstring`,
@@ -670,9 +670,9 @@ console.log(message1);          // "Multiline
 console.log(message2);          // "Multiline\\nstring"
 ```
 
-In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (the slash and `n` characters). Retrieving the raw string information like this allows for more complex processing when necessary.
+В цьому коді, `\n` в `message1` інтерпретується як символ нової лінії, в той час як `\n` в `message2` інтерпретується в його первинній формі `"\\n"` (символи слушу й `n`). Доступ до первинної інформації, як в цьому прикладі, дозволяє виконувати більш комплексні операції за необхідністю.
 
-The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called `raw`. The `raw` property is an array containing the raw equivalent of each literal value. For example, the value in `literals[0]` always has an equivalent `literals.raw[0]` that contains the raw string information. Knowing that, you can mimic `String.raw()` using the following code:
+Первинна інформація рядка також передається в теги шаблону. Перший аргумент в функції тегу — масив з екстра властивістю незваною `raw`. Властивість `raw` є масивом який вміщає первинній еквівалент кожного значення літералу. Наприклад, Значення в `literals[0]` завжди має еквівалент `literals.raw[0]`, який має містить інформацію рядка. Знаючи це, ви можете імітувати `String.raw()`, використовуючи наступний код:
 
 ```js
 function raw(literals, ...substitutions) {
@@ -696,16 +696,16 @@ console.log(message);           // "Multiline\\nstring"
 console.log(message.length);    // 17
 ```
 
-This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
+Код використовує `literals.raw` замість `literals` щоб вивести результуючий рядок. Це означає що будь-які символи екрануються, в тому числі кодові пункти  Unicode, мають бути повернені в їх первинній формі. Первинна форма рядків стане у нагоді, коли ви хочете вивести рядок, який містить код в якому ви хочете вивести екрановані символи (наприклад, коли ви хочете генерувати документацію про якийсь код, ви можливо захочете вивести код у такому вигляді як він є).
 
-## Summary
+## Резюме
 
-Full Unicode support allows JavaScript to deal with UTF-16 characters in logical ways. The ability to transfer between code point and character via `codePointAt()` and `String.fromCodePoint()` is an important step for string manipulation. The addition of the regular expression `u` flag makes it possible to operate on code points instead of 16-bit characters, and the `normalize()` method allows for more appropriate string comparisons.
+Повна підтримка Unicode дозволяє JavaScript працювати з символами UTF-16 логічним чином. Можливість переходів між кодовими пунктами та символами через `codePointAt()` та `String.fromCodePoint()` є важливим кроком в маніпуляціях з рядками. Додавання опції `u` до регулярних виразів дає можливість оперувати кодовими пунктами замість 16-бітних символів, а метод `normalize()` дозволяє краще порівнювати рядки.
 
-ECMAScript 6 also added new methods for working with strings, allowing you to more easily identify a substring regardless of its position in the parent string. More functionality was added to regular expressions, too.
+ECMAScript 6 також додає нові методи для роботи з рядками, дозволяючи вам краще визначати субрядки, давлячись на їх позицію в батьківському рядку. Також більше функціоналу було надано регулярним виразам.
 
-Template literals are an important addition to ECMAScript 6 that allows you to create domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template literals means that developers have a safer tool than string concatenation for composing long strings with variables.
+Літерали шаблонів є важливим додатком до ECMAScript 6, що дозволяє вам створювати специфічні до домену мови (DSLs), щоб полегшити створення рядків. Можливість вставляти змінні безпосередньо в літерали шаблонів означає, що розробники мають безпечніший інструмент ніж  конкатенація рядків при поєднанні довгих рядків зі змінними.
 
-Built-in support for multiline strings also makes template literals a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template literal, you can still use `\n` and other character escape sequences.
+Вбудована підтримка багатолінійних рядків також робить літерали шаблонів корисним доповненням до рядків JavaScript, які досі не мали такої можливості. Не зважаючи на можливість використання нових ліній безпосередньо всередині літералу шаблона, ви все ще можете використовувати `\n` та інші екрановані символи.
 
-Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template literal as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
+Теги шаблону є найбільш важливою частиною цього покращення для створення DSLs. Теги — це функції, що отримують частини літералу шаблону як аргументи. В подальшому ви можете використовувати ці данні, щоб повернути відповідне значення рядка. Впроваджені данні включають літерали, їхні вихідні еквіваленти, та любі значення заміщень. Ці частини інформації в подальшому можуть буди використані, щоб  визначити коректний вивід тегу.
