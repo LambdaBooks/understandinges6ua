@@ -2,19 +2,19 @@
 
 Можливо, рядки є найбільш важливими типами даних в програмуванні. Вони є майже у всіх язиках програмування віщого рівня, і вміння працювати з ними ефективно є необхідністю для розробника, при створенні корисних програм. Але, якщо подивитися ширше, регулярні вирази є не менш важливими, тому що вони  дають розробнику додаткові потужні можливості при роботі з рядками. Пам'ятаючи це, засновники  ECMAScript 6 вдосконалили рядки і регулярні вирази,   додавши нові можливості та довго-очікувану функціональність. Цей розділ розгляне обидва типи змін.
 
-## Better Unicode Support
+## Краща підтримка Unicode (Юнікод)
 
-Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding. All string properties and methods, like the `length` property and the `charAt()` method, were based on the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines choose from two encoding options: either UCS-2 or UTF-16. (Both systems use 16-bit *code units*, making all observable operations work the same.) But 16 bits used to be enough to contain any character, that's no longer true thanks to the expanded character set introduced by Unicode.
+До появи ECMAScript 6, рядки в JavaScript оберталися навколо 16-бітної системи  кодування символів. Усі властивості і методи рядків, як, наприклад, властивість `length`та метод `charAt()`, базувалися на ідеї, що 16-бітна послідовність представляє єдиній символ. ECMAScript 5 дозволяв JavaScript інтерпретаторам поміж двома варіантами кодування: UCS-2 або UTF-16. (Обидві системи використовують 16-бітні *блоки коду*, однаково обробляючі усі відстежувані операції.) Але вважалося що для кодування символів не потрібно більше ніж 16 біт, на щастя це більше не є абсолютом, дякуючи введенню розширеного набору символів Unicode.
 
-### UTF-16 Code Points
+### Кодові пункти UTF-16
 
-Limiting character length to 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0.
+Обмеження довжини кодування символів до 16 біт не дає можливості реалізувати основну мету Unicode з надання глобального унікального ідентифікатора кожному символу у світі. Ці глобальні унікальні ідентифікатори, так звані *кодові пункти*, просто номери, які починаються з 0.
 
-Code points are like character codes, but there's a subtle difference. A character encoding translates code points into code units that are internally consistent. While UCS-2 has a one-to-one mapping of code points to code units, UTF-16 mappings aren't always one-to-one.
+Кодові пункти схожі на коди символів, між ними існує невелика різниця. Кодування символів перекладає кодові пункті в кодові блоки, які внутрішньо несуперечливі. В той час як UCS-2 зв’язує кодові пункти з кодовими блоками у співставленні один до одного, зв’язування в UTF-16 відбувається не завжди один до одного.
 
-The first 2^16 code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in a *supplementary plane*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
+Перші 2^16 кодові пункти в UTF-16 представлені як одиничні 16-бітні кодові блоки. Цей діапазон називається *Основна Багатомовна Матриця* (ОБМ). Все, що поза межами цього діапазону вважається *додактовою матрицею*, де кодові блоки більше не можуть бути представлені лише у 16 бітах. UTF-16 вирішує цю проблему за допомогою *сурогатних пар*, в яких один кодовій пункт представлений двома 16-бітними кодовими блоками. Це означає, що будь який символ у рядку може бути представленій як одним кодовим блоком для ОБМ символів, даючи в сумі 16 біт, або ж двома кодовими блоками для символів в додактової матриці, даючи в сумі 32 біта.
 
-In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs. For example:
+У ECMAScript 5, всі рядкові операції працюють в діапазоні 16-бітних кодових блоків, припускаючи, що ви можете отримати неочікувані результати у рядку кодованому в UTF-16, який містить сурогатні пари. Наприклад:
 
 ```js
 var text = "𠮷";
@@ -27,19 +27,19 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means:
+В даному прикладі, єдиній Unicode символ представлений сурогатною парою, і як наслідок, JavaScript операції з рядком відбуваються, як з таким, що має два 16-бітні символи. Це означає:
 
-* The `length` of `text` is 2.
-* A regular expression trying to match a single character fails.
-* The `charAt()` method is unable to return a valid character string.
+* Властивість `length` у змінної `text` буде 2.
+* Регулярний вираз, як спробує знайти одиничний символ, дасть `false`.
+* Метод `charAt()` не в змозі повернуті рядок.
 
-The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
+Метод `charCodeAt()` повертає відповідний 16-бітний для кожного кодового блоку, але це тільки наближене до реального значення, яке ви можете отримати з ECMAScript 5.
 
-ECMAScript 6 enforces UTF-16 string encoding. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
+ECMAScript 6 забезпечую повну підтримку кодування рядків в UTF-16. Стандартизація операцій з рядками заснованими на цьому кодуванні, означає що JavaScript може підтримувати функціонал розроблений спеціально для роботи з сурогатними парами. Решта цього підрозділу розглядає кілька ключових прикладів цієї функціональності.
 
-### The codePointAt() Method
+### Метод codePointAt()
 
-One method ECMAScript 6 added to fully support UTF-16 is the `codePointAt()` method, which retrieves the Unicode code point that maps to a given position in a string. This method accepts the code unit position rather than the character position and returns an integer value, as these `console.log()` examples show:
+Одним з методів доданих в ECMAScript 6 для повної підтримки UTF-16 є метод `codePointAt()`, який отримує кодові пункти Unicode, які зв’язані з відповідною позицією у рядку. Цей метод отримую позицію кодового пункту замість позиції символу та повертає числове значення, як показує цей приклад `console.log()`:
 
 ```js
 var text = "𠮷a";
