@@ -53,9 +53,9 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the string is three characters long rather than two. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
+Метод `codePointAt()` повертає те саме значення, що й метод `charCodeAt()` за винятком того, що він оперує також не-ОБМ символами. Перший символ змінної `text` є не-ОБМ символом і він представлений двома кодовими блоками, таким чином рядок має довжину трьох символів замість двох. Метод `charCodeAt()` повертає тільки перший кодовий блок для позиції 0, але`codePointAt()` повертає повний кодовий пункт незважаючи на те, що він містить два кодові блоки. Обидва методи повертають таке саме значення для позиції 1 (другий кодовий блок для першого символу) та 2 (символ `"a"`).
 
-Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code points. Here's a function you could write to check:
+Виклик методу `codePointAt()` для символу є найкращим засобом, щоб дізнатися з складається символ з одного або двох кодових блоків. Ось функція, яку ви можете написати для перевірки:
 
 ```js
 function is32Bit(c) {
@@ -66,21 +66,21 @@ console.log(is32Bit("𠮷"));         // true
 console.log(is32Bit("a"));          // false
 ```
 
-The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so any code point above that number must be represented by two code units, for a total of 32 bits.
+Верхня межа 16-бітових символів представлених в шістнадцятковому вигляді є `FFFF`, так що будь-який кодовий пункт вище цього числа має бути представлений двома кодовими блоками, в цілому 32 біта.
 
-### The String.fromCodePoint() Method
+### Метод String.fromCodePoint()
 
-When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string, while `String.fromCodePoint()` produces a single-character string from a given code point. For example:
+Коли ECMAScript надає можливість щось роботи, він також надає можливість роботи те саме у зворотному порядку. Ви можете використати `codePointAt()` щоб визначити кодовій пункт для символу в рядку, в той час коли `String.fromCodePoint()` дає значення символу у рядку відповідно кодового пункту. Наприклад:
 
 ```js
 console.log(String.fromCodePoint(134071));  // "𠮷"
 ```
 
-Think of `String.fromCodePoint()` as a more complete version of the `String.fromCharCode()` method. Both give the same result for all characters in the BMP. There's only a difference when you pass code points for characters outside of the BMP.
+Думайте про `String.fromCodePoint()`, як про вдосконалену версію метода  `String.fromCharCode()`. Обидва дають ті самі результати для символів в межах ОБМ. Різниця буде лише коли ви працюєте з символами за межами ОБМ.
 
-### The normalize() Method
+### Метод normalize()
 
-Another interesting aspect of Unicode is that different characters may be considered equivalent for the purpose of sorting or other comparison-based operations. There are two ways to define these relationships. First, *canonical equivalence* means that two sequences of code points are considered interchangeable in all respects. For example, a combination of two characters can be canonically equivalent to one character. The second relationship is *compatibility*. Two compatible sequences of code points look different but can be used interchangeably in certain situations.
+Іншим цікавим аспектом Unicode є те, що різні символи можуть вважатися еквівалентними для сортування або інших операцій заснованих на порівнянні. Є два шляхи визначення цих відносин. Перший, *канонічна рівність* має на увазі, що дві послідовності кодових пунктів є взаємозамінними у всіх відносинах. Наприклад, комбінація двох символів може бути канонічним еквівалентом одного символу. Друге співвідношення — *сумісність*. Дві сумісні послідовності кодових пунктів можуть виглядати різними, але можуть бути взаємозамінними в певних ситуаціях.
 
 Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the two-character string "ae" may be used interchangeably but are strictly not equivalent unless normalized in some way.
 
