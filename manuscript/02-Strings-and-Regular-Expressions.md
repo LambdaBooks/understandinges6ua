@@ -147,11 +147,11 @@ values.sort(function(first, second) {
 
 Методи не єдині поліпшення, які ECMAScript 6 впроваджує для роботи з рядками Unicode. Стандарт також пропонує два нові елементи синтаксису.
 
-### The Regular Expression u Flag
+### Опція пошуку (flag) u в Регулярних Виразах
 
-You can accomplish many common string operations through regular expressions. But remember, regular expressions assume 16-bit code units, where each represents a single character. To address this problem, ECMAScript 6 defines a `u` flag for regular expressions, which stands for Unicode.
+За допомогою регулярних виразів ви можете виконати багато базових операцій з рядками. Але треба пам’ятати, що регулярні вирази використовують 16-бітні кодові блоки, де кожен представляє один символ. Щоб зарадити цій проблемі, ECMAScript 6 вводить опцію пошуку `u` для регулярних виразів, які працюють з Unicode.
 
-When a regular expression has the `u` flag set, it switches modes to work on characters, not code units. That means the regular expression should no longer get confused about surrogate pairs in strings and should behave as expected. For example, consider this code:
+Коли регулярний вираз має опцію `u`, він переключається в стан роботи з символами, а не з кодовими блоками. Це означає, що регулярний вираз більше не буде збентежений сурогатними парами в рядку і має поводитись як треба. Як приклад, розглянемо цей код:
 
 ```js
 var text = "𠮷";
@@ -161,9 +161,9 @@ console.log(/^.$/.test(text));      // false
 console.log(/^.$/u.test(text));     // true
 ```
 
-The regular expression `/^.$/` matches any input string with a single character. When used without the `u` flag, this regular expression matches on code units, and so the Japanese character (which is represented by two code units) doesn't match the regular expression. When used with the `u` flag, the regular expression compares characters instead of code units and so the Japanese character matches.
+Регулярний вираз `/^.$/` не знаходить жодного рядку, який би складався з одного символу. Використаний без опції `u`, цей регулярний вираз порівнює кодові блоки, тому Японський символ (якій представлений двома кодовими блоками) не відповідає регулярному виразу. Коли ж використовується опція `u`, регулярний вираз порівнює символи замість кодових блоків і таким чином Японський символ відповідає виразу.
 
-Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
+Нажаль, ECMAScript 6 не може визначити скільки кодових пунктів містить рядок, але з визначеною опцією `u`, ви можете використати регулярний вираз, щоб реалізувати це таким чином:
 
 ```js
 function codePointLength(text) {
@@ -175,11 +175,11 @@ console.log(codePointLength("abc"));    // 3
 console.log(codePointLength("𠮷bc"));   // 3
 ```
 
-This example calls `match()` to check `text` for both whitespace and non-whitespace characters, using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
+У цьому прикладі використовується `match()`, щоб перевірити `text` на символи пробілів і не пробілів, за допомогою регулярного виразу, який застосовано глобально та з підтримкою Unicode. Результат містить масив збігів, якщо наявний хоча б один збіг, то довжина масиву буде числом кодових пунктів у рядку. В Unicode, рядки `"abc"` та `"𠮷bc"` мають три символи, тому довжина масиву буде три.
 
-W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully, ECMAScript 7 will include a built-in, efficient way to count code points.
+W> Даний підхід працює, але не дуже швидко, особливо коли його застосувати до довгих рядків. Тому намагайтеся зменшити підрахунок кодових пунктів, якщо це можливо. Дякувати Господу, ECMAScript 7 буде мати вбудований метод підрахунку кодових пунктів.
 
-Since the `u` flag is a syntax change, attempting to use it in JavaScript engines that aren't compatible with ECMAScript 6 throws a syntax error. The safest way to determine if the `u` flag is supported is with a function, like this one:
+Оскільки опція `u` є синтаксичною зміною, спроби використання її в JavaScript інтерпретаторах які не сумісні з ECMAScript 6 будуть провокувати синтаксичну помилку. Найнебезпечнішим шляхом встановити, чи підтримується опція `u` буде функція, на кшталт цієї:
 
 ```js
 function hasRegExpU() {
@@ -192,9 +192,9 @@ function hasRegExpU() {
 }
 ```
 
-This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This syntax is valid even in older JavaScript engines, but the constructor will throw an error if `u` isn't supported.
+Ця функція використовує конструктор `RegExp`, щоб передати опцію `u` як аргумент. Такий синтаксис підтримується навіть старими JavaScript інтерпретаторами, але конструктор буде видавати помилку, якщо `u` не підтримується.
 
-I> If your code still needs to work in older JavaScript engines, always use the `RegExp` constructor when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+I> Якщо ваш код має працювати зі старими JavaScript інтерпретаторами, завжди використовуйте конструктор `RegExp` при використанні опції `u`. Це попередить виникнення синтаксичних помилок і дозволить визначити чи підтримується опція `u`без скасування виконання коду.
 
 ## Other String Changes
 
