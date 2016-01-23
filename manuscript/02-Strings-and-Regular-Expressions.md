@@ -82,16 +82,16 @@ console.log(String.fromCodePoint(134071));  // "𠮷"
 
 Іншим цікавим аспектом Unicode є те, що різні символи можуть вважатися еквівалентними для сортування або інших операцій заснованих на порівнянні. Є два шляхи визначення цих відносин. Перший, *канонічна рівність* має на увазі, що дві послідовності кодових пунктів є взаємозамінними у всіх відносинах. Наприклад, комбінація двох символів може бути канонічним еквівалентом одного символу. Друге співвідношення — *сумісність*. Дві сумісні послідовності кодових пунктів можуть виглядати різними, але можуть бути взаємозамінними в певних ситуаціях.
 
-Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the two-character string "ae" may be used interchangeably but are strictly not equivalent unless normalized in some way.
+Відповідно до цих відносин рядки, які відображають з одного боку той самий текст, можуть мати різну послідовність кодових пунктів. Наприклад символ "æ" та рядок с двох символів "ae" можуть бути використані з взаємним успіхом, але не є повністю еквівалентними, поки їх певним чином не нормалізувати.
 
-ECMAScript 6 supports Unicode normalization forms by giving strings a `normalize()` method. This method optionally accepts a single string parameter indicating one of the  following Unicode normalization forms to apply:
+ECMAScript 6 підтримує нормалізацію форм Unicode, передаючі рядку метод `normalize()`. Цей метод опціонально приймає один параметр у вигляді рядка, який має містити одну з наступних форм Unicode нормалізації для подальшого використання:
 
-* Normalization Form Canonical Composition (`"NFC"`), which is the default
-* Normalization Form Canonical Decomposition (`"NFD"`)
-* Normalization Form Compatibility Composition (`"NFKC"`)
-* Normalization Form Compatibility Decomposition (`"NFKD"`)
+* Форма Нормалізації Канонічна Композиція (`"NFC"`), використовується за замовчуванням
+* Форма Нормалізації Канонічна Декомпозиція (`"NFD"`)
+* Форма Нормалізації Сумісна Композиція (`"NFKC"`)
+* Форма Нормалізації Сумісна Декомпозиція (`"NFKD"`)
 
-It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that when comparing strings, both strings must be normalized to the same form. For example:
+Пояснення відмінностей між цими чотирма формами виходіть за межи цієї книги. Просто майте на увазі, що коли порівнюєте рядки, обидва рядки мають бути нормалізовані до однієї форми. Наприклад:
 
 ```js
 var normalized = values.map(function(text) {
@@ -109,7 +109,7 @@ normalized.sort(function(first, second) {
 });
 ```
 
-This code converts the strings in the `values` array into a normalized form so that the array can be sorted appropriately. You can also sort the original array by calling `normalize()` as part of the comparator, as follows:
+Цей код конвертує рядки в масив `values` у нормалізованній формі, таким чином масив може бути правильно відсортований. Ви також можете відсортувати оригінальний масив, використовуючи метод `normalize()` як частину *компаратора*, наприклад:
 
 ```js
 values.sort(function(first, second) {
@@ -126,7 +126,7 @@ values.sort(function(first, second) {
 });
 ```
 
-Once again, the most important thing to note about this code is that both `first` and `second` are normalized in the same way. These examples have used the default, NFC, but you can just as easily specify one of the others, like this:
+Повторимо це раз, що найважливішим в цьому коді є те, що обидва аргументи, `first` та `second`, будуть нормалізовані однаковим чином. Ці приклади використовують форму нормалізации за замовченням, NFC, але ви можете легко визначити іншу, наприклад:
 
 ```js
 values.sort(function(first, second) {
@@ -143,9 +143,9 @@ values.sort(function(first, second) {
 });
 ```
 
-If you've never worried about Unicode normalization before, then you probably won't have much use for this method now. But if you ever work on an internationalized application, you'll definitely find the `normalize()` method helpful.
+Якщо ви не піклувалися про нормалізацію Unicode раніше, певно тоді цей метод буде не досить корисним для вас. Але якщо ви колись будете працювати з кодом для інтернаціональних програм, метод `normalize()` станеться вам у нагоді.
 
-Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also offers two new syntax elements.
+Методи не єдині поліпшення, які ECMAScript 6 впроваджує для роботи з рядками Unicode. Стандарт також пропонує два нові елементи синтаксису.
 
 ### The Regular Expression u Flag
 
