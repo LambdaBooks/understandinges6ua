@@ -196,19 +196,19 @@ function hasRegExpU() {
 
 I> Якщо ваш код має працювати зі старими JavaScript інтерпретаторами, завжди використовуйте конструктор `RegExp` при використанні опції `u`. Це попередить виникнення синтаксичних помилок і дозволить визначити чи підтримується опція `u`без скасування виконання коду.
 
-## Other String Changes
+## Інші зміни для рядків
 
-JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending JavaScript's capacity to parse strings with new functionality.
+Функціонал рядків JavaScript завжди відставав від аналогічного в інших мовах. Тільки в ECMAScript 5 рядки, нарешті, отримали метод `trim()`. ECMAScript 6 продовжує розвивати функціонал JavaScript для роботи з рядками.
 
-### Methods for Identifying Substrings
+### Методи для визначення підрядків
 
-Developers have used the `indexOf()` method to identify strings inside other strings since JavaScript was first introduced. ECMAScript 6 includes the following three methods, which are designed to do just that:
+З того часу, коли JavaScript був вперше представлений, розробники використовували метод `indexOf()` щоб визначити рядок всередині рядка. ECMAScript 6 містить слідуючі три методи для реалізації цієї дії:
 
-* The `includes()` method returns true if the given text is found anywhere within the string. It returns false if not.
-* The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
-* The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
+* Метод `includes()` повертає `true`, якщо даний тест знайдений деінде у рядку. Та повертає `false`, якщо ні.
+* Метод `startsWith()` повертає `true`, якщо даний текст знайдено на початку рядка. Та повертає `false`, якщо ні.
+* Метод `endsWith()` повертає `true`, якщо даний текст знайдено у кінці рядка. Та повертає `false`, якщо ні.
 
-Each of these methods accepts two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Кожен з цих методів приймає два аргументи: текст, який треба знайти, та необов'язковий аргумент у вигляді індексу рядка з якого треба шукати. Коли надано другий аргумент, `includes()` та `startsWith()` починає пошук з вказаного індексу, в той час як `endsWith()` починає шукати з індексу, який рівний довжині рядка мінус вказаний аргумент; коли другий аргумент не надано, `includes()` та `startsWith()` шукають з початку рядка, в той час як `endsWith()` починає з кінця. Кажучи інакше, другий аргумент зменшує діапазон пошуку в рядку. Ось кілька прикладів цих методів в дії:
 
 ```js
 var msg = "Hello world!";
@@ -226,11 +226,11 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of `msg` (which is the "o" in "Hello"); the call to `msg.endsWith("o", 8)` starts the match at index 4 as well because the `8` argument is subtracted from the string length (12); the call to `msg.includes("o", 8)` starts the match from index 8 (which is the "r" in "world").
+В перших трьох викликах другий аргумент не вказано, тож пошук ведеться по всій довжині рядка. Останні три виклики перевіряють лише частину рядка. Виклик `msg.startsWith("o", 4)` починає шукати з індексу 4 змінної `msg` (що є "o" в "Hello"); виклик`msg.endsWith("o", 8)` починає шукати з індексу 4, тому що аргумент `8` віднімаємо від довжини рядка (12); виклик `msg.includes("o", 8)` починає шукати з індексу 8 (що буде "r" в "world").
 
-While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
+Не зважаючи на те, що ці методи роблять визначення підрядка у рядку легшим, кожен з них повертає лише булеве значення. Якщо вам потрібно знайти дійсну позицію підрядка в рядку, треба використовувати методи `indexOf()` або `lastIndexOf()`.
 
-W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+W> Методи `startsWith()`, `endsWith()`, та `includes()` будуть видавати помилку, якщо ви передасте регулярний вираз замість рядка в якості аргументу. На відміну від `indexOf()` та `lastIndexOf()`, котрі конвертують регулярний вираз в рядок і потім шукають цей рядок.
 
 ### The repeat() Method
 
