@@ -232,9 +232,9 @@ console.log(msg.includes("o", 8));          // false
 
 W> Методи `startsWith()`, `endsWith()`, та `includes()` будуть видавати помилку, якщо ви передасте регулярний вираз замість рядка в якості аргументу. На відміну від `indexOf()` та `lastIndexOf()`, котрі конвертують регулярний вираз в рядок і потім шукають цей рядок.
 
-### The repeat() Method
+### Метод repeat()
 
-ECMAScript 6 also adds a `repeat()` method to strings, which accepts the number of times to repeat the string as an argument. It returns a new string containing the original string repeated the specified number of times. For example:
+ECMAScript 6 також додає до рядків метод `repeat()`, який в якості аргументу приймає число рівне кількості повторів рядку. Він повертає новий рядок, який містить оригінальний рядок повторений вказану кількість разів. Наприклад:
 
 ```js
 console.log("x".repeat(3));         // "xxx"
@@ -242,7 +242,7 @@ console.log("hello".repeat(2));     // "hellohello"
 console.log("abc".repeat(4));       // "abcabcabcabc"
 ```
 
-This method is a convenience function above all else, and it can be especially useful when manipulating text. It's particularly useful in code formatting utilities that need to create indentation levels, like this:
+Цей метод надає важливий функціонал, який може бути надзвичайно корисним при маніпулюванні текстом. Це важливо в інструментах для форматування коду, наприклад:
 
 ```js
 // indent using a specified number of spaces
@@ -253,9 +253,9 @@ var indent = " ".repeat(4),
 var newIndent = indent.repeat(++indentLevel);
 ```
 
-The first `repeat()` call creates a string of four spaces, and the `indentLevel` variable keeps track of the indent level. Then, you can just call `repeat()` with an incremented `indentLevel` to change the number of spaces.
+Перший виклик `repeat()` створить рядок з чотирма пробілами, а змінна `indentLevel` буде записувати рівень відступів. Тепер ви можете просто викликати `repeat()` зі збільшеним `indentLevel`, щоб змінити кількість відступів.
 
-ECMAScript 6 also makes some useful changes to regular expression functionality that don't fit into a particular category. The next section highlights a few.
+ECMAScript 6 також надає деякі корисні зміни до регулярних виразів, які не можна виділити в окрему категорію. Наступний розділ розгляне деякі з них.
 
 ## Other Regular Expression Changes
 
