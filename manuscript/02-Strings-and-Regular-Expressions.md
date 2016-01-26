@@ -399,9 +399,9 @@ console.log(re2.test("AB"));            // false
 
 В цьому коді, `re1` має чутливу до регістру опцію `i`, в той час як `re2` має тільки опцію `g`. Конструктор `RegExp` дублює вираз по шаблону `re1` та змінює опцію `g` на опцію `i`. Без другого аргументу, `re2` буде мати ті самі опції, що й `re1`.
 
-### The `flags` Property
+### Властивість `flags`
 
-Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a new property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
+Разом з доданням нової опції та зміни засобів роботи з опціями, ECMAScript 6 додає нову властивість зв’язану з ними. В ECMAScript 5, ви могли отримати текст регулярного виразу, використовуючи властивість `source`, але щоб отримати рядкове відображення опції, ви мали парсити результат метода `toString()`, як показано нижче:
 
 ```js
 function getFlags(re) {
@@ -415,11 +415,11 @@ var re = /ab/g;
 console.log(getFlags(re));          // "g"
 ```
 
-This code converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
+Цей код конвертує регулярний вираз в рядок, а потім повертає символи знайдені після останнього `/`. Ці символ і є опції.
 
-ECMAScript 6 makes fetching flags easier by adding a `flags` property to go along with the `source` property. Both properties are prototype accessor properties with only a getter assigned, making them read-only. The `flags` property makes inspecting regular expressions easier for both debugging and inheritance purposes.
+ECMAScript 6 робить визначення опцій легше, додаючи властивість `flags` до існуючої властивості `source`. Обидві властивості є засобами доступу до властивостей прототипу, що робить їх доступними тільки до зчитування. Властивість `flags` робить опрацювання регулярних виразів легшим, як для дебагінгу так і для можливостей наслідування.
 
-A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression. For example:
+Додана до ECMAScript 6 в останню чергу, властивість `flags` повертає рядкове відображення будь-якої опції доданої до регулярного виразу, наприклад:
 
 ```js
 var re = /ab/g;
@@ -428,9 +428,9 @@ console.log(re.source);     // "ab"
 console.log(re.flags);      // "g"
 ```
 
-This fetches all flags on `re` and prints them to the console with far fewer lines of code than the `toString()` technique can. Using `source` and `flags` together allows you to extract the pieces of the regular expression that you need without parsing the regular expression string directly.
+Код отримує всі опції від `re` та виводить їх до консолі у значно легший шлях, аніж це робить техніка з використанням методу `toString()`. Використання `source` та `flags` разом дозволить вам отримувати частини регулярного виразу без використання технік з парсингом.
 
-All of the changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a new type of literal to the table that makes strings more flexible.
+Всі зміни до рядків і регулярних виразів, які розглянуті в цьому розділі є безумовно потужними, але ECMAScript 6 вдосконалює ваші можливості роботи з рядками ще більше. Він добавляє новий літерал до таблиці, що робить рядки більш гнучкими.
 
 ## Template Literals
 
