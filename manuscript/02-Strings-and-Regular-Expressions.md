@@ -361,14 +361,14 @@ function hasRegExpY() {
 
 ### Duplicating Regular Expressions
 
-In ECMAScript 5, you can duplicate regular expressions by passing them into the `RegExp` constructor like this:
+В ECMAScript 5, ви можете дублювати регулярні вирази, передаючи до конструктору `RegExp` таким чином:
 
 ```js
 var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
-The `re2` variable is justa  copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, an error is thrown, as in this example:
+Змінна `re2` є простою копією змінної `re1`. Але якщо ви передасте другий аргумент до конструктору `RegExp`, який буде визначати опцію для вашого регулярного виразу, ви отримаєте помилку, як в цьому прикладі:
 
 ```js
 var re1 = /ab/i,
@@ -377,7 +377,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1, "g");
 ```
 
-If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and overrides whichever flags are present on the first argument. For example:
+Якщо ви виконаєте цей код в оточенні ECMAScript 5, ви отримаєте помилку, яка казатиме, що другий аргумент не може бути використаний, якщо перший аргумент є регулярним виразом . ECMAScript 6 змінює цю поведінку таким чином, що другий аргумент є дозволеним та  буде переписувати будь-яку опцію, яка буде міститися у першому аргументі. Наприклад:
 
 ```js
 var re1 = /ab/i,
@@ -397,7 +397,7 @@ console.log(re2.test("AB"));            // false
 
 ```
 
-In this code, `re1` has the case-insensitive `i` flag while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and substituted the `g` flag for the `i` flag. Without the second argument, `re2` would have the same flags as `re1`.
+В цьому коді, `re1` має чутливу до регістру опцію `i`, в той час як `re2` має тільки опцію `g`. Конструктор `RegExp` дублює вираз по шаблону `re1` та змінює опцію `g` на опцію `i`. Без другого аргументу, `re2` буде мати ті самі опції, що й `re1`.
 
 ### The `flags` Property
 
