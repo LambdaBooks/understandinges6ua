@@ -257,13 +257,13 @@ var newIndent = indent.repeat(++indentLevel);
 
 ECMAScript 6 також надає деякі корисні зміни до регулярних виразів, які не можна виділити в окрему категорію. Наступний розділ розгляне деякі з них.
 
-## Other Regular Expression Changes
+## Інші зміни у регулярних виразах
 
-Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, they haven't changed much in recent versions. ECMAScript 6, however, makes several improvements to regular expressions to go along with the updates to strings.
+регулярні вирази важлива частина роботи з рядками в JavaScript, і як більшість частин язику, вони не змінювались істотним чином у попередніх версіях. ECMAScript 6, пропонує деякі покрашення для регулярних виразів, принаймні, щоб йти поруч рядками.
 
-### The Regular Expression y Flag
+### Опція (flag) `y` для регулярних виразів
 
-ECMAScript 6 standardized the `y` flag after it was implemented in Firefox as a proprietary extension to regular expressions. The `y` flag affects a regular expression search's `sticky` property, and it tells the search to start matching characters in a string at the position specified by the regular expression's `lastIndex` property. If there is no match at that location, then the regular expression stops matching. To see how this works, consider the following code:
+ECMAScript 6 зробив опцію `y`стандартом flag після того, як вона була запроваджена в Firefox в якості пропрієтароного доповнення для опрацювання регулярних виразів. Опція `y` стосується такої властивості регулярних виразів, як `sticky`, і він каже пошуку почати шукати відповідні символи в рядку з позиції, зазначеної у властивості `lastIndex` регулярного виразу. Якщо в цій позиції немає збігів, то регулярний вираз зупиняє пошук відповідностей. Щоб побачити, як це працює, розглянемо наступний код:
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -291,11 +291,11 @@ console.log(globalResult[0]);   // "hello2 "
 console.log(stickyResult[0]);   // Error! stickyResult is null
 ```
 
-This example has three regular expressions. The expression in `pattern` has no flags, the one in `globalPattern` uses the `g` flag, and the one in `stickyPattern` uses the `y` flag. In the first trio of `console.log()` calls, all three regular expressions should return `"hello1 "` (with a space at the end).
+Цей приклад має три регулярні вирази. Вираз в `pattern` не має опцій, другий в `globalPattern` використовує опцію `g`, останній `stickyPattern` використовує опцію `y`. У перших трьох викликах `console.log()`, усі три регулярні вирази мають повернути  `"hello1 "` (з пробілом у кінці).
 
-After that, the `lastIndex` property is changed to 1 on all three patterns, meaning that the regular expression should start matching from the second character on all of them. The regular expression with no flags completely ignores the change to `lastIndex` and still matches `"hello1 "` without incident. The regular expression with the `g` flag goes on to match `"hello2 "` because it is searching forward from the second character of the string (`"e"`). The sticky regular expression doesn't match anything beginning at the second character so `stickyResult` is `null`.
+Після цього властивість `lastIndex` було змінено на 1 у всіх трьох шаблонах, маючи на увазі, що регулярний вираз повинен шукати збіги з другого символу у всіх випадках. Регулярний вираз без опцій повністю ігнорує зміни у `lastIndex` та все ще повертає `"hello1 "` без проблем. Регулярний вираз з опцією `g` повертає збіг з `"hello2 "`, тому що він починає пошук з другого символу рядка (`"e"`). Регулярний вираз з опцією `y` не знаходить жодних збігів починаючи з другого символу рядка, тому `stickyResult` є `null`.
 
-The sticky flag saves the index of the next character after the last match in `lastIndex` whenever an operation is performed. If an operation results in no match, then `lastIndex` is set back to 0. The global flag behaves the same way, as demonstrated here:
+Опція `y` зберігає індекс слідуючого символу після останнього в `lastIndex` під час виконання операції. Якщо в результаті операції не має збігів, тоді `lastIndex` повертається до 0. Опція `g` поводиться таким чином, як показано тут:
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -327,14 +327,14 @@ console.log(globalPattern.lastIndex);   // 14
 console.log(stickyPattern.lastIndex);   // 14
 ```
 
-The value of `lastIndex` changes to 7 after the first call to `exec()` and to 14 after the second call, for both the `stickyPattern` and `globalPattern` variables.
+Значення `lastIndex` змінюється на 7 після першого виклику `exec()` та на 14 після другого виклику, як для змінної `stickyPattern` так і для `globalPattern`.
 
-There are two more subtle details about the sticky flag to keep in mind:
+Є дві важливі деталі, які треба мати на увазі стосовно опціі `y`:
 
-1. The `lastIndex` property is only honored when calling methods that exist on the regular expression object, like the `exec()` and `test()` methods. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
-1. When using the `^` character to match the start of a string, sticky regular expressions only match from the start of the string (or the start of the line in multiline mode). While `lastIndex` is 0, the `^` makes a sticky regular expression no different from a non-sticky one. If `lastIndex` doesn't correspond to the beginning of the string in single-line mode or the beginning of a line in multiline mode, the sticky regular expression will never match.
+1. Властивість `lastIndex` буде враховуватися тільки при використанні з методами, які існують для регулярних виразів, на кшталт `exec()` або `test()`. Передавання  регулярного виразу до рядкового методу, як `match()`, не поверне результату.
+2. Коли ми використовуємо символ `^` щоб початі пошук з початку рядка, регулярний вираз з опцією `y` шукає збіги тільки з початку рядка (або початку лінії в багатолінійному коді). Якщо `lastIndex` є 0, символ `^` робить регулярний вираз такм самим як і загального типу. Якщо `lastIndex` не відповідає початку рядка або початку лінії в багатолінійному коді, регулярний вираз з опцією `y` ніколи не поверне збіг.
 
-As with other regular expression flags, you can detect the presence of `y` by using a property. In this case, you'd check the `sticky` property, as follows:
+Так само як і з іншими опціями регулярних виразів, ви можете визначити наявність опції `y`, використовуючи властивість `sticky`. В цьому разі ви маєте перевірити наявність властивості `sticky`, як показано у коді:
 
 ```js
 var pattern = /hello\d/y;
@@ -342,9 +342,9 @@ var pattern = /hello\d/y;
 console.log(pattern.sticky);    // true
 ```
 
-The `sticky` property is set to true if the sticky flag is present, and the property is false if not. The `sticky` property is read-only based on the presence of the flag and cannot be changed in code.
+Перевірка на властивість `sticky` буде повертати `true`, якщо опція `y` наявна у виразі, та `false`, якщо ні. Властивість `sticky` є доступною тільки для читання і не може буди зміненою в коді.
 
-Similar to the `u` flag, the `y` flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the following approach to detect support:
+Так само як опція `u`, опція `y` є синтаксичною зміною, тому вона буде викликати синтаксичну помилку у старих інтерпретаторах JavaScript. Ви можете використати наступний підхід для перевірки підтримки:
 
 ```js
 function hasRegExpY() {
@@ -357,7 +357,7 @@ function hasRegExpY() {
 }
 ```
 
-Just like the `u` check, this returns false if it's unable to create a regular expression with the `y` flag. In one final similarity to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
+Так само як перевірка на опцію `u`, код повертає `false`, якщо невзмозі створити регулярний вираз з опцією `y`. Подібно до використання `u`, якщо вам треба використати `y` в коді, який обробляється у старих інтерпретаторах JavaScript, будьте певними, що використовуєте конструктор `RegExp`, коли визначаєте регулярний вираз, щоб уникнути помилок.
 
 ### Duplicating Regular Expressions
 
