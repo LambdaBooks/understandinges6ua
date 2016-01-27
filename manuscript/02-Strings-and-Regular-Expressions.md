@@ -432,19 +432,19 @@ console.log(re.flags);      // "g"
 
 Всі зміни до рядків і регулярних виразів, які розглянуті в цьому розділі є безумовно потужними, але ECMAScript 6 вдосконалює ваші можливості роботи з рядками ще більше. Він добавляє новий літерал до таблиці, що робить рядки більш гнучкими.
 
-## Template Literals
+## Літерали Шаблону
 
-JavaScript's strings have always been fairly limited when compared to those in other languages. Since JavaScript's inception, strings have lacked the methods covered so far in this chapter and string concatenation is as simple as possible. *Template literals* add new syntax for creating domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. DSLs are languages designed for a specific, narrow purpose (as opposed to JavaScript, which is a general-purpose language) and the ability to create DSLs inside of JavaScript was desired to deal with some of the more complex problems facing JavaScript developers. The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
+Рядки в JavaScript's завжди були досить обмеженими в порівнянні з іншими мовами. З початку становлення JavaScript, рядкам не вистачало методів розглянутих вище в цьому розділі, а конконтенація рядків є досить простою. *Літерали шаблону* додаюсть новий синтаксис для створення специфічної до домену мови (DSLs) для того, щоб працювати з контентом у біль безпечний спосіб ніж ми робимо це зараз. DSLs мова розроблена для специфічного, вузького використання (на відміну від JavaScript, який є мовою широкого використання) і можливість створювати DSLs в середені JavaScript була дуже бажаною для розробників JavaScript, для розв’язання найбільш складних проблем. Вікі ECMAScript пропонує наступне визначення для  [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
 
-> This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
+> Ця схема розширює синтаксис ECMAScript додаванням синтаксичного цукру, щоб дозволити іншим бібліотекам впроваджувати DSLs для легкого створення запитів та маніпулювання контентом з інших мов, які стійкі для ін’єкцій та атак, як XSS, SQL Ін’єкції, та інші.
 
-In reality, though, template literals are ECMAScript 6's answer to the following features that JavaScript lacked all the way through ECMAScript 5:
+Насправді, літерали шаблонів є відповіддю ECMAScript 6' усім недолікам які мав JavaScript в цьому плані з моменту виходу ECMAScript 5:
 
-* **Multiline strings** A formal concept of multiline strings.
-* **Basic string formatting** The ability to substitute parts of the string for values contained in variables.
-* **HTML escaping** The ability to transform a string such that it is safe to insert into HTML.
+* **Богатолінійні рядки** формальна концепція багатолінійних рядків.
+* **Базове форматування рядків** можливість заміщувати частину рядка значеннями з певних змінних.
+* **HTML escaping** можливість трансформування рядки, щоб безпечно вставити іх в HTML.
 
-Rather than trying to add more functionality to JavaScript's already-existing strings, template literals represent an entirely new approach to solving these problems.
+Замість того, щоб додати більше можливостей існуючому функціоналу по опрацюванню рядків JavaScript, літерали рядків пропонують повністю новий підхід для вирішення цих проблем.
 
 ### Basic Syntax
 
