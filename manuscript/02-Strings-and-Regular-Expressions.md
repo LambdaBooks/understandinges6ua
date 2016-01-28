@@ -359,7 +359,7 @@ function hasRegExpY() {
 
 Так само як перевірка на опцію `u`, код повертає `false`, якщо невзмозі створити регулярний вираз з опцією `y`. Подібно до використання `u`, якщо вам треба використати `y` в коді, який обробляється у старих інтерпретаторах JavaScript, будьте певними, що використовуєте конструктор `RegExp`, коли визначаєте регулярний вираз, щоб уникнути помилок.
 
-### Duplicating Regular Expressions
+### Дублювання Regular Expressions
 
 В ECMAScript 5, ви можете дублювати регулярні вирази, передаючи до конструктору `RegExp` таким чином:
 
@@ -472,13 +472,13 @@ console.log(message.length);        // 14
 
 Ви не повинні екранувати подвійні або одинарні лапки в синтаксисі літералу шаблона.
 
-### Multiline Strings
+### Багатолінійні рядки
 
-JavaScript developers have wanted a way to create multiline strings since the first version of the language. But when using double or single quotes, strings must be completely contained on a single line.
+JavaScript розробники шукали можливість створювати багатолінійні рядки з моменту створення мови. Але коли ми використовуємо подвійні або одинарні лапки, рядок має бути розташований тільки на одній лінії коду.
 
-#### Pre-ECMAScript 6 Workarounds
+#### Обхідні шляхи до появи ECMAScript 6
 
-Thanks to a long-standing syntax bug, JavaScript does have a workaround. You can create multiline strings if there's a backslash (`\`) before a newline. Here's an example:
+Дякуючи давно відомому синтаксичному багу, JavaScript має обхідні шлячи. Ви можете створювати багатолінійні рядки, якщо перед новою лінією коду ставити зворотній слеш (`\`). Ось, наприклад:
 
 ```js
 var message = "Multiline \
@@ -487,7 +487,7 @@ string";
 console.log(message);       // "Multiline string"
 ```
 
-The `message` string has no newlines present when printed to the console because the backslash is treated as a continuation rather than a newline. In order to show a newline in output, you'd need to manually include it:
+Рядок `message` не має нових ліній в консолі, тому що зворотній слеш сприймаєтеся як продовження поточної лінії а не початок нової. Для того щоб визначити нову лінію, вам потрібно її позначити:
 
 ```js
 var message = "Multiline \n\
@@ -497,9 +497,9 @@ console.log(message);       // "Multiline
                             //  string"
 ```
 
-This should print `Multiline String` on two separate lines in all major JavaScript engines, but the behavior is defined as a bug and many developers recommend avoiding it.
+Це має вивести `Multiline String` на двох роздільних лініях у більшості JavaScript інтерпретаторів, але по суті така поведінки визначається як баг, і більшість розробників радять не користатися тикам трюком.
 
-Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
+Іншими шляхами створити багатолінійні рядки до появи ECMAScript 6 було звернення до масивів або конкантенація рядків, наприклад:
 
 ```js
 var message = [
@@ -511,11 +511,11 @@ let message = "Multiline \n" +
     "string";
 ```
 
-All of the ways developers worked around JavaScript's lack of multiline strings left something to be desired.
+Але всі ці обхідні шляхи не є те, що насправді було потрібно розробникам.
 
-#### Multiline Strings the Easy Way
+#### Багатолінійні рядки простим чином
 
-ECMAScript 6's template literals make multiline strings easy because there's no special syntax. Just include a newline where you want, and it shows up in the result. For example:
+Літерали шаблонів ECMAScript 6 роблять багатолінійні рядки досить легко доступними, тому що не мають спеціального синтаксису. Просто робіть нову лінію де вам треба і вона буде оброблена. Наприклад:
 
 ```js
 let message = `Multiline
@@ -526,7 +526,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 16
 ```
 
-All whitespace inside the backticks is part of the string, so be careful with indentation. For example:
+Усі пробіли всередині зворотних лапок є частиною рядка, тому будьте уважними в відступами. Наприклад:
 
 ```js
 let message = `Multiline
@@ -537,7 +537,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 31
 ```
 
-In this code, all whitespace before the second line of the template literal is considered part of the string itself. If making the text line up with proper indentation is important to you, then consider leaving nothing on the first line of a multiline template literal and then indenting after that, as follows:
+У цьому коді, всі пробіли перед другою лінією шаблону буквальному вважається частиною самого рядка. Якщо зробити текстову лінію з правильними відступами для вас важливо, потрібно залиши пустою першу лінію багатолінійного літералу шаблону, а потім починати робити відступи в нових лініях, а саме:
 
 ```js
 let html = `
@@ -546,9 +546,9 @@ let html = `
 </div>`.trim();
 ```
 
-This code begins the template literal on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial empty line.
+Цей код починає літерал шаблону на першій лінії, але вона не має ніякого тексту аж до другої. Теги HTML мають відступи для гарного вигляду, а потім метод `trim()` викликається щоб видалити пусту першу лінію.
 
-A> If you prefer, you can also use `\n` in a template literal to indicate where a newline should be inserted:
+A> Якщо ви бажаєте, ви також можете використовувати символ `\n` в літералі шаблону, щоб показати де має буду створена нова лінія:
 A> {:lang="js"}
 A> ~~~~~~~~
 A>
