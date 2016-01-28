@@ -446,9 +446,9 @@ console.log(re.flags);      // "g"
 
 Замість того, щоб додати більше можливостей існуючому функціоналу по опрацюванню рядків JavaScript, літерали рядків пропонують повністю новий підхід для вирішення цих проблем.
 
-### Basic Syntax
+### Загальний синтаксис
 
-At their simplest, template literals act like regular strings delimited by backticks (`` ` ``) instead of double or single quotes. For example, consider the following:
+Дякуючи своїй простоті, літерали шаблону працюють як звичайні рядка оточенні зворотніми лапками (`` ` ``) замість подвійних або одинарних. Розглянемо цей приклад:
 
 ```js
 let message = `Hello world!`;
@@ -458,9 +458,9 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only is used to create the string value, which is then assigned to the `message` variable.
+Цей код показує, що змінна `message` містить звичайний рядок JavaScript. В даному випадку синтаксис літералу шаблона використано тільки для того, щоб створити рядкове значення, яке згодом буде прив’язане до змінної `message`.
 
-If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
+Якщо ви хочете використовувати зворотні лапки в подальшому у рядку, тоді треба екранувати їх зворотнім слешем (`\`), як в цьому варіанті змінної `message`:
 
 ```js
 let message = `\`Hello\` world!`;
@@ -470,7 +470,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 14
 ```
 
-There's no need to escape either double or single quotes inside of template literals.
+Ви не повинні екранувати подвійні або одинарні лапки в синтаксисі літералу шаблона.
 
 ### Multiline Strings
 
