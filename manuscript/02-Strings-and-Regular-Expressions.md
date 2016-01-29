@@ -559,11 +559,11 @@ A>                                 //  string"
 A> console.log(message.length);    // 16
 A> ~~~~~~~~
 
-### Making Substitutions
+### Робимо заміщення
 
-At this point, template literals may look like fancier versions of normal JavaScript strings. The real difference between the two lies in template literal *substitutions*. Substitutions allow you to embed any valid JavaScript expression inside a template literal and output the result as part of the string.
+В цьому сенсі, можуть виглядати як більш вдосконалена версія звичайних JavaScript рядків. Реальна різниця між ними якраз і міститься в літералі шаблону *заміщення*. Заміщення дозволяють вам помістити любий валідний JavaScript вираз в середину літералу шаблона і вивести результат як частину рядка.
 
-Substitutions are delimited by an opening `${` and a closing `}` that can have any JavaScript expression inside. The simplest substitutions let you embed local variables directly into a resulting string, like this:
+Заміщення оточені відкриваючим `${` і закриваючим `}`, що може містити будь-який JavaScript вираз. Найпростіше заміщення дозволить вам помістити локальні змінні в підсумковий рядок , наприклад:
 
 ```js
 let name = "Nicholas",
@@ -572,11 +572,11 @@ let name = "Nicholas",
 console.log(message);       // "Hello, Nicholas."
 ```
 
-The substitution `${name}` accesses the local variable `name` to insert `name` into the `message` string. The `message` variable then holds the result of the substitution immediately.
+Заміщення в `${name}` має доступ до локальної змінної `name` щоб вставити `name` в рядок `message`. Змінна `message` одразу ж виводить результат заміщення.
 
-I> A template literal can access any variable accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template literal throws an error in both strict and non-strict modes.
+I> Літерал шаблону може мати доступ до будь-якої наявної змінної в області видимості, до якої він належить. Спроба використати в літералі шаблону не визначену змінну призведе до помилки як у строгому, так і не строгому режимі.
 
-Since all substitutions are JavaScript expressions, you can substitute more than just simple variable names. You can easily embed calculations, function calls, and more. For example:
+Оскільки всі заміщення є JavaScript виразами, ви можете заміщувати не тільки прості імена змінних. Ви можете легко використати результати обчислень або функцій. Наприклад:
 
 ```js
 let count = 10,
@@ -586,7 +586,7 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This code performs a calculation as part of the template literal. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
+Цей код виконує обчислення, як частину літералу шаблону. До змінних `count` та`price` застосовується операція множення, щоб отримати результат, а потім форматування до двох символів після комі за допомогою `.toFixed()`. Знак долару перед другим заміщенням виводиться як є, тому що після нього немає відкриваючої фігурної дужки.
 
 ### Tagged Templates
 
