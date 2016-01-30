@@ -588,21 +588,21 @@ console.log(message);       // "10 items cost $2.50."
 
 Цей код виконує обчислення, як частину літералу шаблону. До змінних `count` та`price` застосовується операція множення, щоб отримати результат, а потім форматування до двох символів після комі за допомогою `.toFixed()`. Знак долару перед другим заміщенням виводиться як є, тому що після нього немає відкриваючої фігурної дужки.
 
-### Tagged Templates
+### Теговані шаблони
 
-Now you've seen how template literals can create multiline strings and insert values into strings without concatenation. But the real power of template literals comes from tagged templates. A *template tag* performs a transformation on the template literal and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, as shown here:
+Ви побачили як літерали шаблону можуть створювати багатолінійні рядки та вставляти значення в рядки без конкантенації. Але справжню силу літералів шаблону можна відчути з тегованими шаблонами. *Тег шаблону* виконує трансформацію літералу шаблона і повертає остаточне значення рядка. Такий тег визначається на початку рядка, одразу перед першим символом `` ` ``, як показано тут:
 
 ```js
 let message = tag`Hello world`;
 ```
 
-In this example, `tag` is the template tag to apply to the `` `Hello world` `` template literal.
+В цьому прикладі, `tag` є тегом шаблону щоб застосувати літерал шаблону `` `Hello world` ``.
 
-#### Defining Tags
+#### Визначаємо теги
 
-A *tag* is simply a function that is called with the processed template literal data. The tag receives data about the template literal as individual pieces and must combine the pieces to create the result. The first argument is an array containing the literal strings as interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution.
+Насправді *тег* це просто функція яка виконується при обробці даних літералу шаблона. Тег отримує данні про літерали шаблону як окремі частини коду і має зібрати ці частини разом. Перший аргумент це масив рядків літералу як їх інтерпретує JavaScript. Кожен наступний аргумент це відтворене значення кожного заміщення.
 
-Tag functions are typically defined using rest arguments as follows, to make dealing with the data easier:
+Функції тегів як правило викликаються з аргументами, як показано нижче, щоб полегшити роботу з даними:
 
 ```js
 function tag(literals, ...substitutions) {
@@ -610,7 +610,7 @@ function tag(literals, ...substitutions) {
 }
 ```
 
-To better understand what gets passed to tags, consider the following:
+Щоб краще зрозуміти що передається до тегів, розглянемо наступне:
 
 ```js
 let count = 10,
@@ -618,17 +618,17 @@ let count = 10,
     message = passthru`${count} items cost $${(count * price).toFixed(2)}.`;
 ```
 
-If you had a function called `passthru()`, that function would receive three arguments. First, it would get a `literals` array, containing the following elements:
+Якщо ви матимете функцію з назвою `passthru()`, то вона отримає три аргументи. По-перше, вона отримає масив `literals`, який матиме наступні елементи:
 
-* The empty string before the first substitution (`""`)
-* The string after the first substitution and before the second (`" items cost $"`)
-* The string after the second substitution (`"."`)
+* Пустий рядок перед першим заміщенням (`""`)
+* Рядок після першого і перед другим заміщенням (`" items cost $"`)
+* Рядок після другого заміщення (`"."`)
 
-The next argument would be `10`, which is the interpreted value for the `count` variable. This becomes the first element in a `substitutions` array. The final argument would be `"2.50"`, which is the interpreted value for `(count * price).toFixed(2)` and the second element in the `substitutions` array.
+Наступний аргумент буде `10`, що є значенням змінної `count`. Він стає перши елементом в масиві `substitutions`. Останнім аргументом буде `"2.50"`, що є здобутим значенням для `(count * price).toFixed(2)` та другого елементу в масиві `substitutions`.
 
-Note that the first item in `literals` is an empty string. This ensures that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which means the expression `substitutions.length === literals.length - 1` is always true.
+Зауважте, що перший елемент в `literals` є пустий рядок. Таким чином мі впевнені, що  `literals[0]` є завжди початком рядка, так само як `literals[literals.length - 1]` завжди кінець рядка. Заміщень завжди на один менше ніж літералів, таким чином вираз `substitutions.length === literals.length - 1` завжди правильний.
 
-Using this pattern, the `literals` and `substitutions` arrays can be interwoven to create a resulting string. The first item in `literals` comes first, the first item in `substitutions` is next, and so on, until the string is complete. As an example, you can mimic the default behavior of a template literal by alternating values from these two arrays:
+Використовуючи цей шаблон, масиви `literals` та `substitutions` можуть бути зв’язані щоб утворити підсумковий рядок. Перший елемент в `literals` йде першим, перший елемент `substitutions` йде за ним, і так далі, поки рядок не буде завершено. Наприклад, ви можете імітувати поведінку літералу шаблону, чергуючи значення цих двох масивів:
 
 ```js
 function passthru(literals, ...substitutions) {
@@ -653,13 +653,13 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This example defines a `passthru` tag that performs the same transformation as the default template literal behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of the `substitutions` array. This works because the relationship between `literals` and `substitutions` is well-defined in ECMAScript 6.
+В цьому прикладі визначається  тег `passthru` який виконує ту ж саму трансформацію що й літерал шаблону по замовчуванню. Єдина хитрість тут — це використання `substitutions.length` для циклу замість `literals.length` щоб уникнути ненавмисного виходу за рамки масиву `substitutions`. Це працює тому, що відношення між  `literals` та `substitutions` добре визначені в ECMAScript 6.
 
-I> The values contained in `substitutions` are not necessarily strings. If an expression evaluates to a number, as in the previous example, then the numeric value is passed in. Determining how such values should output in the result is part of the tag's job.
+I> Значення в `substitutions` не обов'язково мають бути рядками. Якщо у виразі виконується число, як в попередньому прикладі, тоді буде передаватися числове значення. Визначення кількості значень, що мають буду виведені в результаті частина роботи тегів.
 
-#### Using Raw Values in Template Literals
+#### Використання вихідних (первинних) значень у літералах шаблону
 
-Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to use the built-in `String.raw()` tag. For example:
+Теги шаблонів також мають доступ до первинної інформації, що в першу чергу означає доступ до символів екранування перш ніж вони будуть трансформовані в їх символьні еквіваленти. Найпростішим засобом для роботи з первинними значеннями рядків е використання вбудованого тегу `String.raw()`. Наприклад:
 
 ```js
 let message1 = `Multiline\nstring`,
@@ -670,9 +670,9 @@ console.log(message1);          // "Multiline
 console.log(message2);          // "Multiline\\nstring"
 ```
 
-In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (the slash and `n` characters). Retrieving the raw string information like this allows for more complex processing when necessary.
+В цьому коді, `\n` в `message1` інтерпретується як символ нової лінії, в той час як `\n` в `message2` інтерпретується в його первинній формі `"\\n"` (символи слушу й `n`). Доступ до первинної інформації, як в цьому прикладі, дозволяє виконувати більш комплексні операції за необхідністю.
 
-The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called `raw`. The `raw` property is an array containing the raw equivalent of each literal value. For example, the value in `literals[0]` always has an equivalent `literals.raw[0]` that contains the raw string information. Knowing that, you can mimic `String.raw()` using the following code:
+Первинна інформація рядка також передається в теги шаблону. Перший аргумент в функції тегу — масив з екстра властивістю незваною `raw`. Властивість `raw` є масивом який вміщає первинній еквівалент кожного значення літералу. Наприклад, Значення в `literals[0]` завжди має еквівалент `literals.raw[0]`, який має містить інформацію рядка. Знаючи це, ви можете імітувати `String.raw()`, використовуючи наступний код:
 
 ```js
 function raw(literals, ...substitutions) {
@@ -696,7 +696,7 @@ console.log(message);           // "Multiline\\nstring"
 console.log(message.length);    // 17
 ```
 
-This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
+Код використовує `literals.raw` замість `literals` щоб вивести результуючий рядок. Це означає що будь-які символи екрануються, в тому числі кодові пункти  Unicode, мають бути повернені в їх первинній формі. Первинна форма рядків стане у нагоді, коли ви хочете вивести рядок, який містить код в якому ви хочете вивести екрановані символи (наприклад, коли ви хочете генерувати документацію про якийсь код, ви можливо захочете вивести код у такому вигляді як він є).
 
 ## Summary
 
