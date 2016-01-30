@@ -698,14 +698,14 @@ console.log(message.length);    // 17
 
 Код використовує `literals.raw` замість `literals` щоб вивести результуючий рядок. Це означає що будь-які символи екрануються, в тому числі кодові пункти  Unicode, мають бути повернені в їх первинній формі. Первинна форма рядків стане у нагоді, коли ви хочете вивести рядок, який містить код в якому ви хочете вивести екрановані символи (наприклад, коли ви хочете генерувати документацію про якийсь код, ви можливо захочете вивести код у такому вигляді як він є).
 
-## Summary
+## Резюме
 
-Full Unicode support allows JavaScript to deal with UTF-16 characters in logical ways. The ability to transfer between code point and character via `codePointAt()` and `String.fromCodePoint()` is an important step for string manipulation. The addition of the regular expression `u` flag makes it possible to operate on code points instead of 16-bit characters, and the `normalize()` method allows for more appropriate string comparisons.
+Повна підтримка Unicode дозволяє JavaScript працювати з символами UTF-16 логічним чином. Можливість переходів між кодовими пунктами та символами через `codePointAt()` та `String.fromCodePoint()` є важливим кроком в маніпуляціях з рядками. Додавання опції `u` до регулярних виразів дає можливість оперувати кодовими пунктами замість 16-бітних символів, а метод `normalize()` дозволяє краще порівнювати рядки.
 
-ECMAScript 6 also added new methods for working with strings, allowing you to more easily identify a substring regardless of its position in the parent string. More functionality was added to regular expressions, too.
+ECMAScript 6 також додає нові методи для роботи з рядками, дозволяючи вам краще визначати субрядки, давлячись на їх позицію в батьківському рядку. Також більше функціоналу було надано регулярним виразам.
 
-Template literals are an important addition to ECMAScript 6 that allows you to create domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template literals means that developers have a safer tool than string concatenation for composing long strings with variables.
+Літерали шаблонів є важливим додатком до ECMAScript 6, що дозволяє вам створювати специфічні до домену мови (DSLs), щоб полегшити створення рядків. Можливість вставляти змінні безпосередньо в літерали шаблонів означає, що розробники мають безпечніший інструмент ніж  конкатенація рядків при поєднанні довгих рядків зі змінними.
 
-Built-in support for multiline strings also makes template literals a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template literal, you can still use `\n` and other character escape sequences.
+Вбудована підтримка багатолінійних рядків також робить літерали шаблонів корисним доповненням до рядків JavaScript, які досі не мали такої можливості. Не зважаючи на можливість використання нових ліній безпосередньо всередині літералу шаблона, ви все ще можете використовувати `\n` та інші екрановані символи.
 
-Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template literal as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
+Теги шаблону є найбільш важливою частиною цього покращення для створення DSLs. Теги — це функції, що отримують частини літералу шаблону як аргументи. В подальшому ви можете використовувати ці данні, щоб повернути відповідне значення рядка. Впроваджені данні включають літерали, їхні вихідні еквіваленти, та любі значення заміщень. Ці частини інформації в подальшому можуть буди використані, щоб  визначити коректний вивід тегу.
