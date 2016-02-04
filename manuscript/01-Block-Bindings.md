@@ -1,10 +1,10 @@
-# Block Bindings
+# Блочне зв'язування
 
-Traditionally, the way variable declarations work has been one tricky part of programming in JavaScript. In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Where your variables are actually created depends on how you declare them, and ECMAScript 6 offers options to make controlling scope easier. This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6, and then offers some best practices for using them.
+Так склалось, що одна із найхитріших частин програмування на JavaScript - спосіб, яким оголошуються змінні. У більшості С-подібних мовах, змінні (або їх *зв'язування*) створюються там, де їх оголошують. Проте, в JavaScript це не зовсім так. Де ваші змінні створюються залежить від того, як ви їх оголосили, і ECMAScript 6 надає вам більш простий спосіб контролювати область видимості. Ця глава ілюструє чому класичне `var` оголошення може заплутати, вводить блочне зв'язування в ECMAScript 6, а тоді пропонує деякі рекомендації їх використання.
 
-## Var Declarations and Hoisting
+## Var-оголошення та виринання
 
-Variable declarations using `var` are treat as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
+Використовуючи `var` оголошення, змінна переміщається на початок функції (або в глобальну область видимості, якщо оголошення відбулось поза функцією) не залежно від того, де воно відбулось насправді - це називається *виринання*. Для демонстрації цієї поведінки, розглянемо наступну функцію:
 
 ```js
 function getValue(condition) {
@@ -12,21 +12,21 @@ function getValue(condition) {
     if (condition) {
         var value = "blue";
 
-        // other code
+        // інший код
 
         return value;
     } else {
 
-        // value exists here with a value of undefined
+        // тут змінна value буде існувати зі значенням undefined
 
         return null;
     }
 
-        // value exists here with a value of undefined
+    // тут змінна value буде існувати зі значенням undefined
 }
 ```
 
-If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. In fact, the variable `value` is created regardless. Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
+Якщо ви не знайомі з JavaScript, скоріш за все ви очікуєте, що змінна `value` буде створена тільки тоді, коли `condition` буде рівне true. Насправді `value` буде створена не залежно від цього. Під капотом рушій JavaScript так змінює функцію `getValue`, що вона виглядає так:
 
 ```js
 function getValue(condition) {
@@ -36,7 +36,7 @@ function getValue(condition) {
     if (condition) {
         value = "blue";
 
-        // other code
+        // інший код тут
 
         return value;
     } else {
@@ -46,22 +46,22 @@ function getValue(condition) {
 }
 ```
 
-The declaration of `value` is hoisted to the top, while the initialization remains in the same spot. That means the variable `value` is actually still accessible from within the `else` clause. If accessed from there, the variable would just have a value of `undefined` because it hasn't been initialized.
+Хоч змінна `value` виринає вгорі блоку, ініціалізація відбувається там же. Це означає, що змінна `value` все одно доступна в блоці `else`. Проте, якщо звернутись до неї, отримаємо `undefined`, тому що вона ще не проініціалізована.
 
-It often takes new JavaScript developers some time to get used to declaration hoisting, and misunderstanding this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the controlling a variable's lifecycle a little more powerful.
+Часто новачкам у JavaScript розробці важко звикнути до того, як працює оголошення змінних, і нерозуміння цієї неочевидної поведінки може призвести до помилок. З цієї причини, ECMAScript 6 вводить блочну область видимості, щоб забезпечити більш гнучкий контроль над життєвим циклом змінних.
 
-## Block-Level Declarations
+## Блочне оголошення
 
-Block-level declarations are those that declare variables that are inaccessible outside of a given block scope. Block scopes are created:
+Блочним називають оголошення, при якому змінні не доступні поза поточною блочною областю видимості. Блочна область видимості виникає:
 
-1. Inside of a function
-1. Inside of a block (indicated by the `{` and `}` characters)
+1. в середині функції;
+2. в середині блоків (між символами `{` та `}` ).
 
-Block scoping is how many C-based languages work, and the introduction of block-level declarations in ECMAScript 6 is intended to bring that same flexibility (and uniformity) to JavaScript.
+Багато C-подібних мов програмування працюють за принципом блочної області видимості, тому введення її в ECMAScript 6 надає таку ж гнучкість (і однорідність) в JavaScript.
 
-### Let Declarations
+### Let-оголошення
 
-The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well). Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
+Синтаксис `let` оголошення нічим не відрізняється від `var`. Ви можете просто замінити `var` на `let`, проте тим самим ви обмежите область видимості змінної блоком, в якому вона оголошена (крім того є ще декілька важливих відмінностей, про які ми поговоримо згодом). Так як з `let` оголошенням змінна не буде доступна поза блоком, в якому вона оголошена, вам буде потрібно здійснювати `let` оголошення на початку блоку, щоб вона була доступна також у внутрішніх блоках. Наприклад:
 
 ```js
 function getValue(condition) {
@@ -69,7 +69,7 @@ function getValue(condition) {
     if (condition) {
         let value = "blue";
 
-        // other code
+        // інший код
 
         return value;
     } else {
@@ -83,25 +83,25 @@ function getValue(condition) {
 }
 ```
 
-This version of the `getValue` function behaves much closer to how you'd expect it to in other C-based languages. Since the variable `value` is declared using `let` instead of `var`, the declaration isn't hoisted to the top of the function definition, and the variable `value` is destroyed once execution flows out of the `if` block. If `condition` evaluates to false, then `value` is never declared or initialized.
+Поведінка цієї версії функції `getValue` більш схожа на те, що ви очікуєте від інших C-подібних мов програмування. Так як змінна `value` оголошена, використовуючи `let`, а не `var`, оголошення не виринає на початку визначення функції, і змінна `value` буде знищена після того, як виконається блок `if`. Якщо ж `condition` буде false, `value` ніколи не буде оголошена або проініціалізована.
 
-### No Redeclaration
+### Ніякого перевизначення
 
-If an identifier has already been defined in a scope, then using the identifier in a `let` declaration inside that scope causes an error to be thrown. For example:
+Якщо ідентифікатор змінної вже визначений в поточній області видимості, тоді `let` оголошення, використовуючи цей ідентифікатор, викликає помилку. Для прикладу:
 
 ```js
 var count = 30;
 
-// Syntax error
+// Помилка синтаксису
 let count = 40;
 ```
 
-In this example, `count` is declared twice: once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
+В цьому прикладі `count` визначена двічі: одного разу із `var`, іншого - використовуючи `let`. Так як `let` не перевизначає ідентифікатори, які вже визначені в даній області видимості, оголошення викликає помилку. Натомість ніякої помилки не буде, якщо, `let` оголошення створить нову змінну в області видимості із однаковим ім'ям, як і в змінної, яка знаходиться в області видимості, яке міститься в попередньому, що й ілюструє наступний код:  
 
 ```js
 var count = 30;
 
-// Does not throw an error
+// Не викличе помилку
 if (condition) {
 
     let count = 40;
@@ -110,100 +110,100 @@ if (condition) {
 }
 ```
 
-This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
+Це `let` оголошення не викличе помилку, тому що воно створить нову змінну `count` лише у `if` виразі, а не в навколишньому блоці. В середині `if` блоку нова змінна перекриває глобальну `count`, запобігаючи доступу до неї, допоки виконання не покине блок.
 
-### Constant Declarations
+### Const-оголошення
 
-You can also define variables in ECMAScript 6 with the `const` declaration syntax. Variables declared using `const` are considered *constants*, meaning their values cannot be changed once set. For this reason, every `const` variable must be initialized on declaration, as shown in this example:
+Інший спосіб визначення змінних в ECMAScript 6 - використовувати синтаксис оголошення `const`. Змінні, оголошені використовуючи `const`, вважаються *константами*, тобто вони не можуть бути змінені присвоєнням нового значення. Тому кожна `const` змінна повинна бути проініціалізована і оголошена так, як це показано в прикладі:
 
 ```js
-// Valid constant
+// Правильна константа
 const maxItems = 30;
 
-// Syntax error: missing initialization
+// Помилка синтаксису: відсутня ініціалізація
 const name;
 ```
 
-The `maxItems` variable is initialized, so its `const` declaration should work without a problem. The `name` variable, however, would cause a syntax error if you tried to run the program containing this code, because `name` is not initialized.
+Змінна `maxItems` проініціалізована, тому `const` оголошення має працювати без проблема. Натомість змінна `name` спричинить помилку синтаксису, якщо ви спробуєте запустити програму, яка містить цей код, тому що вона не проініціалізована.
 
 
-#### Constants vs Let Declarations
+#### Const-оголошення проти let-оголошення
 
-Constants, like `let` declarations, are block-level declarations. That means constants are destroyed once execution flows out of the block in which they were declared, and declarations are not hoisted, as demonstrated in this example:
+Константи, так як і `let` оголошення є блочними оголошеннями. Це означає, що константи будуть знищенні відразу ж, як виконання покине блок, в якому вони оголошені, також не буде виринання, що і показано в прикладі:
 
 ```js
 if (condition) {
     const maxItems = 5;
 
-    // more code
+    // ще якийсь код
 }
 
-// maxItems isn't accessible here
+// maxItems тут не доступня
 ```
 
-In this code, the constant `maxItems` is declared within an `if` statement. Once the statement finishes executing, `maxItems` is destroyed and is not accessible outside of that block.
+В цьому коді константа `maxItems` оголошення в `if` виразі. Коли вираз закінчить виконання, `maxItems` буде видалена та не буде доступна поза блоком.
 
-In another similarity to `let`, a `const` declaration throws an error when made with an identifier for an already-defined variable in the same scope. It doesn't matter if that variable was declared using `var` (for global or function scope) or `let` (for block scope). For example, consider this code:
+Інша подібність `let` та `const` - оголошення викличе помилку, якщо використати для оголошення ідентифікатор змінної, яка вже оголошена в цій області видимості. І не важливо чи змінна була оголошена використовуючи `var` (для глобальної або для області видимості на рівні функції) чи `let` (для області видимості на рівні блоку). Для прикладу, розглянемо цей код:
 
 ```js
 var message = "Hello!";
 let age = 25;
 
-// Each of these would throw an error.
+// Кожна із цих змінник викличе помилку
 const message = "Goodbye!";
 const age = 30;
 ```
 
-The two `const` declarations would be valid alone, but given the previous `var` and `let` declarations in this case, neither will work as intended.
+Кожне із `const` оголошення буде валідним, проте враховуючи попередні `var` та `let` оголошення, жоден не буде працювати так, як передбачалось.
 
-Despite those similarities, there is one big difference between `let` and `const` to remember. Attempting to assign a `const` to a previously defined constant will throw an error, in both strict and non-strict modes:
+Незважаючи на ці подібності, є одна велика відмінність між `let` та `const`, яку потрібно пам'ятати. Спроба призначити `const`-змінну іншій вже визначеній константі викличе помилку в обох strict та non-strict режимах.
 
 ```js
 const maxItems = 5;
 
-maxItems = 6;      // throws error
+maxItems = 6;      // викличе помилку
 ```
 
-Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant holds may be modified if it is an object.
+Так як і константи в інших мова, змінній `maxItems` не можна призначити нове значення пізніше. Проте, на відміну від констант в інших мовах, значення може бути видозмінене, якщо це об'єкт.
 
-#### Declaring Objects with Const
+#### Оголошення об'єктів з const
 
-A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
+Оголошення з `const` запобігає видозміні зв'язку, а не самого значення. Це означає, що `const` визначення об'єктів не запобігає їх модифікації. Наприклад:
 
 ```js
 const person = {
     name: "Nicholas"
 };
 
-// works
+// працює
 person.name = "Greg";
 
-// throws an error
+// викличе помилку
 person = {
     name: "Greg"
 };
 ```
 
-Here, the binding `person` is created with an initial value of an object with one property. It's possible to change `person.name` without causing an error because this changes what `person` contains and doesn't change the value that `person` is bound to. When this code attempts to assign a value to `person` (thus attempting to change the binding), an error will be thrown. This subtlety in how `const` works with objects is easy to misunderstand. Just remember: `const` prevents modification of the binding, not modification of the bound value.
+Тут посилання `person` створюється з початковим значенням об'єкта із одою властивістю. Зміна `person.name` не викличе помилку, тому що змінюється значення `person`, а не те, на що `person` посилається. Коли цей код спробує призначити нове значення (намагаючись змінити посилання), буде викликана помилка. Дуже просто заплутатись в тонкощах того, як `const` працює із об'єктами. Просто запам'ятайте: `const` запобігає видозміні посилання, а не його значення.
 
-W> Several browsers implement pre-ECMAScript 6 versions of `const`, so be aware of this when you use this declaration type. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not provide the functionality you expect.
+W> В деяких браузерах реалізована попередня  перед ECMAScript 6 версія `const`, тому зважайте на це, використовуючи цей вид визначення. Реалізації варіюються від простого синоніму `var` (дозволяючи перевизначення значення), до визначення констант насправді, але тільки в глобальній та області визначення на рівні функції. Тому будьте  особливо обережні, використовуючи `const` в продакшині. Функціональності, яку ви очікуєте, може не бути.
 
-### The Temporal Dead Zone
+### Тимчасова мертва зона
 
-Unlike `var` syntax, `let` and `const` variables have no hoisting characteristics. A variable declared with either cannot be accessed until after the declaration. Attempting to do so results in a reference error, even when using normally safe operations such as the `typeof` operation in this `if` statement:
+На відміну від `var`, `let` та `const` не мають виринаючої характеристики.  До змінних оголошених до того, не можна звернутись доти, доки вони не визначені знову.  Спроба це зробити спричинить помилку посилання, навіть якщо використовувати таку звичну та безпечну операцію як `typeof`:
 
 ```js
 if (condition) {
-    console.log(typeof value);  // ReferenceError!
+    console.log(typeof value);  // Помилка посилання!
     let value = "blue";
 }
 ```
 
-Here, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The issue is that `value` exists in what the JavaScript community has dubbed the *temporal dead zone* (TDZ). The TDZ is never named explicitly in the ECMAScript specification, but the term is often used to describe the non-hoisting behavior of `let` and `const`. This section covers some subtleties of declaration placement that the TDZ causes, and although the examples shown all use `let`, note that the same information applies to `const`.
+Тут змінна `value` визначена і ініціалізована, використовуючи `let`, проте вираз ніколи не буде виконаний, так як попередній рядок викличе помилку. Проблема в тому, що `value` існує в області, відомій JavaScript спільноті як *тимчасова мертва зона* (ТМЗ). ТМЗ ніколи не згадується безпосередня в специфікації, проте це термін, який часто вживається, щоб описати неспливаючу поведінку `let` та `const`. Цей розділ  розповідає про деякі тонкощі визначення в місцях, які є ТМЗ, і хоча всі приклади використовують `let`, це ж рівноцінно також для `const`.
 
-When a JavaScript engine looks through an upcoming block and finds a variable declaration, it either hoists the declaration (for `var`) or places the declaration in the TDZ (for `let` and `const`). Any attempt to access a variable in the TDZ results in a runtime error. That variable is only removed from the TDZ, and therefore safe to use, once execution flows to the variable declaration.
+Коли JavaScript рушій переглядає блок, який буде виконуватись і знаходить визначення змінних, він їх або змушує "спливти" (якщо це `var`), або переміщує в ТМЗ (якщо це `let` або `const`). Всі спроби звернутись до змінної, яка знаходиться в ТМЗ спровокують помилку виконання. Змінна буде видалена з ТМЗ, а також буде можна її використовувати лише тоді, коли виконання дійде до визначення змінної.
 
-This is true anytime you attempt to use a variable declared with `let` before it's been defined. As the previous example demonstrated, this even applies to the normally safe `typeof` operator. You can, however, use `typeof` on a variable outside of the block where that variable is declared, though it may not give the results you're after. Consider this code:
+Це справджується кожного разу, як ви намагаєтесь використати змінну визначену з `let` перш ніж вона була визначена, навіть використовуючи звичний і безпечний оператор `typeof`. Проте ви можете використовувати `typeof` зі змінними поза блоком, в якому вони визначені, хоч це може не дати результату опісля. Розглянемо цей код:
 
 ```js
 console.log(typeof value);     // "undefined"
@@ -213,39 +213,39 @@ if (condition) {
 }
 ```
 
-The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding, and `typeof` simply returns `"undefined"`.
+Змінна `value` не є в ТМЗ, коли виконується оператор `typeof`, тому що це відбувається поза блоком, в якому `value` визначена. Це означає, що ще немає посилання на `value`, і `typeof` просто повертає `"undefined"`.
 
-The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
+ТМЗ - всього лиш один унікальний аспект блочного зв'язування. Іншим аспектом є використання в середині циклів.
 
-## Block Binding in Loops
+## Блочне зв'язування в середині циклів
 
-Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
+Можливо, випадок коли розробникам найбільше потрібна блочна область видимості для змінних - це використовуючи їх із циклами `for`, де оголошена змінна лічильника має використовуватись тільки в середині циклу. Наприклад, цей код - цілком звичний в JavaScript:
 
 ```js
 for (var i=0; i < 10; i++) {
     process(items[i]);
 }
 
-// i is still accessible here
+// змінна i досі доступна
 console.log(i);                     // 10
 ```
 
-In other languages, where block level scoping is the default, this example should work as intended, and only the `for` loop should have access to the `i` variable. In JavaScript, however, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, should give the intended behavior:
+В інших мовах, де блочна область видимості за замовчуванням, код типу цього працює як і задумувалось, і тільки цикл `for` має доступ до змінної `i`. В JavaScript змінна `i` досі доступна після того, як цикл завершиться, через виринаючий характер `var`. Натомість використання `let`, як в коді наведеному нижче, дозволить вам отримати очікувану поведінку:
 
 ```js
 for (let i=0; i < 10; i++) {
     process(items[i]);
 }
 
-// i is not accessible here - throws an error
+// змінна i тут недоступна, тому буде викликана помилка
 console.log(i);
 ```
 
-In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
+В цьому прикладі змінна `i` тільки існує в середині циклу `for`. Як тільки цикл закінчить своє виконання, змінна буде знищена та стане недоступною деінде.
 
-### Functions in Loops
+### Функції в циклах
 
-The characteristics of `var` have long made creating functions inside of loops problematic, because the loop variables are accessible from outside the scope of the loop. Consider the following code:
+Так склалось, що через властивості `var`, створення функцій в середині циклів було проблемою, через доступність змінних циклу поза його областю видимості. Розглянемо наступний код:
 
 ```js
 var funcs = [];
@@ -255,13 +255,13 @@ for (var i=0; i < 10; i++) {
 }
 
 funcs.forEach(function(func) {
-    func();     // outputs the number "10" ten times
+    func();     // виводить число "10" десять разів
 });
 ```
 
-You might ordinarily expect this code to print the numbers 0 to 9, but it outputs the number 10 ten times in a row. That's because `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that value prints each time.
+Ви, мабуть, очікуєте, що цей код виведе числа від 0 до 9, проте він виводить число 10 десять раз під ряд. Все тому що змінна `i` спільна для кожної ітерацій циклу, тобто функції, які створюються всередині циклу, беруть посилання на ту ж змінну. Коли цикл закінчиться, значення змінної `i` буде рівне 10, тому коли виконується `console.log(i)`, це і є значенням, яке виводиться кожного разу.
 
-To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable they want to iterate over to be created, as in this example:
+Щоб вирішити цю проблему, розробники використовують негайно-виконуваний функціональний вираз (НВФВ) в середині циклів, щоб вимушено створити нову копію змінної, яку вони хочуть використовувати в ітерації, тобто як в коді нижче:
 
 ```js
 var funcs = [];
@@ -275,15 +275,15 @@ for (var i=0; i < 10; i++) {
 }
 
 funcs.forEach(function(func) {
-    func();     // outputs 0, then 1, then 2, up to 9
+    func();     // виводить 0, тоді 1, тоді 2, і так до 9
 });
 ```
 
-This version uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used by the function for that iteration, so calling each function returns the expected value as the loop counts up from 0 to 9. Fortunately, block-level binding with `let` and `const` in ECMAScript 6 can simplify this loop for you.
+Тут, в середині циклу, використовується НВФВ. Змінна `i` передається до НВФВ, який створює власну копію і зберігає її як `value`. Це значення змінної, яке використовується функцією для цієї ітерації, тому викликаючи кожну функцію, ми отримує значення лічильника циклу - від 0 до 9. На щастя, блочна область бачення з `let` та `const` можуть спростити цей цикл для вас.
 
-### Let Declarations in Loops
+### Let-оголошення в циклах
 
-A `let` declaration simplifies loops by effectively mimicking what the IIFE does in the previous example. On each iteration, the loop creates a new variable and initializes it to the value of the variable with the same name from the previous iteration. That means you can omit the IIFE altogether and get the results you expect, like this:
+Оголошення використовуючи `let` спрощує цикли, фактично виконуючи те, що НВФВ робили в попередньому прикладі. Кожної ітерації цикл створює нову змінну і ініціалізує її зі значенням змінної із таким самим ім'ям в попередні ітерації. Це означає, що ви можете не використовувати НВФВ і отримати очікуваний результат, як цей:
 
 ```js
 var funcs = [];
@@ -295,11 +295,11 @@ for (let i=0; i < 10; i++) {
 }
 
 funcs.forEach(function(func) {
-    func();     // outputs 0, then 1, then 2, up to 9
+    func();     // виводить 0, тоді 1, тоді 2, і так до 9
 })
 ```
 
-This loop works exactly like the loop that used `var` and an IIFE but is, arguably, cleaner. The `let` declaration creates a new variable `i` each time through the loop, so each function created inside the loop gets its own copy of `i`. Each copy of `i` has the value it was assigned at the beginning of the loop iteration in which it was created. The same is true for `for-in` and `for-of` loops, as shown here:
+Цей код працює так само, як код, який використовує `var` та НВФВ, проте, можливо він більш зрозумілий. Оголошення із `let` створює нову змінну кожного разу впродовж циклу, тому кожна функція, створена в циклі, отримує власну копію `i`. Кожна копія `i` має значення, яке було призначене на початку ітерації циклу, в якому вона була створена. Теж саме вірно також для `for-in` та `for-of` циклів, як це показано тут:
 
 ```js
 var funcs = [],
@@ -316,22 +316,23 @@ for (let key in object) {
 }
 
 funcs.forEach(function(func) {
-    func();     // outputs "a", then "b", then "c"
+    func();     // виводить "a", тоді "b" і тоді "c"
 });
 ```
 
-In this example, the `for-in` loop shows the same behavior as the `for` loop. Each time through the loop, a new `key` binding is created, and so each function has its own copy of the `key` variable. The result is that each function outputs a different value. If `var` were used to declare `key`, all functions would output `"c"`.
+В цьому прикладі цикл `for-in` відтворює таку ж поведінку, як і в цикл `for`. Кожного разу впродовж циклу створюється нове посилання `key`, тому кожна функція має власну копію змінної `key`. Як результат кожна функцію виводить інше значення. Якщо б ми використовували `var` для визначення `key`, кожна функція виводила б `"c"`.
 
-I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
+|> Важливо розуміти, що поведінка `let` визначення в циклах спеціально визначена в специфікації, і не пов'язана з невиринаючою властивістю `let`. Насправді ж ранні реалізації `let` не мали цієї поведінки - це було додано пізніше в процесі створення специфікації.
 
-### Constant Declarations in Loops
+### Оголошення констант в циклах
 
-The ECMAScript 6 specification doesn't explicitly disallow `const` declarations in loops; however, there are different behaviors based on the type of loop you're using. For a normal `for` loop, you can use `const` in the initializer, but the loop will throw a warning if you attempt to change the value. For example:
+Фактично специфікація ECMAScript 6 не забороняє `const` визначення в циклах; проте поведінка залежить від циклу, який ви використовуєте. Для звичного циклу `for` ви можете використовувати `const` в ініціалізації, але цикл виведе попередження, якщо ви спробуєте змінити значення. Наприклад:
 
 ```js
 var funcs = [];
 
-// throws an error after one iteration
+// виведе помилку після першої ітерації
+
 for (const i=0; i < 10; i++) {
     funcs.push(function() {
         console.log(i);
@@ -339,9 +340,9 @@ for (const i=0; i < 10; i++) {
 }
 ```
 
-In this code, the `i` variable is declared as a constant. The first iteration of the loop, where `i` is 0, executes successfully. An error is thrown when `i++` executes because it's attempting to modify a constant. As such, you can only use `const` to declare a variable in the loop initializer if you are not modifying that variable.
+В цьому коді змінна `i` визначена як константа. Перша ітерація циклу, де `i` рівне 0, виконається успішно. Помилку викличе виконання `i++`, так як це спроба змінити константу. Тому ви можете використовувати `const` для того, щоб визначати змінні в ініціалізації циклу тільки якщо ви не будете їх змінювати.
 
-When used in a `for-in` or `for-of` loop, on the other hand, a `const` variable behaves the same as a `let` variable. So the following should not cause an error:
+З іншого боку, використовуючи `const` змінну в циклах `for-in` та `fon-of`, поведінка буде така ж, як і `let` змінної. Тому наступний код помилки не викличе:
 
 ```js
 var funcs = [],
@@ -351,7 +352,7 @@ var funcs = [],
         c: true
     };
 
-// doesn't cause an error
+// не виведе помилку
 for (const key in object) {
     funcs.push(function() {
         console.log(key);
@@ -359,18 +360,18 @@ for (const key in object) {
 }
 
 funcs.forEach(function(func) {
-    func();     // outputs "a", then "b", then "c"
+    func();     // виведе "a", тоді "b" і тоді "c"
 });
 ```
 
-This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the previous example using `for` instead of `for-in`).
+Цей код практично такий самий, як і в другому прикладі в розділу "Let Оголошення в Циклах". Єдиною відмінністю є те, що значення `key` неможливо змінити в середині циклу. Цикли `for-in` та `for-of` працюють із `const`, тому що ініціалізатор циклу створює нове посилання при кожній ітерації, а не намагається змінити значення за посиланням, яке вже існує (як це відбувалось в попередньому прикладі, використовуючи `for`, а не `fon-in`).
 
-## Global Block Bindings
+## Глобальне блочне зв'язування
 
-Another way in which `let` and `const` are different from `var` is in their global scope behavior. When `var` is used in the global scope, it creates a new global variable, which is a property on the global object (`window` in browsers). That means you can accidentally overwrite an existing global using `var`, such as:
+Іншою відмінністю `let` та `const` від `var` є поведінка в глобальній області видимості. Коли створюють нову глобальну змінну використовуючи `var`, створюється глобальна змінна, яка є полем глобального об'єкту (`windows` браузерах). Це означає, що ви можете випадково перезаписати існуючу глобальну змінну, використовуючи `var`, так як відбувається тут:
 
 ```js
-// in a browser
+// в браузері
 var RegExp = "Hello!";
 console.log(window.RegExp);     // "Hello!"
 
@@ -378,12 +379,12 @@ var ncz = "Hi!";
 console.log(window.ncz);        // "Hi!"
 ```
 
-Even though the `RegExp` global is defined on `window`, it is not safe from being overwritten by a `var` declaration. This example declares a new global variable `RegExp` that overwrites the original. Similarly, `ncz` is defined as a global variable and immediately defined as a property on `window`. This is the way JavaScript has always worked.
+Хоч глобальний `RegExp` визначений в `windows`, можна його перезаписати, використовуючи `var` оголошення. Цей приклад оголошує нову глобальну змінну `RegExp`, яка перезаписує оригінал. Так само як і `ncz` визначений як глобальна змінна і відразу ж визначається як поле об'єкта `windows`. Так JavaScript працював завжди.
 
-If you instead use `let` or `const` in the global scope, a new binding is created in the global scope but no property is added to the global object. That also means you cannot overwrite a global variable using `let` or `const`, you can only shadow it. Here's an example:
+Проте якщо ви будете використовувати `let` та `const` в глобальній області видимості, будуть створені нові глобальні посилання на змінні без додавання їх як поля глобального об'єкту. Це також означає, що ви не зможете перезаписати глобальну змінну, використовуючи `let` та `const`, а тільки перекрити їх. Наприклад:
 
 ```js
-// in a browser
+// в браузері
 let RegExp = "Hello!";
 console.log(RegExp);                    // "Hello!"
 console.log(window.RegExp === RegExp);  // false
@@ -393,20 +394,20 @@ console.log(ncz);                       // "Hi!"
 console.log("ncz" in window);           // false
 ```
 
-Here, a new `let` declaration for `RegExp` creates a binding that shadows the global `RegExp`. That means `window.RegExp` and `RegExp` are not the same, so there is no disruption to the global scope. Also, the `const` declaration for `ncz` creates a binding but does not create a property on the global object. This capability makes `let` and `const` a lot safer to use in the global scope when you don't want to create properties on the global object.
+В цьому коді нове `let` оголошення  для `RegExp` створює нове посилання, яке перекриває глобальну `RegExp`. Тобто `windows.RegExp` та `RegExp` - не одне і те ж, тому немає ніяких збоїв у глобальній області видимості. Також `const` оголошення `nzt` створює нове посилання, але не створює нове поле в глобальному об'єкті. Ця особливість робить `let` та `const` набагато безпечнішими для використання в глобальній області видимості, якщо ви не хочете створювати поле в глобальному об'єкті.
 
-I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
+|> Ви як і раніше можете використовувати `var` для оголошення змінних в глобальній області видимості, якщо ваш код має бути доступний через глобальний об'єкт. Це може бути необхідним в браузерах, коли вам потрібний доступ до коду із іншого вікна чи фрейму.
 
-## Emerging Best Practices for Block Bindings
+## Рекомендаці щодо блочного зв'язування
 
-While ECMAScript 6 was in development, there was widespread belief you should use `let` by default instead of `var` for variable declarations. For many JavaScript developers, `let` behaves exactly the way they thought `var` should have behaved, and so the direct replacement makes logical sense. In this case, you would use `const` for variables that needed modification protection.
+Допоки ECMAScript 6 був у розробці, була розповсюджена думка про те, що потрібно використовувати `let` за замовчуванням, а не `var` для оголошення змінних. Для багатьох JavaScript розробників поведінка `let` є саме тою, якою мала би бути поведінка `var`, тому пряме заміщення є логічним. У цьому випадку ви будете використовувати `const` тільки для змінних, які не повинні змінюватись.
 
-However, as more developers migrated to ECMAScript 6, an alternate approach gained popularity: use `const` by default and only use `let` when you know a variable's value needs to change. The rationale is that most variables should not change their value after initialization because unexpected value changes are a source of bugs. This idea has a significant amount of traction and is worth exploring in your code as you adopt ECMAScript 6.
+Однак, чим більше розробників мігрувало на ECMAScript 6, тим більше набрав популярність альтернативний підхід: використовувати `const` за замовчуванням, а `let` тільки тоді, коли ви знаєте, що значення змінної потрібно буде змінити. Основною причиною для цього є те, що більшість змінних не повинні змінюватись після ініціалізації, тому що несподівані зміни значення є джерелом помилок. Цей підхід набрав популярність, проте варто вивчити ваш код, щоб зрозуміти як пишите код на ECMAScript 6 ви.
 
-## Summary
+## Підсумок
 
-The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. This offers behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. As a side effect, you cannot access variables before they are declared, even with safe operators such as `typeof`. Attempting to access a block binding before its declaration results in an error due to the binding's presence in the temporal dead zone (TDZ).
+Блочне зв'язування, використовуючи `let` та `const` принесло лексичну область видимості в JavaScript. Ці оголошення не виринають та існують тільки в середині блоку, в якому вони були визначені. Крім того блочне зв'язування ECMAScript 2015 надає поведінку, яка є більш схожою на поведінку змінних в інших мовах, тим самим оберігає від випадкових помилок, тому що змінні можуть бути визначенні саме там, де вони необхідні. Побічним ефектом є те, що ви не можете звернутись до змінної, перш ніж вона була оголошена, навіть із безпечними операторами, таким як `typeof`. Спроба це зробити спровокує помилку у зв'язку із необхідністю наявності зв'язаного посилання в тимчасовій мертвій зоні (ТМЗ).
 
-In many cases, `let` and `const` behave in a manner similar to `var`; however, this is not true for loops. For both `let` and `const`, `for-in` and `for-of` loops create a new binding with each iteration through the loop. That means functions created inside the loop body can access the loop bindings values as they are during the current iteration, rather than as they were after the loop's final iteration (the behavior with `var`). The same is true for `let` declarations in `for` loops, while attempting to use `const` declarations in a `for` loop may result in an error.
+В більшості випадках поведінка `lеt` та `const` схожа до поведінки `var`, однак в циклах це не так. Для `let` та `const` цикли `for-in` та `for-of` створюють нове посилання для кожної ітерації впродовж циклу. Це означає, що функції створенні в тілі циклу можуть звернутись до значення, яке зв'язане з циклом впродовж поточної ітерації, а не навіть після закінчення останньої ітерації (поведінка `var`). Це ж вірно і для `let` оголошення у циклах `for`, в той час як спроба використання `const` визначення  для циклу `for` спричинить помилку.
 
-The current best practice for block bindings is to use `const` by default and only use `let` when you know a variable's value needs to change. This ensures a basic level of immutability in code that can help prevent certain types of errors.
+Поточною рекомендацією для блочного зв'язування є використання `const` в усіх випадках, окрім тих, коли ви знаєте, що повинна змінити значення змінної, тоді використовуйте `let`. Цим ви забезпечуєте початковий рівень імутабельності в коді, який може запобігти виникненню деяких видів помилок.
