@@ -1,238 +1,55 @@
-<!DOCTYPE HTML>
-<html lang="en" >
-    
-    <head>
-        
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Рoзуміння ECMAScript 6 | Рoзуміння ECMAScript 6</title>
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="[![Build Status][travis-image]][travis-url][![Twitter][twitter-image]][twitter-url][![RSS][rss-image]][rss-url]">
-        <meta name="generator" content="GitBook 2.6.7">
-        
-        
-        <meta name="HandheldFriendly" content="true"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
-        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
-        
-    <link rel="stylesheet" href="gitbook/style.css">
-    
-        
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
-        
-    
-        
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
-        
-    
-        
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
-        
-    
-    
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>What is Bash?</title>
+  <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.min.css">
+  <link rel="stylesheet" href="bower_components/reveal.js/css/theme/beige.css">
+</head>
+<body>
+  <!--[if lt IE 7]>
+    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+  <![endif]-->
+  <div class="reveal">
+    <div class="slides">
 
-        
-    
-    
-    <link rel="next" href="./manuscript/00-Introduction.html" />
-    
-    
+      <section>
+        <h1>What is Bash?</h1>
+        <p class="fragment">And why you should know how to use it.</p>
+      </section>
 
-        <link href="http://understandinges6.denysdovhan.com/rss.xml" title="Рoзуміння ECMAScript 6" rel="alternate"type="application/rss+xml">
-    </head>
-    <body>
-        
-        
-    <div class="book"
-        data-level="0"
-        data-chapter-title="Рoзуміння ECMAScript 6"
-        data-filepath="README.md"
-        data-basepath="."
-        data-revision="Sun Feb 21 2016 11:28:19 GMT+0000 (UTC)"
-        data-innerlanguage="">
-    
-
-<div class="book-summary">
-    <nav role="navigation">
-        <ul class="summary">
-            
-            
-            
-            
-
-            
-
-            
-    
-        <li class="chapter active" data-level="0" data-path="index.html">
-            
-                
-                    <a href="./index.html">
-                
-                        <i class="fa fa-check"></i>
-                        
-                        Рoзуміння ECMAScript 6
-                    </a>
-            
-            
-        </li>
-    
-        <li class="chapter " data-level="1" data-path="manuscript/00-Introduction.html">
-            
-                
-                    <a href="./manuscript/00-Introduction.html">
-                
-                        <i class="fa fa-check"></i>
-                        
-                            <b>1.</b>
-                        
-                        Вступ
-                    </a>
-            
-            
-        </li>
-    
-
-
-            
-            <li class="divider"></li>
-            <li>
-                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
-                    Published with GitBook
-                </a>
-            </li>
-            
-        </ul>
-    </nav>
-</div>
-
-    <div class="book-body">
-        <div class="body-inner">
-            <div class="book-header" role="navigation">
-    <!-- Actions Left -->
-    
-
-    <!-- Title -->
-    <h1>
-        <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Рoзуміння ECMAScript 6</a>
-    </h1>
-</div>
-
-            <div class="page-wrapper" tabindex="-1" role="main">
-                <div class="page-inner">
-                
-                
-                    <section class="normal" id="section-">
-                    
-                        <h1 id="&#x440;o&#x437;&#x443;&#x43C;&#x456;&#x43D;&#x43D;&#x44F;-ecmascript-6">&#x420;o&#x437;&#x443;&#x43C;&#x456;&#x43D;&#x43D;&#x44F; ECMAScript 6</h1>
-<p><a href="https://travis-ci.org/denysdovhan/understandinges6ua" target="_blank"><img src="https://img.shields.io/travis/denysdovhan/understandinges6ua.svg?style=flat-square" alt="Build Status"></a>
-<a href="https://twitter.com/es6ua" target="_blank"><img src="https://img.shields.io/badge/twitter-%40es5ua-00ACEE.svg?style=flat-square" alt="Twitter"></a>
-<a href="http://understandinges6.denysdovhan.com/rss.xml" target="_blank"><img src="https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square" alt="RSS"></a></p>
-<blockquote>
-<p>&#x41F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x435;&#x43D;o &#x437; &#x434;o&#x437;&#x432;o&#x43B;&#x443; <a href="https://www.nostarch.com/" target="_blank">No Starch Press</a> &#x442;&#x430; <a href="https://www.nczonline.net/" target="_blank">&#x41D;&#x456;&#x43A;o&#x43B;&#x430;&#x441;&#x430; &#x417;&#x430;&#x43A;&#x430;&#x441;&#x430;</a>.<br>Translated with permission from <a href="https://www.nostarch.com/" target="_blank">No Starch Press</a> and <a href="https://www.nczonline.net/" target="_blank">Nicholas C. Zakas</a>.</p>
-</blockquote>
-<p>ECMASctipt 6 &#x432;&#x456;&#x434;&#x43E;&#x431;&#x440;&#x430;&#x436;&#x430;&#x454; &#x43D;&#x430;&#x439;&#x431;&#x456;&#x43B;&#x44C;&#x448;&#x456; &#x437;&#x43C;&#x456;&#x43D;&#x438; &#x44F;&#x434;&#x440;&#x430; JavaScript &#x443; &#x439;&#x43E;&#x433;&#x43E; &#x456;&#x441;&#x442;&#x43E;&#x440;&#x456;&#x457;. &#x428;&#x43E;&#x441;&#x442;&#x430; &#x432;&#x435;&#x440;&#x441;&#x456;&#x44F; &#x43D;&#x435; &#x43B;&#x438;&#x448;&#x435; &#x434;&#x43E;&#x434;&#x430;&#x454; &#x43E;&#x431;&#x2019;&#x454;&#x43A;&#x442;&#x438; &#x43D;&#x43E;&#x432;&#x43E;&#x433;&#x43E; &#x442;&#x438;&#x43F;&#x443;, &#x430;&#x43B;&#x435; &#x439; &#x43D;&#x43E;&#x432;&#x438;&#x439; &#x441;&#x438;&#x43D;&#x442;&#x430;&#x43A;&#x441;&#x438;&#x441; &#x442;&#x430; &#x43D;&#x43E;&#x432;&#x456;, &#x432;&#x440;&#x430;&#x436;&#x430;&#x44E;&#x447;&#x456; &#x43C;&#x43E;&#x436;&#x43B;&#x438;&#x432;&#x43E;&#x441;&#x442;&#x456;. &#x423; &#x440;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x456; &#x431;&#x430;&#x433;&#x430;&#x442;&#x43E;&#x440;&#x456;&#x447;&#x43D;&#x438;&#x445; &#x434;&#x43E;&#x441;&#x43B;&#x456;&#x434;&#x436;&#x435;&#x43D;&#x44C; &#x442;&#x430; &#x434;&#x438;&#x441;&#x43A;&#x443;&#x441;&#x456;&#x439;, &#x440;&#x43E;&#x431;&#x43E;&#x442;&#x430; &#x43D;&#x430;&#x434; &#x43D;&#x43E;&#x432;&#x438;&#x43C;&#x438; &#x43C;&#x43E;&#x436;&#x43B;&#x438;&#x432;&#x43E;&#x441;&#x442;&#x44F;&#x43C;&#x438; ECMAScript 6 &#x431;&#x443;&#x43B;&#x430; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x430; &#x443; 2014 &#x440;&#x43E;&#x446;&#x456;. &#x417;&#x432;&#x456;&#x441;&#x43D;&#x43E;, &#x43F;&#x43E;&#x43A;&#x438; &#x432;&#x441;&#x456; &#x441;&#x435;&#x440;&#x435;&#x434;&#x43E;&#x432;&#x438;&#x449;&#x430; JavaScript &#x43F;&#x43E;&#x447;&#x43D;&#x443;&#x442;&#x44C; &#x43F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x443;&#x432;&#x430;&#x442;&#x438; ECMAScript 6 &#x43F;&#x43E;&#x432;&#x43D;&#x43E;&#x44E; &#x43C;&#x456;&#x440;&#x43E;&#x44E;, &#x43F;&#x440;&#x43E;&#x439;&#x434;&#x435; &#x449;&#x435; &#x434;&#x435;&#x44F;&#x43A;&#x438;&#x439; &#x447;&#x430;&#x441;, &#x43F;&#x440;&#x43E;&#x442;&#x435; &#x432;&#x441;&#x435; &#x436; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x43D;&#x43E; &#x437;&#x440;&#x43E;&#x437;&#x443;&#x43C;&#x456;&#x442;&#x438; &#x442;&#x430; &#x434;&#x456;&#x437;&#x43D;&#x430;&#x442;&#x438;&#x441;&#x44C; &#x43F;&#x440;&#x43E; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x456;&#x43E;&#x43D;&#x430;&#x43B;, &#x44F;&#x43A;&#x438;&#x439; &#x437;&#x2019;&#x44F;&#x432;&#x438;&#x442;&#x44C;&#x441;&#x44F; &#x442;&#x430; &#x44F;&#x43A;&#x438;&#x439; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x438;&#x439; &#x432;&#x436;&#x435; &#x437;&#x430;&#x440;&#x430;&#x437;.</p>
-<p>&#x426;&#x44F; &#x43A;&#x43D;&#x438;&#x433;&#x430; &#x454; &#x43A;&#x435;&#x440;&#x456;&#x432;&#x43D;&#x438;&#x446;&#x442;&#x432;&#x43E;&#x43C; &#x434;&#x43B;&#x44F; &#x43F;&#x435;&#x440;&#x435;&#x445;&#x43E;&#x434;&#x443; &#x437; 5-&#x457; &#x43D;&#x430; 6-&#x443; &#x432;&#x435;&#x441;&#x456;&#x44E; ECMAScript. &#x412;&#x43E;&#x43D;&#x430; &#x43D;&#x435; &#x43F;&#x43E;&#x432;&#x2019;&#x44F;&#x437;&#x430;&#x43D;&#x430; &#x437; &#x436;&#x43E;&#x434;&#x43D;&#x438;&#x43C; &#x441;&#x435;&#x440;&#x435;&#x434;&#x43E;&#x432;&#x438;&#x449;&#x435;&#x43C; JavaScript, &#x442;&#x43E;&#x43C;&#x443; &#x431;&#x443;&#x434;&#x435; &#x43E;&#x434;&#x43D;&#x430;&#x43A;&#x43E;&#x432;&#x43E; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x43D;&#x43E;&#x44E; &#x44F;&#x43A; &#x434;&#x43B;&#x44F; &#x444;&#x440;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x434;-&#x440;&#x43E;&#x437;&#x440;&#x43E;&#x431;&#x43D;&#x438;&#x43A;&#x456;&#x432; &#x442;&#x430;&#x43A; &#x456; &#x434;&#x43B;&#x44F; &#x440;&#x43E;&#x437;&#x440;&#x43E;&#x431;&#x43D;&#x438;&#x43A;&#x456;&#x432; &#x43D;&#x430; Node.js</p>
-<p>&#x412;&#x438; &#x434;&#x456;&#x437;&#x43D;&#x430;&#x454;&#x442;&#x435;&#x441;&#x44C; &#x43F;&#x440;&#x43E;:</p>
-<ul>
-<li>&#x432;&#x441;&#x456; &#x437;&#x43C;&#x456;&#x43D;&#x438; &#x443; &#x43C;&#x43E;&#x432;&#x456;, &#x43F;&#x43E;&#x447;&#x438;&#x43D;&#x430;&#x44E;&#x447;&#x438; &#x437; ECMAScript 5;</li>
-<li>&#x44F;&#x43A; &#x43D;&#x43E;&#x432;&#x438;&#x439; &#x441;&#x438;&#x43D;&#x442;&#x430;&#x43A;&#x441;&#x438;&#x441; &#x43A;&#x43B;&#x430;&#x441;&#x456;&#x432; &#x43F;&#x43E;&#x432;&#x2019;&#x44F;&#x437;&#x430;&#x43D;&#x438;&#x439; &#x437;&#x456; &#x437;&#x432;&#x438;&#x447;&#x43D;&#x43E;&#x44E; &#x43A;&#x43E;&#x43D;&#x446;&#x435;&#x43F;&#x446;&#x456;&#x454;&#x44E; JavaScript;</li>
-<li>&#x447;&#x43E;&#x43C;&#x443; &#x456;&#x442;&#x435;&#x440;&#x430;&#x442;&#x43E;&#x440;&#x438; &#x442;&#x430; &#x433;&#x435;&#x43D;&#x435;&#x440;&#x430;&#x442;&#x43E;&#x440;&#x438; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x43D;&#x456;;</li>
-<li>&#x44F;&#x43A; arrow-&#x444;&#x443;&#x43D;&#x43A;&#x446;&#x456;&#x457; &#x432;&#x456;&#x434;&#x440;&#x456;&#x437;&#x43D;&#x44F;&#x44E;&#x442;&#x44C;&#x441;&#x44F; &#x432;&#x456;&#x434; &#x437;&#x432;&#x438;&#x447;&#x430;&#x439;&#x43D;&#x438;&#x445; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x456;&#x439;;</li>
-<li>&#x434;&#x43E;&#x434;&#x430;&#x442;&#x43A;&#x43E;&#x432;&#x456; &#x43C;&#x43E;&#x436;&#x43B;&#x438;&#x432;&#x43E;&#x441;&#x442;&#x456; &#x434;&#x43B;&#x44F; &#x437;&#x431;&#x435;&#x440;&#x456;&#x433;&#x430;&#x43D;&#x43D;&#x44F; &#x434;&#x430;&#x43D;&#x43D;&#x438;&#x445; &#x437; &#x434;&#x43E;&#x43F;&#x43E;&#x43C;&#x43E;&#x433;&#x43E;&#x44E; sets, maps &#x442;&#x430; &#x456;&#x43D;.;</li>
-<li>&#x441;&#x438;&#x43B;&#x443; &#x443;&#x441;&#x43F;&#x430;&#x434;&#x43A;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F; &#x432;&#x456;&#x434; &#x440;&#x456;&#x434;&#x43D;&#x438;&#x445; &#x442;&#x438;&#x43F;&#x456;&#x432;;</li>
-<li>&#x447;&#x43E;&#x43C;&#x443; &#x43B;&#x44E;&#x434;&#x438; &#x432; &#x437;&#x430;&#x445;&#x43E;&#x43F;&#x43B;&#x435;&#x43D;&#x43D;&#x456; &#x432;&#x456;&#x434; &#x43F;&#x440;&#x43E;&#x43C;&#x456;&#x441;&#x456;&#x432; &#x442;&#x430; &#x430;&#x441;&#x438;&#x43D;&#x445;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43F;&#x440;&#x43E;&#x433;&#x440;&#x430;&#x43C;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F;;</li>
-<li>&#x44F;&#x43A; &#x43C;&#x43E;&#x434;&#x443;&#x43B;&#x456; &#x437;&#x43C;&#x456;&#x43D;&#x44F;&#x442;&#x44C; &#x43E;&#x440;&#x433;&#x430;&#x43D;&#x456;&#x437;&#x430;&#x446;&#x456;&#x44E; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x434;&#x443;.</li>
-</ul>
-<h2 id="&#x434;&#x435;-&#x447;&#x438;&#x442;&#x430;&#x442;&#x438;">&#x414;&#x435; &#x447;&#x438;&#x442;&#x430;&#x442;&#x438;</h2>
-<p>&#x41E;&#x43D;&#x43B;&#x430;&#x439;&#x43D;-&#x432;&#x435;&#x440;&#x441;&#x456;&#x44F; &#x43A;&#x43D;&#x438;&#x433;&#x438; <a href="#">&#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#x447;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F;</a> &#x431;&#x435;&#x437;&#x43A;&#x43E;&#x448;&#x442;&#x43E;&#x432;&#x43D;&#x43E; &#x442;&#x430; &#x43C;&#x456;&#x441;&#x442;&#x438;&#x442;&#x44C; &#x43D;&#x430;&#x439;&#x441;&#x432;&#x456;&#x436;&#x456;&#x448;&#x456; &#x437;&#x43C;&#x456;&#x43D;&#x438;. &#x41E;&#x440;&#x438;&#x433;&#x456;&#x43D;&#x430;&#x43B;&#x44C;&#x43D;&#x438;&#x439; &#x430;&#x43D;&#x433;&#x43B;&#x43E;&#x43C;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x432;&#x430;&#x440;&#x456;&#x430;&#x43D;&#x442; &#x43A;&#x43D;&#x438;&#x433;&#x438; &#x442;&#x430;&#x43A;&#x43E;&#x436; &#x43C;&#x43E;&#x436;&#x43D;&#x430; <a href="https://leanpub.com/understandinges6/read/" target="_blank">&#x447;&#x438;&#x442;&#x430;&#x442;&#x438; &#x43E;&#x43D;&#x43B;&#x430;&#x439;&#x43D;</a>. &#x420;&#x43E;&#x437;&#x434;&#x456;&#x43B;&#x438; &#x43C;&#x43E;&#x436;&#x443;&#x442;&#x44C; &#x431;&#x443;&#x442;&#x438; &#x43D;&#x435;&#x437;&#x430;&#x43A;&#x456;&#x43D;&#x447;&#x435;&#x43D;&#x438;&#x43C;&#x438;, &#x43F;&#x440;&#x43E;&#x442;&#x435; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434; &#x43C;&#x430;&#x454; &#x431;&#x443;&#x442;&#x438; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x44C;&#x43D;&#x438;&#x43C;. &#x41F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434; &#x43E;&#x43D;&#x43E;&#x432;&#x43B;&#x44E;&#x454;&#x442;&#x44C;&#x441;&#x44F; &#x43A;&#x456;&#x43B;&#x44C;&#x43A;&#x430; &#x440;&#x430;&#x437;&#x456;&#x432; &#x43D;&#x430; &#x43C;&#x456;&#x441;&#x44F;&#x446;&#x44C;.</p>
-<h2 id="&#x43F;&#x440;&#x438;&#x434;&#x431;&#x430;&#x442;&#x438;-&#x43A;&#x43E;&#x43F;&#x456;&#x44E;">&#x41F;&#x440;&#x438;&#x434;&#x431;&#x430;&#x442;&#x438; &#x43A;&#x43E;&#x43F;&#x456;&#x44E;</h2>
-<p>&#x412;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x437;&#x430;&#x43C;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x435;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x443; &#x43A;&#x43E;&#x43F;&#x456;&#x44E; &#x43E;&#x440;&#x438;&#x433;&#x456;&#x43D;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;&#x457; &#x432;&#x435;&#x440;&#x441;&#x456;&#x457; &#x43A;&#x43D;&#x438;&#x433;&#x438; &#x447;&#x435;&#x440;&#x435;&#x437; <a href="https://leanpub.com/understandinges6" target="_blank">Leanpub</a>. &#x414;&#x435;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x456;&#x448;&#x435; &#x434;&#x456;&#x437;&#x43D;&#x430;&#x432;&#x430;&#x439;&#x442;&#x435;&#x441;&#x44C; <a href="https://github.com/nzakas/understandinges6/blob/master/README.md#purchasing-a-copy" target="_blank">&#x437;&#x430; &#x43F;&#x43E;&#x441;&#x438;&#x43B;&#x430;&#x43D;&#x43D;&#x44F;&#x43C;</a>.</p>
-<p>&#x414;&#x440;&#x443;&#x43A;&#x43E;&#x432;&#x430;&#x43D;&#x443; &#x432;&#x435;&#x440;&#x441;&#x456;&#x44E; &#x430;&#x43D;&#x433;&#x43B;&#x43E;&#x43C;&#x43E;&#x432;&#x43D;&#x43E;&#x433;&#x43E; &#x432;&#x438;&#x434;&#x430;&#x43D;&#x43D;&#x44F; &#x43C;&#x43E;&#x436;&#x43D;&#x430; &#x431;&#x443;&#x434;&#x435; &#x43F;&#x440;&#x438;&#x434;&#x431;&#x430;&#x442;&#x438; &#x443; &#x432;&#x438;&#x434;&#x430;&#x432;&#x43D;&#x438;&#x446;&#x442;&#x432;&#x456; <a href="https://www.nostarch.com/" target="_blank">No Starch Press</a>, &#x44F;&#x43A;&#x435; &#x432;&#x438;&#x434;&#x430;&#x441;&#x442;&#x44C; &#x457;&#x457; &#x44F;&#x43A; &#x442;&#x456;&#x43B;&#x44C;&#x43A;&#x438; &#x43A;&#x43D;&#x438;&#x433;&#x430; &#x431;&#x443;&#x434;&#x435; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x430; (&#x43E;&#x440;&#x456;&#x454;&#x43D;&#x442;&#x43E;&#x432;&#x43D;&#x43E; &#x43D;&#x430; &#x43F;&#x43E;&#x447;&#x430;&#x442;&#x43A;&#x443; 2016-&#x433;&#x43E;).</p>
-<p>&#x41D;&#x430; &#x436;&#x430;&#x43B;&#x44C;, &#x434;&#x440;&#x443;&#x43A;&#x43E;&#x432;&#x430;&#x43D;&#x443; &#x432;&#x435;&#x440;&#x441;&#x456;&#x44E; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x443; &#x43F;&#x440;&#x438;&#x434;&#x431;&#x430;&#x442;&#x438; &#x43D;&#x435;&#x43C;&#x43E;&#x436;&#x43B;&#x438;&#x432;&#x43E;, &#x447;&#x435;&#x440;&#x435;&#x437; &#x432;&#x456;&#x434;&#x441;&#x443;&#x442;&#x43D;&#x456;&#x441;&#x442;&#x44C; &#x432;&#x438;&#x434;&#x430;&#x432;&#x446;&#x44F;. &#x42F;&#x43A;&#x449;&#x43E; &#x432;&#x438; &#x445;&#x43E;&#x447;&#x435;&#x442;&#x435; &#x441;&#x442;&#x430;&#x442;&#x438; &#x43D;&#x430;&#x448;&#x438;&#x43C; &#x432;&#x438;&#x434;&#x430;&#x432;&#x446;&#x435;&#x43C; &#x430;&#x431;&#x43E; &#x43C;&#x430;&#x454;&#x442;&#x435; &#x431;&#x443;&#x434;&#x44C;-&#x44F;&#x43A;&#x456; &#x456;&#x434;&#x435;&#x457; &#x449;&#x43E;&#x434;&#x43E; &#x434;&#x440;&#x443;&#x43A;&#x443; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x443;, <a href="mailto:understandinges6@denysdovhan.com" target="_blank">&#x43D;&#x430;&#x43F;&#x438;&#x448;&#x456;&#x442;&#x44C; &#x43D;&#x430;&#x43C;</a>.</p>
-<h2 id="&#x434;&#x43E;&#x43F;&#x43E;&#x43C;&#x43E;&#x433;&#x430;-&#x430;&#x432;&#x442;&#x43E;&#x440;&#x443;">&#x414;&#x43E;&#x43F;&#x43E;&#x43C;&#x43E;&#x433;&#x430; &#x430;&#x432;&#x442;&#x43E;&#x440;&#x443;</h2>
-<p>&#x412;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x434;&#x43E;&#x43F;&#x43E;&#x43C;&#x43E;&#x433;&#x442;&#x438; &#x41D;&#x456;&#x43A;&#x43E;&#x43B;&#x430;&#x441;&#x443; &#x417;&#x430;&#x43A;&#x430;&#x441;&#x443; &#x448;&#x432;&#x438;&#x434;&#x448;&#x435; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x438;&#x442;&#x438; &#x440;&#x43E;&#x431;&#x43E;&#x442;&#x443; &#x43D;&#x430;&#x434; &#x43A;&#x43D;&#x438;&#x433;&#x43E;&#x44E;, &#x441;&#x442;&#x430;&#x432;&#x448;&#x438; &#x439;&#x43E;&#x433;&#x43E; <a href="https://patreon.com/nzakas" target="_blank">&#x43F;&#x430;&#x442;&#x440;&#x43E;&#x43D;&#x43E;&#x43C;</a>.</p>
-<h2 id="&#x43F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x43A;&#x430;-&#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x443;">&#x41F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x43A;&#x430; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x443;</h2>
-<p>&#x42F;&#x43A;&#x449;&#x43E; &#x412;&#x430;&#x43C; &#x441;&#x43F;&#x43E;&#x434;&#x43E;&#x431;&#x430;&#x432;&#x441;&#x44F; &#x446;&#x435;&#x439; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434; &#x456; &#x432;&#x438; &#x445;&#x43E;&#x447;&#x435;&#x442;&#x435; &#x434;&#x43E;&#x43F;&#x43E;&#x43C;&#x43E;&#x433;&#x442;&#x438; &#x43D;&#x430;&#x43C;, &#x43F;&#x435;&#x440;&#x448; &#x437;&#x430; &#x432;&#x441;&#x435;, &#x43C;&#x438; &#x434;&#x44F;&#x43A;&#x443;&#x454;&#x43C;&#x43E; &#x412;&#x430;&#x43C;! &#x404; &#x434;&#x435;&#x43A;&#x456;&#x43B;&#x44C;&#x43A;&#x430; &#x441;&#x43F;&#x43E;&#x441;&#x43E;&#x431;&#x456;&#x432; &#x43F;&#x43E;&#x441;&#x43F;&#x440;&#x438;&#x44F;&#x442;&#x438; &#x43D;&#x430;&#x43C;:</p>
-<h3 id="&#x43D;&#x430;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x438;-&#x43D;&#x430;&#x43C;">&#x41D;&#x430;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x438; &#x43D;&#x430;&#x43C;</h3>
-<p>&#x42F;&#x43A;&#x449;&#x43E; &#x412;&#x438; &#x43F;&#x43E;&#x43C;&#x456;&#x442;&#x438;&#x43B;&#x438; &#x44F;&#x43A;&#x443;-&#x43D;&#x435;&#x431;&#x443;&#x434;&#x44C; &#x43F;&#x43E;&#x43C;&#x438;&#x43B;&#x43A;&#x443;, <a href="https://github.com/denysdovhan/understandinges6ua/issues" target="_blank">&#x43F;&#x43E;&#x432;&#x456;&#x434;&#x43E;&#x43C;&#x442;&#x435; &#x43D;&#x430;&#x441;</a>, &#x430;&#x431;&#x43E; &#x432;&#x438;&#x43F;&#x440;&#x430;&#x432;&#x442;&#x435; &#x442;&#x430; &#x43D;&#x430;&#x434;&#x456;&#x448;&#x43B;&#x456;&#x442;&#x44C; <a href="https://github.com/denysdovhan/understandinges6ua/compare" target="_blank">pull request</a>.</p>
-<p>&#x41D;&#x435; &#x441;&#x43E;&#x440;&#x43E;&#x43C;&#x442;&#x435;&#x441;&#x44C; &#x43D;&#x430;&#x434;&#x441;&#x438;&#x43B;&#x430;&#x442;&#x438; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F; &#x442;&#x430; &#x43F;&#x43E;&#x431;&#x430;&#x436;&#x430;&#x43D;&#x43D;&#x44F;, &#x44F;&#x43A;&#x456; &#x441;&#x442;&#x43E;&#x441;&#x443;&#x44E;&#x442;&#x44C;&#x441;&#x44F; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x443; &#x43A;&#x43D;&#x438;&#x433;&#x438;. &#x41C;&#x438; &#x43E;&#x431;&#x43E;&#x432;&#x2019;&#x44F;&#x437;&#x43A;&#x43E;&#x432;&#x43E; &#x432;&#x456;&#x437;&#x44C;&#x43C;&#x435;&#x43C;&#x43E; &#x434;&#x43E; &#x443;&#x432;&#x430;&#x433;&#x438; &#x43A;&#x43E;&#x43D;&#x441;&#x442;&#x440;&#x443;&#x43A;&#x442;&#x438;&#x432;&#x43D;&#x443; &#x43A;&#x440;&#x438;&#x442;&#x438;&#x43A;&#x443; &#x437; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x431;&#x43E;&#x43A;&#x443;.</p>
-<h3 id="&#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x441;&#x442;&#x438;-&#x440;&#x43E;&#x437;&#x434;&#x456;&#x43B;">&#x41F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x441;&#x442;&#x438; &#x440;&#x43E;&#x437;&#x434;&#x456;&#x43B;</h3>
-<p>&#x412;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; <a href="https://git.io/vznFT" target="_blank">&#x43E;&#x431;&#x440;&#x430;&#x442;&#x438; &#x43E;&#x434;&#x438;&#x43D; &#x437; &#x434;&#x43E;&#x441;&#x456; &#x43D;&#x435;&#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;&#x435;&#x43D;&#x438;&#x445; &#x440;&#x43E;&#x437;&#x434;&#x456;&#x43B;&#x456;&#x432;</a> &#x456; &#x441;&#x43F;&#x440;&#x43E;&#x431;&#x443;&#x432;&#x430;&#x442;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x441;&#x442;&#x438; &#x439;&#x43E;&#x433;&#x43E;. &#x41D;&#x435; &#x437;&#x430;&#x431;&#x443;&#x434;&#x44C;&#x442;&#x435; &#x43F;&#x43E;&#x432;&#x456;&#x434;&#x43E;&#x43C;&#x438;&#x442;&#x438; &#x43F;&#x440;&#x43E; &#x446;&#x435; &#x443; &#x432;&#x456;&#x434;&#x43F;&#x43E;&#x432;&#x456;&#x434;&#x43D;&#x456;&#x439; issue, &#x449;&#x43E;&#x431; &#x43C;&#x438; &#x43C;&#x43E;&#x433;&#x43B;&#x438; &#x437;&#x430;&#x43A;&#x440;&#x456;&#x43F;&#x438;&#x442;&#x438; &#x437;&#x430; &#x432;&#x430;&#x43C;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434; &#x446;&#x44C;&#x43E;&#x433;&#x43E; &#x440;&#x43E;&#x437;&#x434;&#x456;&#x43B;&#x443;!</p>
-<p>&#x42F;&#x43A; &#x442;&#x456;&#x43B;&#x44C;&#x43A;&#x438; &#x432;&#x438; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x438;&#x442;&#x435; &#x43F;&#x435;&#x440;&#x435;&#x43A;&#x43B;&#x430;&#x434;, &#x43D;&#x430;&#x434;&#x456;&#x448;&#x43B;&#x456;&#x442;&#x44C; &#x43D;&#x430;&#x43C; <a href="https://github.com/denysdovhan/understandinges6ua/compare" target="_blank">pull request</a>, &#x437; &#x43F;&#x43E;&#x441;&#x438;&#x43B;&#x430;&#x43D;&#x43D;&#x44F;&#x43C; &#x43D;&#x430; &#x432;&#x456;&#x434;&#x43F;&#x43E;&#x432;&#x456;&#x434;&#x43D;&#x443; issue.</p>
-<h3 id="&#x43F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x430;&#x442;&#x438;-&#x43C;&#x430;&#x442;&#x435;&#x440;&#x456;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;">&#x41F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x430;&#x442;&#x438; &#x43C;&#x430;&#x442;&#x435;&#x440;&#x456;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;</h3>
-<p>&#x412;&#x438; &#x442;&#x430;&#x43A;&#x43E;&#x436; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x43D;&#x430;&#x434;&#x456;&#x441;&#x43B;&#x430;&#x442;&#x438; &#x43A;&#x43E;&#x448;&#x442;&#x438; &#x432; &#x43F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x43A;&#x443; &#x43F;&#x440;&#x43E;&#x435;&#x43A;&#x442;&#x443; &#x43D;&#x430; &#x43A;&#x430;&#x440;&#x442;&#x43A;&#x443;:</p>
-<p><strong>4149 4378 5069 5501</strong></p>
-<h2 id="&#x43B;&#x456;&#x446;&#x435;&#x43D;&#x437;&#x456;&#x44F;">&#x41B;&#x456;&#x446;&#x435;&#x43D;&#x437;&#x456;&#x44F;</h2>
-<p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_US" target="_blank">CC BY-NC-ND 3.0</a> &#xA9; <a href="http://denysdovhan.com" target="_blank">Denys Dovhan</a> and <a href="https://github.com/terrysahaidak" target="_blank">Terry Sahaidak</a></p>
-<!-- References -->
-
-                    
-                    </section>
-                
-                
-                </div>
-            </div>
-        </div>
-
-        
-        
-        <a href="./manuscript/00-Introduction.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Вступ"><i class="fa fa-angle-right"></i></a>
-        
     </div>
-</div>
+  </div>
 
-        
-<script src="gitbook/app.js"></script>
+  <script src="bower_components/reveal.js/lib/js/head.min.js"></script>
+  <script src="bower_components/reveal.js/js/reveal.min.js"></script>
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
-    
+  <script>
+   Reveal.initialize({
+    transition: 'linear',
+    backgroundTransition: 'slide',
+    dependencies: [
+        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+        { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
-    
+        // Interpret Markdown in <section> elements
+        { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-yametrika/plugin.js"></script>
-    
+        // Syntax highlight for <code> elements
+        { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-ga/plugin.js"></script>
-    
+        // Zoom in and out with Alt+click
+        { src: 'bower_components/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-rss/plugin.js"></script>
-    
+        // Speaker notes
+        { src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
 
-    
-    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
-    
-
-    
-    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
-    
-
-    
-    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
-    
-
-    
-    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
-    
-
-<script>
-require(["gitbook"], function(gitbook) {
-    var config = {"edit-link":{"base":"https://github.com/denysdovhan/understandinges6ua/tree/master","label":"Редагувати"},"github":{"url":"https://github.com/denysdovhan/understandinges6ua"},"yametrika":{"number":"34703815"},"ga":{"token":"UA-40496885-6","configuration":"auto"},"rss":{"title":"Рoзуміння ECMAScript 6","description":"Український переклад книги «Understanding ES6».","author":"Denys Dovhan and Terry Sahaidak","site_url":"http://understandinges6.denysdovhan.com/","feed_url":"http://understandinges6.denysdovhan.com/rss.xml","managingEditor":"email@denysdovhan.com (Denys Dovhan)","webMaster":"email@denysdovhan.com (Denys Dovhan)","categories":["frontend","js","javascript","es6","es2015","ecmascript"]},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
-    gitbook.start(config);
-});
-</script>
-
-        <script type='text/javascript'>(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter34703815 = new Ya.Metrika({id:34703815}); } catch(e) { } }); var n = d.getElementsByTagName('script')[0], s = d.createElement('script'), f = function () { n.parentNode.insertBefore(s, n); }; s.type = 'text/javascript'; s.async = true; s.src = (d.location.protocol == 'https:' ? 'https:' : 'http:') + '//mc.yandex.ru/metrika/watch.js'; if (w.opera == '[object Opera]') { d.addEventListener('DOMContentLoaded', f, false); } else { f(); } })(document, window, 'yandex_metrika_callbacks');</script><noscript><div><img src='//mc.yandex.ru/watch/34703815' style='position:absolute; left:-9999px;' alt=''/></div></noscript>
-    </body>
-    
+        // Remote control your reveal.js presentation using a touch device
+        { src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+  });
+  </script>
+</body>
 </html>
