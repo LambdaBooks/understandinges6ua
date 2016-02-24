@@ -1,0 +1,25 @@
+/* font-family: "League Gothic"; */
+@font-face {
+  font-family: "League Gothic";
+  src: url("../fonts/LeagueGothic/LeagueGothicCyrillic.eot");
+  src: url("../fonts/LeagueGothic/LeagueGothicCyrillic.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* font-family: "Lato"; */
+@font-face {
+    font-family: "Lato";
+    src: url("../fonts/Lato/LatoRegular.eot");
+    src: url("../fonts/Lato/LatoRegular.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/Lato/LatoRegular.woff")       format("woff"),
+         url("../fonts/Lato/LatoRegular.ttf")        format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+
+.about-me img {
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+}
