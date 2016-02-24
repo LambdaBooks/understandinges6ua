@@ -18,6 +18,14 @@
     font-weight: normal;
 }
 
+.what-is-bash__link {
+  margin-top: 1em !important;
+}
+
+.what-is-bash__link code {
+  font-size: 0.75em;
+}
+
 .about-me img {
   width: 25%;
   height: 25%;
