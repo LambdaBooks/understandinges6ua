@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title><![CDATA[Рoзуміння ECMAScript 6]]></title>
+        <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
+        <link>http://understandinges6.denysdovhan.com/</link>
+        <generator>RSS for Node</generator>
+        <lastBuildDate>Wed, 24 Feb 2016 20:00:41 GMT</lastBuildDate>
+        <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
+        <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
+        <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
+        <webMaster><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></webMaster>
+        <category><![CDATA[frontend]]></category>
+        <category><![CDATA[js]]></category>
+        <category><![CDATA[javascript]]></category>
+        <category><![CDATA[es6]]></category>
+        <category><![CDATA[es2015]]></category>
+        <category><![CDATA[ecmascript]]></category>
+        <item>
+            <title><![CDATA[Рoзуміння ECMAScript 6]]></title>
+            <description><![CDATA[Build Status
+Twitter
+RSS]]></description>
+            <link>http://understandinges6.denysdovhan.com/</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Вступ]]></title>
+            <description><![CDATA[Особливості ядра мови JavaScript визначені у стандарті під назвою ECMA-262. Мова, яку визначає цей стандарт, називається ECMAScript, з якої JavaScript у браузерах та оточенні Node.js є надбудовою. У той час, коли браузери та Node.js можуть розширювати можливості за допомогою додаткових об’єктів та методів, ядро мови залишається таким, яким воно визначене у ECMAScript, тому розвиток ECMA-262 є життєво важливим для успіху JavaScript в цілому.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+    </channel>
+</rss>
