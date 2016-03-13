@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sun, 13 Mar 2016 14:15:04 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 13 Mar 2016 14:17:58 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -29,6 +29,13 @@ RSS]]></description>
             <description><![CDATA[Особливості ядра мови JavaScript визначені у стандарті під назвою ECMA-262. Мова, яку визначає цей стандарт, називається ECMAScript, з якої JavaScript у браузерах та оточенні Node.js є надбудовою. У той час, коли браузери та Node.js можуть розширювати можливості за допомогою додаткових об’єктів та методів, ядро мови залишається таким, яким воно визначене у ECMAScript, тому розвиток ECMA-262 є життєво важливим для успіху JavaScript в цілому.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Блочне зв'язування]]></title>
+            <description><![CDATA[Так склалось, що одна із найхитріших частин програмування на JavaScript - спосіб, яким оголошуються змінні. У більшості С-подібних мов змінні (або їх зв'язування) створюються там, де їх оголошують. Проте в JavaScript це не зовсім так. Місце створення ваших змінних залежить від того, як ви їх оголосили і ECMAScript 6 надає вам простіший спосіб контролювати область видимості. Ця глава ілюструє чому класичне var оголошення може заплутати, вводить блочне зв'язування в ECMAScript 6, а тоді пропонує деякі рекомендації для їх використання.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/01-Block-Bindings.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/01-Block-Bindings.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
