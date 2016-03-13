@@ -2,7 +2,7 @@
 
 * [Рoзуміння ECMAScript 6](/README.md)
 * [Вступ](/manuscript/00-Introduction.md)
-* Блочне зв’язування
+* [Блочне зв’язування](/manuscript/01-Block-Bindings.md)
 * Рядки та регулярні вирази
 * Функції
 * Об’єкти
