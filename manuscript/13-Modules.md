@@ -1,37 +1,37 @@
-# Modules
+# Модулі
 
-One of the most error-prone and confusing aspects of JavaScript has long been the "shared everything" approach to loading code. Whereas other languages have concepts such as packages, JavaScript lagged behind, and everything defined in every file shared the same global scope. As web applications became more complex and the amount of JavaScript used grew, the "shared everything" approach began to show problems with naming collisions, security concerns, and more. One of the goals of ECMAScript 6 was to solve this problem and bring some order into JavaScript applications. That's where modules come in.
+Одним з найбільш схильних до помилок і заплутаних аспектів JavaScript вже давно є "shared everything" підхід до завантаження коду. У той час як інші мови мають такі поняття, як пакети, JavaScript відстав, і все, що визначається в кожному файлі поділяє єдину глобальну область видимості. В той час, коли веб-додатки стали більш складними, а кількість використання JavaScript виросла, "shared everything" підхід почав виявляти проблеми з конфліктами імен, проблеми безпеки та багато іншого. Однією з цілей ECMAScript 6 було вирішення цієї проблеми, і наведення порядку в додатках JavaScript. Ось тут і з’являються модулі.
 
-## What are Modules?
+## Що таке модулі?
 
-*Modules* are JavaScript files that are loaded in a special mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). At the time of my writing, neither browsers nor Node.js have a way to natively load ECMAScript 6 modules, but both have indicated that there will need to be some sort of opt-in to do so. The reason this opt-in is necessary is because module files have very different semantics than non-module files:
+*Модулі* — це JavaScript файли, які завантажені спеціальним чином (на відміну від *скриптів*, які завантажуються звичайним для JavaScript чином). На час мого написання, ані браузери, ані Node.js не мали засобів для завантаження модулів ECMAScript 6, але обидва вказували, що повинна бути певна можливість це робити. Причина необхідності цієї опції в тому, що файли модулів мають досить відмінну від файлів не-модулів семантику:
 
-1. Module code automatically runs in strict mode and there's no way to opt-out of strict mode.
-1. Variables created in the top level of a module are not automatically added to the shared global scope. They exist only within the top-level scope of the module.
-1. The value of `this` in the top level of a module is `undefined`.
-1. Modules do not allow HTML-style comments within the code (a leftover feature from the early browser days).
-1. Modules must export anything that should be available to code outside of the module.
+1. код модуля автоматично запускається в строгому режимі і не має ніякого способу, щоб відмовитися від строгого режиму;
+1. змінні, створені на вищому рівні модуля, не додаються автоматично до загальної глобальної області видимості. Вони існують тільки в межах вищого рівня модуля;
+1. значення `this` в віому рівні модуля — `undefined`;
+1. модулі не дозволяють використання коментарів в стилі HTML у коді (можливість, що залишилась з перших днів браузерів);
+1. модулі повинні експортувати будь-щоб що має бути доступне за межами модуля.
 
-These differences may seem small at first glance, however, they represent a significant change in how JavaScript code is loaded and evaluated.
+Відмінності можуть казатися маленькими на перший погляд, але вони представляють собою значну зміну того, як JavaScript завантажується й обробляється.
 
-Module JavaScript files are created just like any other JavaScript file: in a text editor and typically with the `.js` extension. The only difference during development is that you use some different syntax.
+Файли JavaScript модулів створюються так само, як і інші JavaScript фали: в текстовому редакторі та, зазвичай, з розширенням `.js`. Відмінність під час розробки в тому, що ви використовуєте трохи інший синтаксис.
 
-## Basic Exporting and Importing
+## Основи експорту та імпорту
 
-The `export` keyword is used to expose parts of published code to other modules. In the simplest case, you can place `export` in front of any variable, function, or class declaration to export it from the module. For example:
+Ключове слово `export` використовується, щоб надавати частини опублікованого коду іншим модулям. В найпростішому випадку, ви можете поставити `export` на початку оголошення будь-якої змінної, функції, або класу, щоб експортувати їх з модуля. Наприклад:
 
 ```js
-// export data
+// експортуємо дані
 export var color = "red";
 export let name = "Nicholas";
 export const magicNumber = 7;
 
-// export function
+// експортуємо функцію
 export function sum(num1, num2) {
     return num1 + num1;
 }
 
-// export class
+// експортуємо клас
 export class Rectangle {
     constructor(length, width) {
         this.length = length;
@@ -39,88 +39,88 @@ export class Rectangle {
     }
 }
 
-// this function is private to the module
+// це привата функція модуля
 function subtract(num1, num2) {
     return num1 - num2;
 }
 
-// define a function
+// визначаємо функцію
 function multiply(num1, num2) {
     return num1 * num2;
 }
 
-// export later
+// експортуємо пізніше
 export multiply;
 ```
 
-There are a few things to notice in this example:
+Є декілька речей, на які треба зважати в цьому приклді:
 
-1. Every declaration is exactly the same as it would otherwise be without the `export` keyword.
-1. Both function and class declarations require a name. You cannot export anonymous functions or classes using this syntax (unless using the `default` keyword discussed later in this chapter)
-1. You need not always export the declaration, you can also export references, as with `multiply` in this example.
-1. Any variables, functions, or classes that are not explicitly exported remain private to the module. In this example, `subtract()` is not exported and is therefore not accessible from outside the module.
+1. кожне оголошення значить те саме, що й повинно значити без слова `export`;
+1. оголошення функції й класу потребують ім’я. Ви не можете експортувати анонімні функції або класи, використовуючи такий синтаксис (принаймні, без використання ключового слова `default`, яке буде розглянуте далі в цьому розділі);
+1. ви не повинні завжди експортувати оголошення, ви також можете експортувати посилання, як у випадку з `multiply` в цьому прикладі;
+1. будь-які змінні, функції, чи класи, які явно не експортовані залишаються приватними для модуля. В цьому прикладі, `subtract()` не експортовано і залишається в подальшому недосяжним за межами модуля.
 
-An important limitation of `export` is that it must be used in the top-level of the module. For instance, this is a syntax error:
+Важливим обмеженням `export` є те, що воно має бути використане на вищому рівні модуля. Наприклад, це — синтаксична помилка:
 
 ```js
 if (flag) {
-    export flag;    // syntax error
+    export flag;    // синтаксична помилка
 }
 ```
 
-This example is a syntax error because `export` is inside of an `if` statement. Exports cannot be conditional or done dynamically in any way. Part of the benefit of module syntax is so the JavaScript engine can staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
+Цей приклад є синтаксичною помилкою тому, що `export` знаходиться всередині виразу `if`. Експорти не можуть буди частинами умовних висловів або створюватися динамічно іншим чином. Чистина переваг синтаксису модуля полягає в тому, що JavaScript рушій може статично визначити, що буду експортовано. Ось чому, ви можете використовувати `export` тільки на вищому рівні модуля.
 
-W> If you are using a transpiler like Babel.js, you may find that `export` can be used anywhere. This only works when code is converted to ECMAScript 5 and will not work with a native ECMAScript 6 module system.
+W> Якщо ви користуєтесь компілятором на кшталт Babel.js, ви можете зауважити, що `export` може бути використано будь-де. Це працює тільки, коли код конвертується в ECMAScript 5 і не буде працювати з справжньою системою модулів ECMAScript 6.
 
-Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. An `import` statement has two parts: the identifiers you're importing and the module from which those identifiers should be imported. The basic form is as follows:
+Якщо ви маєте модуль з експортами, ви здатні використовувати експортований функціонал в іншому модулі за допомогою ключового слова `import`. Оголошення `import` має дві частини: ідентифікатори того, що ви імпортуєте та модуль, звідки ті ідентифікатори мають буду імпортовані. Загальна форма має такий вигляд:
 
 ```js
 import { identifier1, identifier2 } from "module";
 ```
 
-The curly braces after `import` indicate the identifiers to import from the given module. The keyword `from` is used to indicate the module from which to import the given identifiers. The module is specified using a string. At the time of my writing, it is still undecided what module identifiers will look like. They may end up being full file paths (such as "../mymodule.js"), file paths without extensions (such as "../mymodule"), or something else. This likely won't be determined until browsers and Node.js begin implementing modules natively.
+Фігурні дужки після `import` позначають ідентифікатори, які треба імпортувати з вказаного модуля. Ключове слово `from` використане, щоб позначити модуль з якого будуть імпортовані вказані ідентифікатори. Модуль визначається з використанням рядка. На момент мого написання, все ще не визначено, як мають виглядати ідентифікатори модулів. Можливо це мають бути повні шляхи файлів (як "../mymodule.js"), шляхи файлів без розширення (як "../mymodule"), або щось інше. Певно, це не буде визначено доки браузери й Node.js не реалізують модулі природнім шляхом.
 
-I> Even though it looks similar, the list of identifiers to import is not a destructured object.
+I> Не зважаючи на те, що він виглядає подібно, список ідентифікаторів імпорту не є неструктурованим об’єктом.
 
-When importing an identifier from a module, the identifier acts as if it were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
+При імпорті ідентифікатора з модуля, ідентифікатор діє так, якби його було визначено за допомогою `const`. Це означає, що ви не можете визначити іншу змінну з тим же ім'ям, використовуйте ідентифікатор до оголошення `import`, або змініть його значення.
 
-Suppose that the first example in this section is in a module named `"example"`. You can import and use identifiers from that module in a number of ways. You can just import one identifier:
+Припустимо, що перший приклад в даному розділі знаходиться в модулі з ім'ям `"example"`. Ви можете імпортувати і використовувати ідентифікатори з цього модуля кількома шляхами. Ви можете просто імпортувати один ідентифікатор:
 
 ```js
-// import just one
+// імпортуємо тільки один ідентифікатор
 import { sum } from "example";
 
 console.log(sum(1, 2));     // 3
 
-sum = 1;        // error
+sum = 1;        // помилка
 ```
 
-This example imports only `sum()` from the example module. Even though the example module exports more than just that one function, they are not exposed here. If you try to assign a new value to `sum`, the result is an error, as you cannot reassign imported identifiers.
+Цей приклад імпортує тільки `sum()` з модуля `"example"`. Навіть якщо припустити, що модуль експортує більше, ніж просто одну функцію, ці експорти не вказані тут. Якщо ви спробуєте надати нове значення `sum`, результатом буде помилка тому, що ви не можете перевизначити імпортовані ідентифікатори.
 
-If you want to import multiple identifiers from the example module, you can explicitly list them out:
+Якщо ви хочете імпортувати кілька ідентифікаторів з модуля `"example"`, ви можете явно перерахувати їх:
 
 ```js
-// import multiple
+// множинний імпорт
 import { sum, multiply, magicNumber } from "example";
 console.log(sum(1, magicNumber));   // 8
 console.log(multiply(1, 2));        // 2
 ```
 
-Here, three identifiers are imported from the example module: `sum`, `multiply`, and `magicNumber`. They are then used as if they were locally defined.
+Тут з модуля `"example"` імпортуються три ідентифікатора: `sum`,` multiply` і `magicNumber`. Потім вони використовуються, якщо б вони були локально визначені.
 
-There's also a special case that allows you to import the entire module as a single object. All of the exports are then available on that object as properties. For example:
+Ось також особливий випадок, який дозволяє імпортувати весь модуль як єдиний об'єкт. Всі експорти будуть доступні в цьому об'єкті в якості властивостей. Наприклад:
 
 ```js
-// import everything
+// імпортуємо все
 import * as example from "example";
 console.log(example.sum(1,
         example.magicNumber));          // 8
 console.log(example.multiply(1, 2));    // 2
 ```
 
-In this code, the entirety of the example module is loaded into an object called `example`. The named exports `sum()`, `multiple()`, and `magicNumber` are then accessible as properties on `example`.
+В цьому коді весь модуль `"example"` завантажено в об’єкт названий `example`. Вказані експорти `sum()`, `multiple()` та `magicNumber` є доступними, як властивості в `example`.
 
-Keep in mind that the code inside of a module will only ever be executed once, regardless of the number of times it's used in an `import` statement. Consider the following:
+Майте на увазі, що код всередині модуля буде виконуватися тільки один раз, незалежно від того, скільки разів він використовується в оголошенні `import`. Зверніть увагу на таке:
 
 ```js
 import { sum } from "example";
@@ -128,13 +128,13 @@ import { multiply } from "example";
 import { magicNumber } from "example";
 ```
 
-Even though there are three `import` statements in this module, the code in `"example"` will only be executed once. The instantiated module is then kept in memory and reused whenever another `import` statement references it. It doesn't matter if the `import` statements are all in the module, or are spread across multiple modules - they each will use the same module instance.
+Незважаючи на те, що є три оголошення `import` в даному модулі, код з `"example"` буде виконуватися тільки один раз. Ініційований модуль потім зберігається в пам'яті й буде повторно використовуватися при кожному наступному оголошенні `import`. Не має значення, чи оголошення `import` всі в одному модулі, або розподілені за кількома модулями — всі вони будуть використовувати той самий екземпляр модуля.
 
-## Renaming Exports and Imports
+## Перейменування імпортів і експортів
 
-Sometimes the original name of a variable, function, or class isn't what you want to use. It's possible to change the name of an export both during the export and when the identifier is being imported.
+Іноді оригінальна назва змінної, функції або класу не те, що ви хочете використовувати. Можна змінити назву експорту, як під час експорту так і, коли ідентифікатор імпортується.
 
-In the first case, suppose you have a function that you'd like to export with a different name. You can use the `as` keyword to specify the name that the function should be known as outside of the module:
+У першому випадку, припустимо, що у вас є функція, яку ви хотіли б експортувати з іншим ім'ям. Ви можете використовувати ключове слово `as`, щоб вказати ім'я, під яким функція повинна бути відома за межами модуля:
 
 ```js
 function sum(num1, num2) {
@@ -144,13 +144,13 @@ function sum(num1, num2) {
 export { sum as add };
 ```
 
-Here, the `sum()` function (`sum` is the *local name*) is exported as `add()` (`add` is the *exported name*). That means when another module wants to import this function, it will have to use the name `add` instead:
+Тут, функція `sum()` (`sum` — це *локальне ім’я*) експортована як `add()` (`add` — це *експортоване ім’я*). Це означає, що, коли інший модуль хоче імпортувати цю функцію, він має використовувати ім'я `add`:
 
 ```js
 import { add } from "example";
 ```
 
-If the module importing the function wants to use a different name, it can also use `as`:
+Якщо модуль при імпорті функції хоче використовувати для неї інше ім’я, він також може використовувати `as`:
 
 ```js
 import { add as sum } from "example";
@@ -158,11 +158,11 @@ console.log(typeof add);            // "undefined"
 console.log(sum(1, 2));             // 3
 ```
 
-This code imports the `add()` function (the *import name*) and renames it to `sum()` (the local name). That means there is no identifier named `add` in this module.
+Цей код імпортує функцію `add()` (*імпортоване ім’я*) та перейменовує її на `sum()` (локальне ім’я). Це означає, зо в цьому модулі біль не має ідентифікатора з ім’ям `add`.
 
-A> ### Imported Bindings
+A> ### Імпортовані зв’язування
 A>
-A> A subtle but important point about the `import` statements is that they create bindings to variables, functions, and classes rather than simply referencing them. That means even though you cannot change an imported identifier, it can still change on its own. For example, suppose you have this module:
+A> Тонкий, але важливий момент, стосовно оголошень `import` є те, що вони створюють зв’язування для змінних, функцій і класів, а не просто посилання на них. Це означає, що навіть якщо ви не можете змінити імпортований ідентифікатор, він все ще може змінитися сам по собі. Наприклад, припустимо, що у вас є такий модуль:
 A>
 A> ```js
 A> export var name = "Nicholas";
@@ -171,7 +171,7 @@ A>     name = newName;
 A> }
 A> ```
 A>
-A> When you import `name` and `setName()`, you can see that `setName()` is able to change the value of `name`:
+A> Коли ви імпортуєте `name` та `setName()`, ви можете бачити, що `setName()` може змінити значення `name`:
 A>
 A> ```js
 A> import { name, setName } from "example";
@@ -183,11 +183,11 @@ A>
 A> name = "Nicholas";       // error
 A> ```
 A>
-A> The call to `setName("Greg")` goes back into the module from which `setName()` was exported and executes there, setting `name` to `"Greg"`. Note this change is automatically reflected on the imported `name` binding. That's because `name` is the local name for the exported *name* identifier so they are not the same thing.
+A> Виклик `setName("Greg")` повертається назад до модуля, з якого `setName()` було експортовано та виконується там, встановлюючи `name` до `"Greg"`. Зауважте, ця зміна автоматично відбивається на імпортоване `name` зв’язування. Це тому, що `name` є локальним ім’ям для експортованого ідентифікатора *name*, таким чином вони не є тотожними речами.
 
-## Exporting and Importing Defaults
+## Замовчування для експортів та імпортів
 
-The module syntax is really optimized for exporting and importing default values from modules. The default value for a module is a single variable, function, or class as specified by the `default` keyword. For example:
+Синтаксис модуля також оптимізований для експорту та імпорту значеннь за замовчуванням з модулів. Значення за замовчуванням для модуля є простою змінною, функцією або класом, яку визначено за допомогою ключового слова `default`. Наприклад:
 
 ```js
 export default function(num1, num2) {
@@ -195,12 +195,12 @@ export default function(num1, num2) {
 }
 ```
 
-This module exports a function as the default. The `default` keyword indicates that this is a default export and the function doesn't require a name because the module itself represents the function.
+Цей модуль за замовчуванням експортує функцію. Ключове слово `default` вказує на те, що це є експорт за замовчуванням і функція не вимагає ім'я, тому що сам модуль являє собою функцію.
 
-You can also specify an identifier as being the default export using the renaming syntax, such as:
+Ви також можете вказати ідентифікатор, який буде експортом за замовчуванням за допомогою синтаксису перейменування, ось так:
 
 ```js
-// equivalent to previous example
+// те саме, що й в попередньому прикладі
 function sum(num1, num2) {
     return num1 + num2;
 }
@@ -208,26 +208,26 @@ function sum(num1, num2) {
 export { sum as default };
 ```
 
-The `as default` specifies that `sum` should be the default export of the module. This syntax is equivalent to the previous example.
+Вираз `as default` визначає, що `sum` має бути експортом модуля за замовчуванням. Цей синтаксис є еквівалентом попередньому прикладу.
 
-W> You can only have one default export per module. It is a syntax error to use the `default` keyword with multiple exports.
+W> Ви можете мати тільки один експорт за замовчуванням для модуля. Використання ключового слова `default` з багатьма експортами буде синтаксичною помилкою.
 
-You can import a default value from a module using the following syntax:
+Ви можете імпортувати значення за замовчуванням з модуля, використовуючи наступний синтаксис:
 
 ```js
-// import the default
+// імпортуємо значення за замовчуванням
 import sum from "example";
 
 console.log(sum(1, 2));     // 3
 ```
 
-This import statement imports the default from the module `"example"`. Note that there are no curly braces used in this case, as would be with a non-default export. The local name `sum` is used to represent the function that the module exports. This syntax is the cleanest as it's anticipated to be the dominant form of import on the web, allowing you to use already-existing object, such as:
+Це оголошення імпорту імпортує замовчування з модуля `"example"`. Зверніть увагу, що в цьому випадку не використовуються фігурні дужки, які використовуються в цьому випадку, якби було б з експортами не за замовчуванням. Локальне ім’я `sum` використовується щоб представити функцію, яка експортується модулем. Цей синтаксис є найчистішим і, як очікується, буде домінантою формою імпорту в Інтернеті, що дозволяє використовувати вже існуючий об’єкт, як наприклад:
 
 ```js
 import $ from "jquery";
 ```
 
-For modules that export both a default and one or more non-defaults, you can import them with one statement. For instance, suppose you have this module:
+Для модулів, які експортують як замовчування, так і один або більше експортів не за замовчуванням, ви можете імпортувати все за допомогою одного оператора. Наприклад, припустимо, що у вас є цей модуль:
 
 ```js
 export let color = "red";
@@ -237,7 +237,7 @@ export default function(num1, num2) {
 }
 ```
 
-You can then import both `color` and the default function using the following:
+Потім ви можете імпортувати як `color`, так і замовчування, використовуючи наступне:
 
 ```js
 import sum, { color } from "example";
@@ -246,72 +246,72 @@ console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
 ```
 
-The comma separates the default local name from the non-defaults (which are also surrounded by curly braces).
+Кома відокремлює локальне ім’я для імпорту замочування від інших імпортів (які також оточенні фігурними дужками).
 
-As with exporting defaults, importing defaults can also be accomplished using the renaming syntax:
+Так само, як для експортів замовчувань, імпорт замовчувань також може бути виконаний з використанням синтаксису перейменування:
 
 ```js
-// equivalent to previous example
+// те саме, що й в попередньому прикладі
 import { default as sum, color } from "example";
 
 console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
 ```
 
-In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the previous example.
+У цьому коді, експорт за замовчуванням (`default`) перейменовується в `sum`, а додатковий експорт `color` також імпортується. Цей приклад еквівалентний попередньому прикладу.
 
-## Re-exporting
+## Ре-експортування
 
-There may be a time when you'd like to re-export something that your module has imported. You can do this using the patterns already discussed in this chapter, such as:
+Можливо, колись ви захотіли б реекспортувати те, що ваш модуль імпортув. Ви можете зробити це, використовуючи шаблони вже розглянуті в цьому розділі, такі як:
 
 ```js
 import { sum } from "example";
 export { sum }
 ```
 
-However, there's also a single statement that can accomplish the same thing:
+Тим не менш, є також один оператор, який може зробити те ж саме:
 
 ```js
 export { sum } from "example";
 ```
 
-This form of `export` looks into the specified module for the declaration of `sum` and then exports it. Of course, you can also choose to export a different name for the same thing:
+Ця форма `export` шукає в зазначеному модулі на оголошення `sum`, а потім експортує його. Звичайно, ви можете також вибрати для експорту інше ім'я:
 
 ```js
 export { sum as add } from "example";
 ```
 
-Here, `sum` is imported from `"example"` and then exported as `add`.
+Тут `sum` імпортоване з `"example"`, а потім експортоване як `add`.
 
-If you'd like to export everything from another module, you can use the `*` pattern:
+Якщо ви хочете експортувати все з іншого модуля, то ви можете використовувати шаблон `*`:
 
 ```js
 export * from "example";
 ```
 
-By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `"example"` has a default export, you'll be unable to define a new default export when using this syntax.
+При експорті всього, ви разом з усіма експортами, що мають ім’я, експортуєте також і замовчування, які можуть вплинути на те, що ви можете експортувати з вашого модуля. Наприклад, якщо `"example"` має експорт за замовчуванням, ви будете не в змозі визначити новий експорту за замовчуванням при використанні цього синтаксису.
 
-## Importing Without Bindings
+## Імпортування без зв’язування
 
-Some modules may not export anything, and instead, only make modifications to objects in the global scope. Even though top-level variables, functions, and classes inside of modules do not automatically end up in the global scope, that doesn't mean modules cannot access the global scope. The shared definitions of built-in objects such as `Array` and `Object` are accessible inside of a module and changes to those objects will be reflected in other modules.
+Деякі модулі можуть нічого не експортувати, а замість цього, тільки вносити зміни в об'єкти в глобальній області видимості. Навіть якщо змінні верхнього рівня, функції і класи всередині модулів автоматично не потрапляють в глобальну область видимості, це не означає, що модулі не можуть отримати доступ до глобальної області. Загальні визначення вбудованих об'єктів, таких як `Array` і` Object` доступні всередині модуля і зміни до цих об'єктів будуть віддзеркалені в інших модулях.
 
-For instance, suppose you want to add a method to all arrays called `pushAll()`, you may define a module like this:
+Наприклад, припустимо, що ви хочете додати метод до всіх масивів з ім’ям `pushAll()`, ви можете визначити модуль наступним чином:
 
 ```js
-// module code without exports or imports
+// Код модуля без експортів чи імпортів
 Array.prototype.pushAll = function(items) {
 
-    // items must be an array
+    // items має буду масивом
     if (!Array.isArray(items)) {
         throw new TypeError("Argument must be an array.");
     }
 
-    // use built-in push() and spread operator
+    // використовуємо вбудовані push() та spread оператори
     return this.push(...items);
 };
 ```
 
-This is a valid module even though there are no exports or imports. This code can be used both as a module and a script. Since it doesn't export anything, you can use a simplified import to execute the module code without importing any bindings:
+Це дійсний модуль, навіть якщо немає експорту або імпорту. Цей код може бути використаний як в якості модуля, так і сценарію. Так як він не експортує нічого, ви можете використовувати спрощений імпорт для виконання коду модуля без імпорту будь-яких зв’язувань:
 
 ```js
 import "example";
@@ -322,14 +322,14 @@ let items = [];
 items.pushAll(colors);
 ```
 
-In this example, the module is imported and executed, so `pushAll()` is added to the array prototype. That means `pushAll()` is now available for use on all arrays inside of this module.
+У цьому прикладі, модуль імпортується і виконується таким чином, що `pushAll()` додається до прототипу масиву. Це означає, що `pushAll()` тепер доступний для використання у всіх масивах всередині цього модуля.
 
-I> Imports without bindings are most likely to be used to create polyfills and shims.
+I> Імпорти без зв’язування, швидше за все, будуть використовуватися для створення поліфілів та латок.
 
-## Summary
+## Підсумки
 
-ECMAScript 6 adds modules to the language as a way to package up and encapsulate functionality. Modules behave differently than scripts, as they do not modify the global scope with their top-level variables, functions, and classes, and `this` is `undefined`. In order to work differently than scripts, modules must be loaded using a different mode.
+ECMAScript 6 додає модулі до мови, як спосіб пакування і інкапсуляції функціональності. Модулі поводяться інакше, ніж скрипти, так як вони не змінюють глобальну область видимості їх змінними верхнього рівня, функціями і класами, і `this` є `undefined`. Для того, щоб працювати по-іншому, ніж скрипти, модулі повинні бути завантажені в інший спосіб.
 
-You must export any functionality you'd like to make available to consumers of a module. Variables, functions, and classes can all be exported, and there is also one default export allowed per module. After exporting, another module can import all or some of the exported names. These names act as if defined by `let`, and so operate as block bindings that cannot be redeclared in the same module.
+Ви повинні експортувати будь-які функціональні можливості, які б ви хотіли зробити доступними для використання у модулях. Змінні, функції і класи можуть бути експортовані, також для кожного модуля допускається один експорт за замовчуванням. Після експорту, інший модуль може імпортувати всі або деякі з експортованих імен. Ці імена діють так, якби їх було визначено через `let`, і тому поводяться як блокові зв’язування, які не можуть бути повторно оголошені в тому ж модулі.
 
-Modules need not export anything if they are manipulating something in the global scope. In that case, it's possible to import from such a module without introducing any bindings into the module scope.
+Модулі не повинні нічого експортувати, якщо вони маніпулюють чимось у глобальній області видимості. В цьому випадку, можна імпортувати з такого модуля без введення будь-яких зв’язувань у області видимості модуля.
