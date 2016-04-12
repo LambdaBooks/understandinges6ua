@@ -1,16 +1,16 @@
-# Functions
+# Функції
 
-Functions are an important part of any programming language, and prior to ECMAScript 6, JavaScript functions hadn't changed much since the language was created. This left a backlog of problems and nuanced behavior that made making mistakes easy and often required more code just to achieve very basic behaviors.
+Функцій — важлива частина будь–якої мови програмування, і до ECMAScript 6, функції в JavaScript на зазнавали значних змін з моменту створення мови. Це накопичувало проблеми та нюанси поведінки, які призводили до помилкок та потребували більше коду для виконання базових завдань.
 
-ECMAScript 6 functions make a big leap forward, taking into account years of complaints and requests from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful.
+Функції в ECMAScript 6 зробили великий крок уперед, беручи до уваги скарги та прохання JavaScript–розробників. Результатом стали численні покращення ECMAScript 5 функцій, що допоможуть уникнути помилок при програмуванні на JavaScript та зроблять його більш потужним.
 
-## Functions with Default Parameter Values
+## Функції з параметрами за замовчуванням
 
-Functions in JavaScript are unique in that they allow any number of parameters to be passed, regardless of the number of parameters declared in the function definition. This allows you to define functions that can handle different numbers of parameters, often by just filling in default values when parameters aren't provided. This section covers how default parameters work both in and prior to ECMAScript 6, along with some important information on the `arguments` object, using expressions as parameters, and another TDZ.
+Функції в JavaScript є унікальними з тієї точки зору, що дозволяють приймати будь-яку кількість параметрів, незалежновід того, яку кількість параметрів було оголошено при визначенні функції. Це дозволяє вам визначати функції, що можуть оперувати різною кількістю параметрів просто підставляючи значення за замовчуванням, коли вони не передані. Цей розділ розповідає про те, як параметри за замовчуванням працюють до та в ECMAScript 6, разом з важливою інформацією про об’єкт `arguments`, використання виразів у якості параметрів та інші нюанси.
 
-### Simulating Default Parameter Values in ECMAScript 5
+### Імітування параметрів за замовчуванням у ECMAScript 5
 
-In ECMAScript 5 and earlier, you would likely use the following pattern to create a function with default parameters values:
+У ECMAScript 5 та раніше ви, напевно, використовували такий шаблон для створення функції з параметрами за замовчуванням:
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -18,14 +18,14 @@ function makeRequest(url, timeout, callback) {
     timeout = timeout || 2000;
     callback = callback || function() {};
 
-    // the rest of the function
+    // решта функції
 
 }
 ```
 
-In this example, both `timeout` and `callback` are actually optional because they are given a default value if a parameter isn't provided. The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for `timeout` might actually be `0`, but this would replace it with `2000` because `0` is falsy.
+У цьому прикладі і `timeout`, і `callback` є насправді необов’язковими, тому що їм передаються значення за замовчуваннями, якщо вони не вказані. Логічний оператор AБО (`||`) завжди повертає другий оперант, якщо перший є хибним. Оскільки вказані параметри не вказані, їм буде встановелене значення `undefined`, таким чином оператор логічного АБО часто використовується для встановлення пропущеним параметрам значень за замовчуванням. Однак, у такому підході є недолік: у тому випадку, якщо `timeout` матиме значення `0`, яке є валідним, воно буде замінене на `2000`, тому що `0` є хибою.
 
-In that case, a safer alternative is to check the type of the argument using `typeof`, as in this example:
+У цьому випадку, безпечнішою альтернативою первірки чи було передано аргумент є використання `typeof`, як у цьому прикладі:
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -33,16 +33,16 @@ function makeRequest(url, timeout, callback) {
     timeout = (typeof timeout !== "undefined") ? timeout : 2000;
     callback = (typeof callback !== "undefined") ? callback : function() {};
 
-    // the rest of the function
+    // решта функції
 
 }
 ```
 
-While this approach is safer, it still requires a lot of extra code for a very basic operation. Popular JavaScript libraries are filled with similar patterns, as this represents a common pattern.
+Цей підхід безпечніший, але він потребує багато зайвого коду для такої простої операції. Популярні JavaScript–бібліотеки часто використовують подібний патерн, оскільки цей підхід є загальним.
 
-### Default Parameter Values in ECMAScript 6
+### Параметри за замовчуванням у ECMAScript 6
 
-ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
+ECMAScript 6 полегшує передачу значень параметрам за замовчуванням шляхом ініціалізації, яка відбувається, коли параметер не був переданий. Наприклад:
 
 ```js
 function makeRequest(url, timeout = 2000, callback = function() {}) {
@@ -52,57 +52,57 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
 }
 ```
 
-This function only expects the first parameter to always be passed. The other two parameters have default values, which makes the body of the function much smaller because you don't need to add any code to check for a missing value.
+Ця функція очікує, що лише перший параметер буде передаватись завжди. Інші два параметри мають значення за замовчуванням, що робить тіло функції меншим, оскільки вам не потрібно писати додатковий код для перевірки значень.
 
-When `makeRequest()` is called with all three parameters, the defaults are not used. For example:
+Коли `makeRequest()` з усіма трьома параметрами, параметри за замовчуванням не будуть використовуватись. Наприклад:
 
 ```js
-// uses default timeout and callback
+// використовує значення timeout та callback за замовчуванням
 makeRequest("/foo");
 
-// uses default callback
+// використовує callback за замовчуванням
 makeRequest("/foo", 500);
 
-// doesn't use defaults
+// не використовує значення за замовчуванням
 makeRequest("/foo", 500, function(body) {
     doSomething(body);
 });
 ```
 
-ECMAScript 6 considers `url` to be required, which is why `"/foo"` is passed in all three calls to `makeRequest()`. The two parameters with a default value are considered optional.
+ECMAScript 6 розглядає `url` як обов’язковий параметер, тому ми передаємо `"/foo"` у всіх трьох викликах `makeRequest()`. Два параметри зі значеннями за замовчуванням розглядаються як необов’язкові.
 
-It's possible to specify default values for any arguments, including those that appear before arguments without default values in the function declaration. For example, this is fine:
+Можливо задавати значення за замовчуванням для будь–яких аргументів, включаючи ті, які стоять у оголошенні функції перед аргументами без значень за замовчуванням. Наприклад, такий код працює як і очікується:
 
 ```js
 function makeRequest(url, timeout = 2000, callback) {
 
-    // the rest of the function
+    // решта функції
 
 }
 ```
 
-In this case, the default value for `timeout` will only be used if there is no second argument passed in or if the second argument is explicitly passed in as `undefined`, as in this example:
+У цьому випадку значення `timeout` за замовчування використовуватиметься лише тоді, коли другий аргумент не переданий, або якщо в якості другого аргументу безпосередньо передати `undefined`, як у цьому прикладі:
 
 ```js
-// uses default timeout
+// використовує timeout за замовчуванням
 makeRequest("/foo", undefined, function(body) {
     doSomething(body);
 });
 
-// uses default timeout
+// використовує значення timeout за замовчуванням
 makeRequest("/foo");
 
-// doesn't use default timeout
+// не використовує значення timeout за замовчуванням
 makeRequest("/foo", null, function(body) {
     doSomething(body);
 });
 ```
 
-In the case of default parameter values, a value of `null` is considered to be valid, meaning that in the third call to `makeRequest()`, the default value for `timeout` will not be used.
+У цьому випадку, значення `null` приймається як валідне і означає, що в третьому виклику `makeRequest()` значення `timeout` за замовчуванням не буде використовуватись.
 
-### How Default Parameter Values Affect the arguments Object
+### Як параметри за замовчуванням впливають на об’єкт arguments
 
-Just keep in mind that the behavior of the `arguments` object is different when default parameter values are present. In ECMAScript 5 nonstrict mode, the `arguments` object reflects changes in the named parameters of a function. Here's some code that illustrates how this works:
+Просто запам’ятайте, що поведніка об’єкту `arguments` відрізняється від звичної, якщо використовуються значення за замовчуванням. У нестрогому режимі (nonstrict mode) ECMAScript 5, об’єкт `arguments` відображає зміни у іменованих параметрах функції. Нижче наведений код, який ілюструє як це працює:
 
 ```js
 function mixArgs(first, second) {
@@ -117,7 +117,7 @@ function mixArgs(first, second) {
 mixArgs("a", "b");
 ```
 
-This outputs:
+Вивід:
 
 ```
 true
@@ -126,9 +126,9 @@ true
 true
 ```
 
-The `arguments` object is always updated in nonstrict mode to reflect changes in the named parameters. Thus, when `first` and `second` are assigned new values, `arguments[0]` and `arguments[1]` are updated accordingly, making all of the `===` comparisons resolve to `true`.
+У нестрогому режимі об’єкт `arguments` завжди оновлюється, щоб відображати зміни в іменованих параметрах. Тобто, якщо `first` та `second` присвоїти нові значення, `arguments[0]` там `arguments[1]` оновляться миттєво, так що порівняння `===` даватиме результат `true`.
 
-ECMAScript 5's strict mode, however, eliminates this confusing aspect of the `arguments` object. In strict mode, the `arguments` object does not reflect changes to the named parameters. Here's the `mixArgs()` function again, but in strict mode:
+Однак строгий режим (strict mode) ECMAScript 5 усуває цей неочевидну властивість об’єкту `arguments`. У строгому режимі, об’єкт `arguments` не відображає зміни в іменованих параметрах. Нижче знову наведена функція `mixArgs()`, але у строгому режимі:
 
 ```js
 function mixArgs(first, second) {
@@ -145,7 +145,7 @@ function mixArgs(first, second) {
 mixArgs("a", "b");
 ```
 
-The call to `mixArgs()` outputs:
+Виклик `mixArgs()` виведе:
 
 ```
 true
@@ -154,12 +154,12 @@ false
 false
 ```
 
-This time, changing `first` and `second` doesn't affect `arguments`, so the output behaves as you'd normally expect it to.
+Цього разу зміни `first` та `second` не повпливали на `arguments`, тому вивід буде саме таким, яким ви його очікуєте.
 
-The `arguments` object in a function using ECMAScript 6 default parameter values, however, will always behave in the same manner as ECMAScript 5 strict mode, regardless of whether the function is explicitly running in strict mode. The presence of default parameter values triggers the `arguments` object to remain detached from the named parameters. This is a subtle but important detail because of how the `arguments` object may be used. Consider the following:
+Об’єкт `arguments` у функціях, що використовують ECMAScript 6 параметри за замовчуванням, однак, завжди поводитимуться так, як вони поводяться у строгому режимі ECMAScript 5, незалежно від того чи функція працює у строгому режимі чи ні. Наявність параметрів за замовчуванням робить об’єкт `arguments` незалежним від іменованих параметрів. Це тонка, але важлива деталь того як об’єкт `arguments` може бути використаний. Розгляньте наступне:
 
 ```js
-// not in strict mode
+// не строгий режим
 function mixArgs(first, second = "b") {
     console.log(arguments.length);
     console.log(first === arguments[0]);
@@ -173,7 +173,7 @@ function mixArgs(first, second = "b") {
 mixArgs("a");
 ```
 
-This outputs:
+Виведе:
 
 ```
 1
@@ -183,11 +183,11 @@ false
 false
 ```
 
-In this example, `arguments.length` is 1 because only one argument was passed to `mixArgs()`. That also means `arguments[1]` is `undefined`, which is the expected behavior when only one argument is passed to a function. That means `first` is equal to `arguments[0]` as well. Changing `first` and `second` has no effect on `arguments`. This behavior occurs in both nonstrict and strict mode, so you can rely on `arguments` to always reflect the initial call state.
+У цьому прикладі, `arguments.length` рівне 1 тому що лише один аргумент було передано до `mixArgs()`. Це також означає, що `arguments[1]` рівний `undefined`, що є очікованою поведінкою, коли лише один аргумент передається у функцію. Це також означає, що `first` є рівним `arguments[0]`. Зміна `first` та `second` не повпливає на `arguments`. Така поведінка буде у як у строгому так і нестрогому режимах, тож ви можете бути певні, що `arguments` завжди відображатиме початковий стан виклику.
 
-### Default Parameter Expressions
+### Вирази в параметрах за замовчуванням
 
-Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter value, like this:
+Одним з найбільш цікавих нововведень параметрів за замовчуванням є те, що їх значення не обов’язково мають бути примітивними значеннями. Ви можете, до прикладу, викликати функцію, що повертатиме значення параметру, ось так:
 
 ```js
 function getValue() {
@@ -202,7 +202,7 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 6
 ```
 
-Here, if the last argument isn't provided, the function `getValue()` is called to retrieve the correct default value. Keep in mind that `getValue()` is only called when `add()` is called without a second parameter, not when the function declaration is first parsed. That means if `getValue()` were written differently, it could potentially return a different value. For instance:
+Тут, якщо останній аргумент не переданий, викликається фукнція `getValue()`, що повертає коректне значення за замовчуванням. Пам’ятайте, що `getValue()` буде викликана лише тоді, коли `add()` буде викликана без другого аргументу, а не тоді, коли оголошення функції буде оброблене інтерпретатором. Це означає, що якщо `getValue()` була написана змінною, вона буде повертати різні значення. Для розуміння:
 
 ```js
 let value = 5;
@@ -220,11 +220,11 @@ console.log(add(1));        // 6
 console.log(add(1));        // 7
 ```
 
-In this example, `value` begins as five and increments each time `getValue()` is called. The first call to `add(1)` returns 6, while the second call to `add(1)` returns 7 because `value` was incremented. Because the default value for `second` is only evaluated when the function is called, changes to that value can be made at any time.
+У цьому прикладі, `value` має значення п’ять і збільшується на одиницю щоразу, коли викликається `getValue()`. Перший виклик `add(1)` повертає 6, тоді другий виклик `add(1)` повертає 7, тому що `value` був збільшений на одиницю. Оскільки значення `second` за замовчуванням обчислюється при виклику функції, можна змінюти це значення у будь–який час.
 
-W> Be careful when using function calls as default parameter values. If you forget the parentheses, such as `second = getValue` in the last example, you are passing a reference to the function rather than the result of the function call.
+W> Будьте обережними при використанні виклику фукнцій в якості параметрів за замовчуванням. Якщо ви забудете дужки, як ось `second = getValue` у останньому прикладі, ви отримаєте посилання на функцію замість результату її виклику.
 
-This behavior introduces another interesting capability. You can use a previous parameter as the default for a later parameter. Here's an example:
+Така поведінка демонструє іншу цікаву особливість. Ви можете використовувати параметер за замовчування для наступного параметра. Ось приклад:
 
 ```js
 function add(first, second = first) {
@@ -235,7 +235,7 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 2
 ```
 
-In this code, the parameter `second` is given a default value of `first`, meaning that passing in just one argument leaves both arguments with the same value. So `add(1, 1)` returns 2 just as `add(1)` returns 2. Taking this a step further, you can pass `first` into a function to get the value for `second` as follows:
+У цьому прикладі, параметр `second` отримує значення `first` за замовчуванням, що означає, що виклик фукнції з одним аргументом присвоїть обом параметрам однакове значення. Тому `add(1, 1)` поверне 2, так само як `add(1)` повертає 2. Навіть більше, ви можете передати `first` у функцію, щоб отримаи значення `second` ось так:
 
 ```js
 function getValue(value) {
@@ -250,9 +250,9 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 7
 ```
 
-This example sets `second` equal to the value returned by `getValue(first)`, so while `add(1, 1)` still returns 2, `add(1)` returns 7 (1 + 6).
+Цей приклад встановлює `second` рівним значенню, яке було повернуте `getValue(first)`, тому `add(1, 1)` продовжує повертати 2, а `add(1)` поверне 7 (1 + 6).
 
-The ability to reference parameters from default parameter assignments works only for previous arguments, so earlier arguments do not have access to later arguments. For example:
+Можливість посилатись на параметри працює лише при зверненні до попередніх аргументів, тому аргументи попереду не мають доступу до наступних аргументів. Наприклад:
 
 ```js
 function add(first = second, second) {
@@ -260,16 +260,17 @@ function add(first = second, second) {
 }
 
 console.log(add(1, 1));     // 2
-console.log(add(1));        // throws error
+console.log(add(1));        // викине помилку
 ```
 
-The call to `add(1)` throws an error because `second` is defined after `first` and is therefore unavailable as a default value. To understand why that happens, it's important to revisit temporal dead zones.
+Виклик `add(1)` викине помилку, тому що `second` визначений після `first` і тому недоступний в якості значення за замовчуванням. Щоб зрозуміти що тут відбувається, важливо згадати що таке тимчасом мертва зона.
 
-### Default Parameter Value Temporal Dead Zone
+### Тимчасова мертва зона параметрів за замовчуванням
 
-Chapter 1 introduced the temporal dead zone (TDZ) as it relates to `let` and `const`, and default parameter values also have a TDZ where parameters cannot be accessed. Similar to a `let` declaration, each parameter creates a new identifier binding that can't be referenced before initialization without throwing an error. Parameter initialization happens when the function is called, either by passing a value for the parameter or by using the default parameter value.
+Глава 1 ввела поняття тимчасової мертвої зони (ТМЗ) яка стосувалась `let` та `const`, втім параметри за замовчуванням також мають ТМЗ, з якої параметри будуть недоступними. Подібно до `let`–оголошення, кожен параметр створює новий ідентифікатор зв’язування, на який не можна посилатись до його ініціалізації не спричинивши помилки. Ініціалізація параметрів відбувається тоді, коли функція викликається, 
+Parameter initialization happens when the function is called, або при передачі параметрам значення, або при використанні значень параметрів за замовчуванням.
 
-To explore the default parameter value TDZ, consider this example from "Default Parameter Expressions" again:
+Щоб дослідити ТМЗ параметрів за замовчуванням, розглянемо цей приклад з розділу «Вирази в параметрах за замовчуванням»:
 
 ```js
 function getValue(value) {
@@ -284,19 +285,19 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 7
 ```
 
-The calls to `add(1, 1)` and `add(1)` effectively execute the following code to create the `first` and `second` parameter values:
+Виклики `add(1, 1)` та `add(1)` ефективно виконують присвоєння `first` та `second` значень за замовчуванням:
 
 ```js
-// JavaScript representation of call to add(1, 1)
+// JavaScript представлення виклику add(1, 1)
 let first = 1;
 let second = 1;
 
-// JavaScript representation of call to add(1)
+// JavaScript представлення виклику add(1)
 let first = 1;
 let second = getValue(first);
 ```
 
-When the function `add()` is first executed, the bindings `first` and `second` are added to a parameter-specific TDZ (similar to how `let` behaves). So while `second` can be initialized with the value of `first` because `first` is always initialized at that time, the reverse is not true. Now, consider this rewritten `add()` function:
+Коли функція `add()` виконується вперше, зв’язування `first` та `second` додаються до специфічної для параметрів ТМЗ (схоже на те, як поводить себе `let`). Тому `second` може бути ініціалізований зі значенням `first`, оскільки `first` у той момент буде вже ініціалізованим, але протилежне не є вірним. Тепер розглянемо змінену функцію `add()`:
 
 ```js
 function add(first = second, second) {
@@ -304,38 +305,38 @@ function add(first = second, second) {
 }
 
 console.log(add(1, 1));         // 2
-console.log(add(undefined, 1)); // throws error
+console.log(add(undefined, 1)); // кидає помилку
 ```
 
-The calls to `add(1, 1)` and `add(undefined, 1)` in this example now map to this code behind the scenes:
+Давайте розглянемо, що відбувається за лаштунками при виклику `add(1, 1)` та `add(undefined, 1)` у цьому прикладі:
 
 ```js
-// JavaScript representation of call to add(1, 1)
+// JavaScript представлення виклику add(1, 1)
 let first = 1;
 let second = 1;
 
-// JavaScript representation of call to add(undefined, 1)
+// JavaScript представлення виклику add(undefined, 1)
 let first = second;
 let second = 1;
 ```
 
-In this example, the call to `add(undefined, 1)` throws an error because `second` hasn't yet been initialized when `first` is initialized. At that point, `second` is in the TDZ and therefore any references to `second` throw an error. This mirrors the behavior of `let` bindings discussed in Chapter 1.
+У цьому випадку, виклик `add(undefined, 1)` призводить до помилки, тому що `second` ще не був ініціалізований тоді, коли ініціалізується `first`. У цьому випадку, `second` знаходиться у ТМЗ і тому будь–яке посилання на нього призведе до помилки. Схожу поведінку `let`–оголошень було розглянуто у Главі 1.
 
-I> Function parameters have their own scope and their own TDZ that is separate from the function body scope. That means the default value of a parameter cannot access any variables declared inside the function body.
+I> Параметри функцій мають власну області видимості та власні ТМЗ, що відрізняються від області видимості функцій. Це означає, що значення параметрів за замовчуванням не можуть звертатись до будь–якої змінної, оголошеної всередині тіла функції.
 
-## Working with Unnamed Parameters
+## Робота з неіменованими параметрами
 
-So far, the examples in this chapter have only covered parameters that have been named in the function definition. However, JavaScript functions don't limit the number of parameters that can be passed to the number of named parameters defined. You can always pass fewer or more parameters than formally specified. Default parameter values make it clear when a function can accept fewer parameters, and ECMAScript 6 sought to make the problem of passing more parameters than defined better as well.
+До цих пір, приклади у цій главі були пов’язані лише з параметри, які мали імена у виразі функції. Однак, функції JavaScript не обмежують кількість параметрів, які ми можемо передавати у функцію, кількістю параметрів, які вказані при заданні функції. Ви завжди можете передати менше або більше параметрів, ніж формально оголошено. Значення за замовчування допомагають тоді, коли функція може приймати менше параметрів, але ECMAScript 6 також пропонує вирішення проблеми з передачею більшої кількості параметрів, ніж вказано в оголошенні.
 
-### Unnamed Parameters in ECMAScript 5
+### Неіменовані параметри в ECMAScript 5
 
-Early on, JavaScript provided the `arguments` object as a way to inspect all function parameters that are passed without necessarily defining each parameter individually. While inspecting `arguments` works fine in most cases, this object can be a little cumbersome to work with. For example, examine this code, which inspects the `arguments` object:
+Раніше JavaScript пропонував об’єкт `arguments` для того, щоб працювати з усіма параметрами, які були передані у функцію, без необхдіності вказувати кожен параметер індивідуально. Об’єкт `arguments` чудово працює у більшості випадків, проте цей об’єкт може бути занадто громіздким. Наприклад, дослідіть цей код, який оперує об’єктом `arguments`:
 
 ```js
 function pick(object) {
     let result = Object.create(null);
 
-    // start at the second parameter
+    // починаючи з другого параметра
     for (let i = 1, len = arguments.length; i < len; i++) {
         result[arguments[i]] = object[arguments[i]];
     }
@@ -355,15 +356,15 @@ console.log(bookData.author);   // "Nicholas C. Zakas"
 console.log(bookData.year);     // 2015
 ```
 
-This function mimics the `pick()` method from the *Underscore.js* library, which returns a copy of a given object with some specified subset of the original object's properties. This example defines only one argument and expects the first argument to be the object from which to copy properties. Every other argument passed is the name of a property that should be copied on the result.
+Ця фукнція відтворює метод `pick()` з бібліотеки *Underscore.js*, який повертає копію даного об’єкту з деякою підмножиною властивостей оригінального об’єкту. У цьому прикладі оголошується лише один аргумент і очікується, що він буде об’єктом з якого будуть копіюватись властивості. Усі інші аргументи, які передаються — це імена властивостей, які мають бути копійованими до результату.
 
-There are a couple of things to notice about this `pick()` function. First, it's not at all obvious that the function can handle more than one parameter. You could define several more parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, when you look for the properties to copy, you have to start in the `arguments` object at index 1 instead of index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of.
+Є кілька речей, які потрібно зауважити у функції `pick()`. По–перше, не зовсім очевидно, що функція може обробляти біліше одного параметра. Ви могли би задати більше параметрів, але було би не достатньо очевидно, що фукнція може приймати будь–яку кількість параметрів. По–друге, оскільки перший параметр іменований та використовується безпосередньо, якщо ви звернете увагу на властивості, які мають бути скопійовані, то муситиме звертатись до об’єкту `arguments` починаючи з індексу 1 замість індексу 0. Запам’ятовування відповідних індексів для `arguments` не є складним, проте це ще одна річ, за якою потрібно стежити.
 
-ECMAScript 6 introduces rest parameters to help with these issues.
+ECMAScript 6 вводить залишкові (rest) параметри, щоб вирішити цю проблему.
 
-### Rest Parameters
+### Залишкові (rest) параметри
 
-A *rest parameter* is indicated by three dots (`...`) preceding a named parameter. That named parameter becomes an `Array` containing the rest of the parameters passed to the function, which is where the name "rest" parameters originates. For example, `pick()` can be rewritten using rest parameters, like this:
+*Залишкові параметри* (або *rest–параметри*) позначаються трьома крапками (`...`) перед іменованим параметром. Цей іменований параметр стає масивом (`Array`), що містить решту параметрів, які були передані функції. Наприклад, `pick()` можна переписати з використанням залишкових параметрів ось так:
 
 ```js
 function pick(object, ...keys) {
@@ -377,13 +378,13 @@ function pick(object, ...keys) {
 }
 ```
 
-In this version of the function, `keys` is a rest parameter that contains all parameters passed after `object` (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `keys` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
+У цій версії функції, `keys` це залишковий параметр, який містить всі параметри, передані після `object` (на відміну від `arguments`, який містить всі параметри, включаючи перший). Це означає, що ви без проблем можете ітеруватись по `keys` від початку і до кінця. В якості бонусу, ви можете з першого погляду бачити, що функція працює з будь–якою кількістю параметрів.
 
-I> Rest parameters do not affect a function's `length` property, which indicates the number of named parameters for the function. The value of `length` for `pick()` in this example is 1 because only `object` counts towards this value.
+I> Залишкові параметри не впливають на властивість функції `length`, яка вказує на кількість іменованих параметрів функції. Значення `length` для `pick()` у цьому прикладі є рівним 1, оскільки буде враховутись лише `object`.
 
-#### Rest Parameter Restrictions
+#### Обмеження залишкових параметрів
 
-There are two restrictions on rest parameters. The first restriction is that there can be only one rest parameter, and the rest parameter must be last. For example, this code won't work:
+Є два обмеження пов’язані з залишковими параметрами. Перше обмеження: може бути лише один залишковий параметр і він має бути останнім. Для прикладу, такий код не працюватиме.
 
 ```js
 // Syntax error: Can't have a named parameter after rest parameters
@@ -398,27 +399,27 @@ function pick(object, ...keys, last) {
 }
 ```
 
-Here, the parameter `last` follows the rest parameter `keys`, which would cause a syntax error.
+Тут, праметр `last` слідує за залишковим параметром `keys`, що спричинило би синтактичну помилку.
 
-The second restriction is that rest parameters cannot be used in an object literal setter. That means this code would also cause a syntax error:
+Друге обмеження це те, що залишковий параметр не може використовуватись у сетерах об’єктних літералів. Це означає, що такий код також призведе до помилки:
 
 ```js
 let object = {
 
     // Syntax error: Can't use rest param in setter
     set name(...value) {
-        // do something
+        // якийсь код
     }
 };
 ```
 
-This restriction exists because object literal setters are restricted to a single argument. Rest parameters are, by definition, an infinite number of arguments, so they're not allowed in this context.
+Це обмеження має місце тому, що сетери об’єктних літералів обмежуються одним аргументом. Залишкові параметри, за визначенням, є нескінченною кількістю аргументів, тож вони не дозволені у цьому контексті.
 
-#### How Rest Parameters Affect the arguments Object
+#### Як залишкові параметри впливають на об’єкт arguments
 
-Rest parameters were designed to replace `arguments` in ECMAScript. Originally, ECMAScript 4 did away with `arguments` and added rest parameters to allow an unlimited number of arguments to be passed to functions. ECMAScript 4 never came into being, but this idea was kept around and reintroduced in ECMAScript 6, despite `arguments` not being removed from the language.
+Залишкові параметри покликані замінити `arguments` в ECMAScript. Спочатку, ECMAScript 4 покінчив з `arguments` та включав залишкові параметри, які дозволяли би передавати необмежену кількість аргументів у функцію. ECMAScript 4 не був прийнятим, але ця ідея була збережена та відтворена у ECMAScript 6, не зважаючи на те, що `arguments` не був видалений з мови.
 
-The `arguments` object works together with rest parameters by reflecting the arguments that were passed to the function when called, as illustrated in this program:
+Об’єкт `arguments` працює разом із залишковими параметрами відображаючи аргументи, які були передані до функції при виклику. Це ілюструє така програма:
 
 ```js
 function checkArgs(...args) {
@@ -431,7 +432,7 @@ function checkArgs(...args) {
 checkArgs("a", "b");
 ```
 
-The call to `checkArgs()` outputs:
+Виклик `checkArgs()` виведе:
 
 ```
 2
@@ -440,14 +441,13 @@ a a
 b b
 ```
 
-The `arguments` object always correctly reflects the parameters that were passed into a function regardless of rest parameter usage.
+Об’єкт `arguments` завжди коректно відображає параметри, що були передані до функції незалежно від використання залишкових параметрів.
 
-That's all you really need to know about rest parameters to get started using them. The next section continues the parameter discussion with the spread operator, which is closely related to rest parameters.
+Це все, що вам потрібно знати про залишкові параметри, щоб почати використовувати їх. Наступний розділ продовжить розповідь про оператор розкладу (spread), який є дуже схожим на залишкові параметри.
 
+## Розширені можливості конструктора Function
 
-## Increased Capabilities of the Function Constructor
-
-The `Function` constructor is an infrequently used part of JavaScript that allows you to dynamically create a new function. The arguments to the constructor are the parameters for the function and the function body, all as strings. Here's an example:
+Конструктор `Function` є рідковикористовуваною частиною JavaScript, яка дозволяє вам динамічно створювати нові функції. Аргументами контруктора є параметри для функції та тіло функції, всі аргументи у вигляді рядків. Ось приклад:
 
 ```js
 var add = new Function("first", "second", "return first + second");
@@ -455,7 +455,7 @@ var add = new Function("first", "second", "return first + second");
 console.log(add(1, 1));     // 2
 ```
 
-ECMAScript 6 augments the capabilities of the `Function` constructor to allow default parameters and rest parameters. You need only add an equals sign and a value to the parameter names, as follows:
+ECMAScript 6 доповнює `Function` можливостями задання параметрів за замовчуванням та залишкових параметрів. Вам потрібно лише додати знак рівності між значенням та ім’ям параметра:
 
 ```js
 var add = new Function("first", "second = first",
@@ -465,9 +465,9 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 2
 ```
 
-In this example, the parameter `second` is assigned the value of `first` when only one parameter is passed. The syntax is the same as for function declarations that don't use `Function`.
+У цьому прикладі параметр `second` присвоюється значення `first`, коли переданий лише один параметр. Синтаксис такий же як і для функцій, що не використовують `Function`.
 
-For rest parameters, just add the `...` before the last parameter, like this:
+Для залишкових параметрів, просто додайте `...` перед останнім параметром, як тут:
 
 ```js
 var pickFirst = new Function("...args", "return args[0]");
@@ -475,13 +475,13 @@ var pickFirst = new Function("...args", "return args[0]");
 console.log(pickFirst(1, 2));   // 1
 ```
 
-This code creates a function that uses only a single rest parameter and returns the first argument that was passed in.
+Цей код створює функцію, яка використовує лише один залишковий параметр та повертає перший аргумент, який був переданий у функцію.
 
-The addition of default and rest parameters ensures that `Function` has all of the same capabilities as the declarative form of creating functions.
+Доповнення параметрами за замовчуванням та залишковими параметрами прирівнює можливості `Function` до можливостей декларативних форм оголошення функцій.
 
-## The Spread Operator
+## Оператор розкладу (spread)
 
-Closely related to rest parameters is the spread operator. While rest parameters allow you to specify that multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. Here's a simple use case for this method:
+Близьким до залишкових параметрів є оператор розкладу (spread). Залишкові параметри дозволяють вам вказати як кілька незалежних аргументів можуть комбінуватись у масив, тоді як оператор розкладу дозволяє вам задати як масив має розкласти свої елементи у окремі аргументи функції. Розгляньте метод `Math.max()`, який приймає будь–яку кількість аргументів та повертає найбільше значення. Ось приклад використання цього методу:
 
 ```js
 let value1 = 25,
@@ -490,7 +490,7 @@ let value1 = 25,
 console.log(Math.max(value1, value2));      // 50
 ```
 
-When you're dealing with just two values, as in this example, `Math.max()` is very easy to use. The two values are passed in, and the higher value is returned. But what if you've been tracking values in an array, and now you want to find the highest value? The `Math.max()` method doesn't allow you to pass in an array, so in ECMAScript 5 and earlier, you'd be stuck either searching the array yourself or using `apply()` as follows:
+Коли ви працюєте з двома значеннями, як у цьому прикладі, `Math.max()` використовувати легко. Два значення передаються і повертається найбільше. Але що якщо ви працюєте з значеннями масиву і вам потрібно знайти найбільше значення? Метод `Math.max()` не дозволяє вам передавати масив, тому в ECMAScript 5 та раніше ви би застрягли шукаючи значення самостійно, або використовували б `apply()` як ось тут:
 
 ```js
 let values = [25, 50, 75, 100]
@@ -498,21 +498,21 @@ let values = [25, 50, 75, 100]
 console.log(Math.max.apply(Math, values));  // 100
 ```
 
-This solution works, but using `apply()` in this manner is a bit confusing. It actually seems to obfuscate the true meaning of the code with additional syntax.
+Це рішення працює, але використання `apply()` в такому вигляді вносить деяку плутанину. Це виглядає наче навмисне заплутування коду додатковим синтаксисом.
 
-The ECMAScript 6 spread operator makes this case very simple. Instead of calling `apply()`, you can pass the array to `Math.max()` directly and prefix it with the same `...` pattern used with rest parameters. The JavaScript engine then splits the array into individual arguments and passes them in, like this:
+Оператор розкладу ECMAScript 6 вирішує цю проблему дуже легко. Замість виклику `apply()`, ви можете передати масив у `Math.max()` на пряму, додавши попереду `...`, як і у випадку з залишковими параметрами. Рушій JavaScript розкладе масив у окремі аргументи та передасть їх у функцію, ось так:
 
 ```js
 let values = [25, 50, 75, 100]
 
-// equivalent to
+// еквівалент для
 // console.log(Math.max(25, 50, 75, 100));
 console.log(Math.max(...values));           // 100
 ```
 
-Now the call to `Math.max()` looks a bit more conventional and avoids the complexity of specifying a `this`-binding (the first argument to `Math.max.apply()` in the previous example) for a simple mathematical operation.
+Тепер виклик `Math.max()` виглядає більш звично та уникає складності, пов’язаної з заданням `this`–зв’язування (першого аргументу `Math.max.apply()` у попередньому прикладі) для простої математичної операції.
 
-You can mix and match the spread operator with other arguments as well. Suppose you want the smallest number returned from `Math.max()` to be 0 (just in case negative numbers sneak into the array). You can pass that argument separately and still use the spread operator for the other arguments, as follows:
+Ви можете змішувати та комбінувати оператор розкладу з іншими аргументами. Припустимо вам потрібно, щоб найменшим числом, яке поверне `Math.max()` був 0 (просто для випадку, якщо якесь число менше 0 закрадеться у масив). Ви можете передати аргумент окремо та продовжувати використовувати оператор розкладу для інших аргументів:
 
 ```js
 let values = [-25, -50, -75, -100]
@@ -520,19 +520,19 @@ let values = [-25, -50, -75, -100]
 console.log(Math.max(...values, 0));        // 0
 ```
 
-In this example, the last argument passed to `Math.max()` is `0`, which comes after the other arguments are passed in using the spread operator.
+У цьому прикладі, останній аргумент, переданий до `Math.max()` буде `0`, який був переданий після всіх інших аргументів переданих з використанням оператору розкладу.
 
-The spread operator for argument passing makes using arrays for function arguments much easier. You'll likely find it to be a suitable replacement for the `apply()` method in most circumstances.
+Оператор розкладу для передачі аргументів робить використання масивів у функцях набагато легшим. Ви знайдете зручну заміну для методу `apply()` у більшості випадках.
 
-In addition to the uses you've seen for default and rest parameters so far, in ECMAScript 6, you can also apply both parameter types to JavaScript's `Function` constructor.
+На додачу до прикладів використання залишкових та параметрів за замовчуванням, в ECMAScript 6, ви можете також використовувати обидва типи у JavaScript–конструкторі  `Function`.
 
-## ECMAScript 6's name Property
+## Властивість name в ECMAScript 6
 
-Identifying functions can be challenging in JavaScript given the various ways a function can be defined. Additionally, the prevalence of anonymous function expressions makes debugging a bit more difficult, often resulting in stack traces that are hard to read and decipher. For these reasons, ECMAScript 6 adds the `name` property to all functions.
+Ідентифікування функцій в JavaScript може виявитись складним завданням, зважаючи на численні способи визначення функцій. Крім того, поширення анонімних функцій робить відлагоджування набагато складнішим, адже стек викликів є складним для розуміння. Виходячи з цих міркувань, ECMAScript 6 вводить властивість `name` для всіх функцій.
 
-### Choosing Appropriate Names
+### Вибір відповідного імені
 
-All functions in an ECMAScript 6 program will have an appropriate value for their `name` property. To see this in action, look at the following example, which shows a function and function expression, and prints the `name` properties for both:
+Всі функції в програмах на ECMAScript 6 будуть мати відповідні значення властивості `name`. Щоб побачити це в дії, погляньте на приклад нижче, який демонструє фукнцію і функціональний вираз та виводить властивість `name` для обох:
 
 ```js
 function doSomething() {
@@ -547,11 +547,11 @@ console.log(doSomething.name);          // "doSomething"
 console.log(doAnotherThing.name);       // "doAnotherThing"
 ```
 
-In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The anonymous function expression `doAnotherThing()` has a `name` of `"doAnotherThing"` because that's the name of the variable to which it is assigned.
+У цьому коді, `doSomething()` має властивість `name`, що рівна `"doSomething"`, оскільки це оголошення функції. Вираз з анонімною функцією `doAnotherThing()` має `name` рівне `"doAnotherThing"`, тому що таке ім’я змінної, якій він був присвоєний.
 
-### Special Cases of the name Property
+### Особливі випадки властивості name
 
-While appropriate names for function declarations and function expressions are easy to find, ECMAScript 6 goes further to ensure that *all* functions have appropriate names. To illustrate this, consider the following program:
+Відповідні імена для оголошень фукнцій та функціональних виразів знайти легко, але ECMAScript 6 іде далі, щоб впевнетись, що *всі* функції мають відповідні імена. Щоб зрозуміти це, розгляньте наступний приклад:
 
 ```js
 var doSomething = function doSomethingElse() {
@@ -572,9 +572,9 @@ console.log(person.sayName.name);   // "sayName"
 console.log(person.firstName.name); // "get firstName"
 ```
 
-In this example, `doSomething.name` is `"doSomethingElse"` because the function expression itself has a name, and that name takes priority over the variable to which the function was assigned. The `name` property of `person.sayName()` is `"sayName"`, as the value was interpreted from the object literal. Similarly, `person.firstName` is actually a getter function, so its name is `"get firstName"` to indicate this difference. Setter functions are prefixed with `"set"` as well.
+У цьому прикладі,`doSomething.name` є `"doSomethingElse"` оскільки функціональний вираз має власне ім’я, яке має пріорітет над змінною, якій ця функція була присвоєна. Властивість `name` у `person.sayName()` рівна `"sayName"`, бо це значення було інтерпретоване з об’єктного літералу. Так само, `person.firstName` насправді є функцією–гетером, тож її ім’я `"get firstName"`, що вказує на цю відмінність. Функції–сетери так само позначаються через `"set"`.
 
-There are a couple of other special cases for function names, too. Functions created using `bind()` will have their names prefixed with `"bound"` and functions created using the `Function` constructor have a name of `"anonymous"`, as in this example:
+Також є кілька інших особливих випадків для імен функцій. Функції, створені з використанням `bind()` будуть мати імена з префіксованим `"bound"`, а функції створені конструктором `Function` мають ім’я `"anonymous"`:
 
 ```js
 var doSomething = function() {
@@ -586,13 +586,13 @@ console.log(doSomething.bind().name);   // "bound doSomething"
 console.log((new Function()).name);     // "anonymous"
 ```
 
-The `name` of a bound function will always be the `name` of the function being bound prefixed with the string `"bound "`, so the bound version of `doSomething()` is `"bound doSomething"`.
+`name` зв’язаної функції буде завжди `name` функції, що була зв’язана з префіксом `"bound "`, тому зв’язана версію `doSomething()` буде `"bound doSomething"`.
 
-Keep in mind that the value of `name` for any function does not necessarily refer to a variable of the same name. The `name` property is meant to be informative, to help with debugging, so there's no way to use the value of `name` to get a reference to the function.
+Запам’ятайте, що значення `name` для будь–якої функції не обов’язково посилається на змінну з таким самим ім’ям. Власнивість `name` не покликана допомагати у відлагодженні, тому неможливо використати значення `name` для отримання посилання на функцію.
 
-## Clarifying the Dual Purpose of Functions
+## Роз’яснення подвійної ролі функцій
 
-In ECMAScript 5 and earlier, functions serve the dual purpose of being callable with or without `new`. When used with `new`, the `this` value inside a function is a new object and that new object is returned, as illustrated in this example:
+в ECMAScript 5 та раніше, функції можна було створити двома способами: з, або без `new`. При використанні `new`, значення `this` всередині функції було новим об’єктом і цей об’єкт повертався, так я ілюстровано в цьому прикладі:
 
 ```js
 function Person(name) {
@@ -606,73 +606,73 @@ console.log(person);        // "[Object object]"
 console.log(notAPerson);    // "undefined"
 ```
 
-When creating `notAPerson`, calling `Person()` without `new` results in `undefined` (and sets a `name` property on the global object in nonstrict mode). The capitalization of `Person` is the only real indicator that the function is meant to be called using `new`, as is common in JavaScript programs. This confusion over the dual roles of functions led to some changes in ECMAScript 6.
+При створенні `notAPerson`, виклик `Person()` без `new` повертає `undefined` (та встановлює властивість `name` глобальному об’єкту у нестрогому режимі). В програмах на JavaScript прийнято, що `Person` з великої літери — це єдиний індикатор того, що функція має бути викликаною з використанням `new`. Таке подвійне призначення функцій призводило до плутанини і тому зазнало деяких змін у ECMAScript 6.
 
-JavaScript has two different internal-only methods for functions: `[[Call]]` and `[[Construct]]`. When a function is called without `new`, the `[[Call]]` method is executed, which executes the body of the function as it appears in the code. When a function is called with `new`, that's when the `[[Construct]]` method is called. The `[[Construct]]` method is responsible for creating a new object, called the *new target*, and then executing the function body with `this` set to the new target. Functions that have a `[[Construct]]` method are called *constructors*.
+JavaScript має два різних внутрішніх методи для функцій: `[[Call]]` та `[[Construct]]`. Коли функція викликається без `new`, виконується метод `[[Call]]`, який виконує тіло функцій так, як це описано в коді. Коли функція викликається з `new`, тоді викликається `[[Construct]]`. Метод `[[Construct]]` відповідальний за створення нового об’єкта, і тоді виконання тіла функції з `this`, встановленим для нового об’єкта. Функції, які мають метод `[[Construct]]` називаються *конструкторами*.
 
-I> Keep in mind that not all functions have `[[Construct]]`, and therefore not all functions can be called with `new`. Arrow functions, discussed in the "Section Name" section on page xx, do not have a `[[Construct]]` method.
+I> Запам’ятайте, що не всі функції мають `[[Construct]]`, тому не всі функції можуть бути викликані з `new`.  Arrow–функції, про які буде йтись у відповідному розділі, не мають методу `[[Construct]]`.
 
-### Determining How a Function was Called in ECMAScript 5
+### Визначення того, як функція була викликана у ECMAScript 5
 
-The most popular way to determine if a function was called with `new` (and hence, with constructor) in ECMAScript 5 is to use `instanceof`, for example:
+Найпопулярніший спосіб визначити, що функція була викликана з `new` (а отже й з конструктором) у ECMAScript 5 — це використати `instanceof`, для прикладу:
 
 ```js
 function Person(name) {
     if (this instanceof Person) {
-        this.name = name;   // using new
+        this.name = name;   // використано new
     } else {
         throw new Error("You must use new with Person.")
     }
 }
 
 var person = new Person("Nicholas");
-var notAPerson = Person("Nicholas");  // throws error
+var notAPerson = Person("Nicholas");  // кидає помилку
 ```
 
-Here, the `this` value is checked to see if it's an instance of the constructor, and if so, execution continues as normal. If `this` isn't an instance of `Person`, then an error is thrown. This works because the `[[Construct]]` method creates a new instance of `Person` and assigns it to `this`. Unfortunately, this approach is not completely reliable because `this` can be an instance of `Person` without using `new`, as in this example:
+Тут значення `this` перевіряється чи воно відповідає конструтору, і якщо воно відповідає, то виконання виконується так, як і слід. Якщо `this` не відповідає `Person`, тоді кидається помилка. Це працює тому, що метод `[[Construct]]` створює новий екземпляр `Person` та присвоює його в `this`. На жаль, такий підхід недостатньо надійний, оскільки `this` може відповідати `Person` і без використання `new`, наприклад:
 
 ```js
 function Person(name) {
     if (this instanceof Person) {
-        this.name = name;   // using new
+        this.name = name;   // з використанням new
     } else {
         throw new Error("You must use new with Person.")
     }
 }
 
 var person = new Person("Nicholas");
-var notAPerson = Person.call(person, "Michael");    // works!
+var notAPerson = Person.call(person, "Michael");    // працює!
 ```
 
-The call to `Person.call()` passes the `person` variable as the first argument, which means `this` is set to `person` inside of the `Person` function. To the function, there's no way to distinguish this from being called with `new`.
+Виклику `Person.call()` передається змінна `person` в якості першого аргументу, що означає `this` встановлений в `person` всередині функції `Person`. Для функцій немає ніякого способу відрізнити це від виклику з `new`.
 
-### The new.target MetaProperty
+### Метавластивість new.target
 
-To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. A metaproperty is a property of a non-object that provides additional information related to its target (such as `new`). When a function's `[[Construct]]` method is called, `new.target` is filled with the target of the `new` operator. That target is typically the constructor of the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`.
+Щоб вирішити цю проблему, ECMAScript 6 вводить *метавластивість* `new.target`. Метавластивість — це властивість для необ’єктів, яка надає додаткову інформацію, яка стосується цільового об’єкту (як от `new`). Коли метод `[[Construct]]` функції викликаний, `new.target` заповнюється цільовим об’єктом оператора `new`. Цей цільовий об’єкт є зазвичай новоствореним екземпляром об’єкту, який стає `this` всередині тіла функції. Якщо виконано `[[Call]]`, тоді `new.target` буде `undefined`.
 
-This new metaproperty allows you to safely detect if a function is called with `new` by checking whether `new.target` is defined as follows:
+Ця нова метавластивість дозволяє вам безпечно перевіряти чи функція була викликана з `new`, простою перевіркою того, чи було встановлено `new.target`:
 
 ```js
 function Person(name) {
     if (typeof new.target !== "undefined") {
-        this.name = name;   // using new
+        this.name = name;   // з використанням new
     } else {
         throw new Error("You must use new with Person.")
     }
 }
 
 var person = new Person("Nicholas");
-var notAPerson = Person.call(person, "Michael");    // error!
+var notAPerson = Person.call(person, "Michael");    // помилка!
 ```
 
-By using `new.target` instead of `this instanceof Person`, the `Person` constructor is now correctly throwing an error when used without `new`.
+З використанням `new.target` замість `this instanceof Person`, конструктор `Person` тепер кидатиме помилку при використанні без `new`.
 
-You can also check that `new.target` was called with a specific constructor. For instance, look at this example:
+Ви також можете перевірити, що `new.target` було викликано з певним конструктором. Для прикладу:
 
 ```js
 function Person(name) {
     if (typeof new.target === Person) {
-        this.name = name;   // using new
+        this.name = name;   // використовуючи new
     } else {
         throw new Error("You must use new with Person.")
     }
@@ -683,34 +683,34 @@ function AnotherPerson(name) {
 }
 
 var person = new Person("Nicholas");
-var anotherPerson = new AnotherPerson("Nicholas");  // error!
+var anotherPerson = new AnotherPerson("Nicholas");  // помилка!
 ```
 
-In this code, `new.target` must be `Person` in order to work correctly. When `new AnotherPerson("Nicholas")` is called, `new.target` is set to `AnotherPerson`, so the subsequent call to `Person.call(this, name)` will throw an error even though `new.target` is defined.
+У цьому прикладі, `new.target` мусить бути `Person` для коректної роботи. Коли `new AnotherPerson("Nicholas")` створюється, `new.target` встановлюється в `AnotherPerson`, тому наступний виклик `Person.call(this, name)` кине помилку попри те, що `new.target` буде встановлено.
 
-W> Warning: Using `new.target` outside of a function is a syntax error.
+W> Увага: Використання `new.target` поза функцією призведе до помилки.
 
-By adding `new.target`, ECMAScript 6 helped to clarify some ambiguity around functions calls. Following on this theme, ECMAScript 6 also addresses another previously ambiguous part of the language: declaring functions inside of blocks.
+Додаючи `new.target`, ECMAScript 6 допомагає прояснити деякі незрозумілості, пов’язані з викликом функцій. Продовжуючи тему, ECMAScript 6 також вводить раніше незрозумілу частину мови: оголошення функцій всередині блоків.
 
-## Block-Level Functions
+## Блочні функції
 
-In ECMAScript 3 and earlier, a function declaration occurring inside of a block (a *block-level function*) was technically a syntax error, but all browsers still supported it. Unfortunately, each browser that allowed the syntax behaved in a slightly different way, so it is considered a best practice to avoid function declarations inside of blocks (the best alternative is to use a function expression).
+У ECMAScript 3 та раніше, оголошення функції всередині блоку (*блочні функції*) технічно був синтаксичною помилкою, проте всі браузери продовжували підтримувати це. На жаль, кожен браузер, що дозволяв такий синтаксис поводився по різному, тому було прийнято уникати оголошення функцій всередині блоків (найкращою альтернативою було використання функціональних виразів).
 
-In an attempt to rein in this incompatible behavior, ECMAScript 5 strict mode introduced an error whenever a function declaration was used inside of a block in this way:
+Намагаючись обмежети таку несумісну поведінку, строгий режим в ECMAScript 5 призводив до помилки при кожному оголошенні функції всередині блоку:
 
 ```js
 "use strict";
 
 if (true) {
 
-    // Throws a syntax error in ES5, not so in ES6
+    // Кидає синтаксичну помилку у ES5, але не в ES6
     function doSomething() {
         // ...
     }
 }
 ```
 
-In ECMAScript 5, this code throws a syntax error. In ECMAScript 6, the `doSomething()` function is considered a block-level declaration and can be accessed and called within the same block in which it was defined. For example:
+У ECMAScript 5, такий код кидає синтаксичну помилку. У ECMAScript 6, функція `doSomething()` розглядається як блочне оголошення і може бути доступною та викликаною всередині блоку, в якому вона була оголошена. Наприклад:
 
 ```js
 "use strict";
@@ -729,18 +729,18 @@ if (true) {
 console.log(typeof doSomething);            // "undefined"
 ```
 
-Block level functions are hoisted to the top of the block in which they are defined, so `typeof doSomething` returns `"function"` even though it appears before the function declaration in the code. Once the `if` block is finished executing, `doSomething()` no longer exists.
+Блочні функції виринають на вершину блоку, в якому вони були оголошені, тому `typeof doSomething` повертає `"function"` не дивлячись на те, що ця інструкція знаходиться перед оголошенням функції. Як тільки блок `if` закінчить виконання, `doSomething()` більше не існуватиме.
 
-### Deciding When to Use Block-Level Functions
+### Коли використовувати блочні функції
 
-Block level functions are similar to `let` function expressions in that the function definition is removed once execution flows out of the block in which it's defined. The key difference is that block level functions are hoisted to the top of the containing block. Function expressions that use `let` are not hoisted, as this example illustrates:
+Блочні функції схожі на функціональні вирази з `let`. При такому визначенні,функції видаляються як тільки хід виконання програми виходить з блоку у якому вони були оголошені. Основна відмінність у тому, що блочні функції виринають на вершину блоку у якому вони оголошені. Функціональні вирази, що використовують `let` не виринають, як показано у цьому прикладі:
 
 ```js
 "use strict";
 
 if (true) {
 
-    console.log(typeof doSomething);        // throws error
+    console.log(typeof doSomething);        // кине помилку
 
     let doSomething = function () {
         // ...
@@ -752,14 +752,14 @@ if (true) {
 console.log(typeof doSomething);
 ```
 
-Here, code execution stops when `typeof doSomething` is executed, because the `let` statement hasn't been executed yet, leaving `doSomething()` in the TDZ. Knowing this difference, you can choose whether to use block level functions or `let` expressions based on whether or not you want the hoisting behavior.
+Тут виконання коду зупиниться коли `typeof doSomething` буде виконано, оскільки оператор `let`  ще не було виконано, залишивши `doSomething()` у ТМЗ. Знанючи цю відмінність, ви можете обирати де використовувати блочні функції, а де вирази з `let`, в заледності від того, чи потрібне вам виринання, чи ні.
 
-### Block-Level Functions in Nonstrict Mode
+### Блочні функції у нестрогому режимі
 
-ECMAScript 6 also allows block-level functions in nonstrict mode, but the behavior is slightly different. Instead of hoisting these declarations to the top of the block, they are hoisted all the way to the containing function or global environment. For example:
+ECMAScript 6 також дозволяє блочні функції у нестрогому режимі, але з дещо іншою поведінкою. Замість виринання цього огологення на вершину блоку, вони будуть виринати на вершину функції, або глобального оточення в якому містяться. До прикладу:
 
 ```js
-// ECMAScript 6 behavior
+// Поведінка ECMAScript 6
 if (true) {
 
     console.log(typeof doSomething);        // "function"
@@ -774,101 +774,101 @@ if (true) {
 console.log(typeof doSomething);            // "function"
 ```
 
-In this example, `doSomething()` is hoisted into the global scope so that it still exists outside of the `if` block. ECMAScript 6 standardized this behavior to remove the incompatible browser behaviors that previously existed, so all ECMAScript 6 runtimes should behave in the same way.
+У цьому прикладі, `doSomething()` виринає у глобальну область видимості, тому вона існує поза блоком `if`. ECMAScript 6 стандартизує цю поведінку, щоб прибрати несумісну поведінку браузерів, яка існувала до цього, тож всі оточення ECMAScript 6 повинні працювати однаково.
 
-Allowing block-level functions improves your ability to declare functions in JavaScript, but ECMAScript 6 also introduced a completely new way to declare functions.
+Можливість використання блочних функцій розширює ваші можливості оголошення функцій у JavaScript, проте ECMAScript 6 також вводить абсолютно новий спосіб оголошення функцій.
 
-## Arrow Functions
+## Arrow–функції
 
-One of the most interesting new parts of ECMAScript 6 is the *arrow function*. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). But arrow functions behave differently than traditional JavaScript functions in a number of important ways:
+Однією з найцікавіших частин ECMAScript 6 є *arrow–функції*. Arrow–функції — це, як можна здогадатись, функції, що оголошуються з новим синтаксисом, який використовує стрілку ("arrow") (`=>`). Проте arrow–функції мають кілька важливих відмінностей від JavaScript–функцій:
 
-* **No `this`, `super`, `arguments`, and `new.target` bindings** - The value of `this`, `super`, `arguments`, and `new.target` inside of the function is by the closest containing nonarrow function. (`super` is covered in Chapter 4.)
-* **Cannot be called with `new`** - Arrow functions do not have a `[[Construct]]` method and therefore cannot be used as constructors. Arrow functions throw an error when used with `new`.
-* **No prototype** - since you can't use `new` on an arrow function, there's no need for a prototype. The `prototype` property of an arrow function doesn't exist.
-* **Can't change `this`** - The value of `this` inside of the function can't be changed. It remains the same throughout the entire lifecycle of the function.
-* **No `arguments` object** - Since arrow functions have no `arguments` binding, you must rely on named and rest parameters to access function arguments..
-* **No duplicate named arguments** - arrow functions cannot have duplicate named arguments in strict or nonstrict mode, as opposed to nonarrow functions that cannot have duplicate named arguments only in strict mode.
+* **Жодних `this`, `super`, `arguments`, та `new.target` зв’язувань** – значення `this`, `super`, `arguments`, та `new.target` всередині функції наслідується від найближчої зовнішньої не–arraw–функції. (`super` буде розгянуто у Главі 4.)
+* **Не можуть викликатись з `new`** - аrrow–функції не мають методу `[[Construct]]` і тому не можуть використовуватись у якості конструкторів. Arrow–функції кидають помилку при використанні з `new`.
+* **Жодних прототипів** - оскільки ви не можете використовувати `new` з arrow–функцією, немає потреби у прототипі. Властивості `prototype` у arrow–функції не існує.
+* **Не можна змінювати `this`** - значення `this` всередині функції не може змінюватись. Воно залишається незмінним протягом усього життєвого циклу функції.
+* **Жодного об’єкту `arguments`** - оскільки arrow–функції не мають зв’язування з `arguments`, ви мусите покладатись лише на іменовані та залишкові параметри для доступу до аргументів.
+* **Ніяких дубльованих іменованих аргументів** - arrow–функції не можуть мати дубьованих іменованих параметрів у строгому та нестрогому режимах, на відміну він не–arrow–функцій, що не можуть мати їх лише у строгому режимі.
 
-There are a few reasons for these differences. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside a function, which can result in unintended program behavior, and arrow functions eliminate this confusion. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations, unlike regular functions, which might be used as a constructor or otherwise modified.
+Є кілька причин для цих відмінностей. Перша і найголовніша: зв’язування `this` є основним джерелом помилок у JavaScript. Дуже легко загубити значення `this` всередині функції, що може призвести до неочікуваної поведінки програми. Arrow–функції позбавляють нас цієї проблеми. Друге полягає у тому, що arrow–функцій можуть лише виконувати код з єдиним значенням `this`. Рушії JavaScript можуть легше оптимізувати такі операції, на відміну від звичайних функцій, які можуть бути використані в якості конструктора, або бути модифікованим іншим чином.
 
-The rest of the differences are also focused on reducing errors and ambiguities inside of arrow functions. By doing so, JavaScript engines are better able to optimize arrow function execution.
+Решту відмінностей спрямовані на те, щоб скоротити помилки та невизначеності пов’язані з arrow–функціями. Завдяки цьому JavaScript рушії зможуть краще оптимізувати виконання arrow–фукнцій.
 
-I> Note: Arrow functions also have a `name` property that follows the same rule as other functions.
+I> Зауважте: Arrow–також мають властивість `name`, яка формується за тим же правилом, як і в інших функцій.
 
-### Arrow Function Syntax
+### Синтаксис аrrow–фукнцій
 
-The syntax for arrow functions comes in many flavors depending upon what you're trying to accomplish. All variations begin with function arguments, followed by the arrow, followed by the body of the function. Both the arguments and the body can take different forms depending on usage. For example, the following arrow function takes a single argument and simply returns it:
+Синтаксис arrow–функцій може бути різним, в залежності від того, якого результату ви намагаєтесь досягти. Усі варіанти починаються з аргументів функції, за якими слідує стрілка, за якою слідує тіло функції. Як аргументи, так і тіло можуть набувати різного вигляду, в залежності від використання. До прикладу, наступна arrow–функція приймає один аргумент та просто повертає його:
 
 ```js
 var reflect = value => value;
 
-// effectively equivalent to:
+// простіший запис для:
 
 var reflect = function(value) {
     return value;
 };
 ```
 
-When there is only one argument for an arrow function, that one argument can be used directly without any further syntax. The arrow comes next and the expression to the right of the arrow is evaluated and returned. Even though there is no explicit `return` statement, this arrow function will return the first argument that is passed in.
+Коли arrow–функція приймає лише один аргумет, цей один аргумент можна використовувати без будь–якого іншого синтаксису. Далі слідує стрілка та вираз праворуч від стрілки, який буде обчислено та повернено. Не дивлячись на відсутність інструкції `return`, ця arrow–функція поверне перший аргумент, який було передано.
 
-If you are passing in more than one argument, then you must include parentheses around those arguments, like this:
+Якщо ви передаєте більш ніж один аргумент, ви повинні огорнути ці аргументи круглими дужками, ось так:
 
 ```js
 var sum = (num1, num2) => num1 + num2;
 
-// effectively equivalent to:
+// простіший запис для:
 
 var sum = function(num1, num2) {
     return num1 + num2;
 };
 ```
 
-The `sum()` function simply adds two arguments together and returns the result. The only difference between this arrow function and the `reflect()` function is that the arguments are enclosed in parentheses with a comma separating them (like traditional functions).
+Функція `sum()` просто додає два аргументи та повертає результат. Єдина відмінність між цією arrow–фунцією та функцією `reflect()` — аргументи огорнуті в круглі дужки та розділені комами (як і в звичайних функціях).
 
-If there are no arguments to the function, then you must include an empty set of parentheses in the declaration, as follows:
+Якщо функція не приймає аргументів, тоді ви повинні залишити порожні круглі дужки, як показано у прикладі:
 
 ```js
 var getName = () => "Nicholas";
 
-// effectively equivalent to:
+// простіший запис для:
 
 var getName = function() {
     return "Nicholas";
 };
 ```
 
-When you want to provide a more traditional function body, perhaps consisting of more than one expression, then you need to wrap the function body in braces and explicitly define a return value, as in this version of `sum()`:
+Якщо вам потрібне більш традиційне тіло функції, що, можливо, складається з більш ніж одного виразу, тоді вам потрібно огорнути тіло функції у фігурні дужки та безпосередньо вказати значення, яке має бути повернутим, як у цій версії `sum()`:
 
 ```js
 var sum = (num1, num2) => {
     return num1 + num2;
 };
 
-// effectively equivalent to:
+// простіший запис для:
 
 var sum = function(num1, num2) {
     return num1 + num2;
 };
 ```
 
-You can more or less treat the inside of the curly braces the same as you would in a traditional function, with the exception that `arguments` is not available.
+Так чи інакше, ви можете розглядати все що між фігурними дужками як звичайну фукнцію, за вийнятком того, що `arguments` в ній буде недоступний.
 
-If you want to create a function that does nothing, then you need to include curly braces, like this:
+Якщо ви хочете створити функцію, яка не робить нічого, тоді вам потрібно написати порожні фігурні дужки:
 
 ```js
 var doNothing = () => {};
 
-// effectively equivalent to:
+// простіший запис для:
 
 var doNothing = function() {};
 ```
 
-Curly braces are used to denote the function's body, which works just fine in the cases you've seen so far. But an arrow function that wants to return an object literal outside of a function body must wrap the literal in parentheses. For example:
+Фігурні дужки використовуються для опису тіла функції і працює так само, як ви вже бачили в попередніх прикладах. Проте arrow–функція, що повертає літерал об’єкта, має бути огорненою у круглі дужеки. Наприклад:
 
 ```js
 var getTempItem = id => ({ id: id, name: "Temp" });
 
-// effectively equivalent to:
+// простіший запис для:
 
 var getTempItem = function(id) {
 
@@ -879,11 +879,11 @@ var getTempItem = function(id) {
 };
 ```
 
-Wrapping the object literal in parentheses signals that the braces are an object literal instead of the function body.
+Огорнення літералу об’єкта у круглі дужки сигналізують, що фігурні дужки є літералом об’єкту, а не тілом функції.
 
-### Creating Immediately-Invoked Function Expressions
+### Створення миттєво–виконуваних функціональних виразів
 
-One popular use of functions in JavaScript is creating immediately-invoked function expressions (IIFEs). IIFEs allow you to define an anonymous function and call it immediately without saving a reference. This pattern comes in handy when you want to create a scope that is shielded from the rest of a program. For example:
+Одним з найпопулярніших застосувань функцій в JavaScript є створення миттєво–виконуваних функціональних виразів (МВФВ). МВФВ дозволяють вам визначати анонімну функцію та викликати її миттєво, без збереження посилання. Такий підхід стає в нагоді, коли вам потрібно зробити область видимості, захищену від решти програми. Наприклад:
 
 ```js
 let person = function(name) {
@@ -899,9 +899,9 @@ let person = function(name) {
 console.log(person.getName());      // "Nicholas"
 ```
 
-In this code, the IIFE is used to create an object with a `getName()` method. The method uses the `name` argument as the return value, effectively making `name` a private member of the returned object.
+У цьому коді, МВФВ використовується щоб створити об’єкт з методом `getName()`. Цей метод повертає значення `name`, роблячи `name` приватним значенням об’єкту, що повертається.
 
-You can accomplish the same thing using arrow functions, so long as you wrap the arrow function in parentheses:
+Ви можете зробити те саме використовуючи arrow–функції огорнувши arrow–функцію у круглі дужки:
 
 ```js
 let person = ((name) => {
@@ -917,11 +917,11 @@ let person = ((name) => {
 console.log(person.getName());      // "Nicholas"
 ```
 
-Note that the parentheses are only around the arrow function definition, and not around `("Nicholas")`. This is different from a formal function, where the parentheses can be placed outside of the passed-in parameters as well as just around the function definition.
+Зауважте, що круглі дужки охоплюють лише вираз arrow–функції не включаючи `("Nicholas")`. Це відмінність від звичайних функцій, з якими круглі дужки також можуть огортати параметри, що передаються.
 
-### No this Binding
+### Жодного зв’язування this
 
-One of the most common areas of error in JavaScript is the binding of `this` inside of functions. Since the value of `this` can change inside a single function depending on the context in which the function is called, it's possible to mistakenly affect one object when you meant to affect another. Consider the following example:
+Одне з найбільших джерел проблем у JavaScript це зв’язування `this` всередині функцій. Оскільки значення `this` всередині функції може змінюватись, в залежності від контексту в якому функція викликається, можливо помилково вплинути на один об’єкт, тоді як ви мали на увазі зовсім інший. Розгляньте такий приклад:
 
 ```js
 var PageHandler = {
@@ -930,7 +930,7 @@ var PageHandler = {
 
     init: function() {
         document.addEventListener("click", function(event) {
-            this.doSomething(event.type);     // error
+            this.doSomething(event.type);     // помилка
         }, false);
     },
 
@@ -940,11 +940,11 @@ var PageHandler = {
 };
 ```
 
-In this code, the object `PageHandler` is designed to handle interactions on the page. The `init()` method is called to set up the interactions, and that method in turn assigns an event handler to call `this.doSomething()`. However, this code doesn't work exactly as intended.
+У цьому коді, об’єкт `PageHandler` створений для обробки взаємодій зі сторінкою. Метод `init()` викликається для встановлює обробник події і передає керування до `this.doSomething()`. Однак цей код не працює так, як очікується.
 
-The call to `this.doSomething()` is broken because `this` is a reference to the object that was the target of the event (in this case `document`), instead of being bound to `PageHandler`. If you tried to run this code, you'd get an error when the event handler fires because `this.doSomething()` doesn't exist on the target `document` object.
+Виклик `this.doSomething()` не спрацює, оскільки `this` є посиланням на об’єкт, на який була спрямована подія (у цьому випадку `document`), що був пов’язаний з `PageHandler`. Якщо ви спробуєте запустити цей код, ви отримаєте помилку, оскільки `this.doSomething()` не існує в контексті об’єкту `document`.
 
-You could fix this by binding the value of `this` to `PageHandler` explicitly using the `bind()` method on the function instead, like this:
+Ви можете виправити це зв’язуванням значення `this` з `PageHandler` через  використання методу `bind()`, ось так:
 
 ```js
 var PageHandler = {
@@ -953,7 +953,7 @@ var PageHandler = {
 
     init: function() {
         document.addEventListener("click", (function(event) {
-            this.doSomething(event.type);     // no error
+            this.doSomething(event.type);     // немає помилки
         }).bind(this), false);
     },
 
@@ -963,9 +963,9 @@ var PageHandler = {
 };
 ```
 
-Now the code works as expected, but it may look a little bit strange. By calling `bind(this)`, you're actually creating a new function whose `this` is bound to the current `this`, which is `PageHandler`. To avoid creating an extra function, a better way to fix this code is to use an arrow function.
+Тепер цей код працює так, як очікувалось, проте виглядає дещо дивно. Викликаючи `bind(this)`, ви насправді створюєте нову функцію, в якої `this` є зв’язаним з поточним `this`, яким є `PageHandler`. Щоб запобігти створенню додаткової фунції, краще скористатись arrow–функцією.
 
-Arrow functions have no `this` binding, which means the value of `this` inside an arrow function can only be determined by looking up the scope chain. If the arrow function is contained within a nonarrow function, `this` will be the same as the containing function; otherwise, `this` is undefined. Here's one way you could write this code using an arrow function:
+Arrow—функція не має зв’язування з `this`. Це означає, що значення `this` всередині arrow–функції визначається ланцюжком областей видимості. Якщо arrow–функція міститься всередині не–arrow–функції, `this` буде таким, як у зовнішньої функції. В іншому випадку, `this` буде не заданим (undefined). Ось один зі способів написати цей код з допомогою arrow–функції:
 
 ```js
 var PageHandler = {
@@ -983,22 +983,22 @@ var PageHandler = {
 };
 ```
 
-The event handler in this example is an arrow function that calls `this.doSomething()`. The value of `this` is the same as it is within `init()`, so this version of the code works similarly to the one using `bind(this)`. Even though the `doSomething()` method doesn't return a value, it's still the only statement executed in the function body, and so there is no need to include braces.
+Обробник події у цьому випадку є arrow–функцією, що викликає `this.doSomething()`. Значення `this` є таким самим як і всередині `init()`, тому такий код працюватиме так само як і при використанні `bind(this)`. Навіть хоча й метод `doSomething()` не повертає ніякого значення, він є лише однією інструкцією в тілі функції, тому немає потреби огортати його в фігурні дужки.
 
-Arrow functions are designed to be "throwaway" functions, and so cannot be used to define new types; this is evident from the missing `prototype` property, which regular functions have. If you try to use the `new` operator with an arrow function, you'll get an error, as in this example:
+Arrow–функції є тимчасовими функціями, тому не можуть бути використаними для задання типів — це наслідок відсутності властивості `prototype`, яку мають звичайні функції. Якщо ви спробуєте використати оператор `new` з arrow–функцією, ви отримаєте помилку, як у цьому прикладі:
 
 ```js
 var MyType = () => {},
-    object = new MyType();  // error - you can't use arrow functions with 'new'
+    object = new MyType();  // помилка - ви не можете використовувати arrow–функції з 'new'
 ```
 
-In this code, the call to `new MyType()` fails because `MyType` is an arrow function and therefore has no `[[Construct]]` behavior. Knowing that arrow functions cannot be used with `new` allows JavaScript engines to further optimize their behavior.
+У цьому коді, виклик `new MyType()` падає, оскільки `MyType` є arrow–функцією і тому не має внутрішнього методу `[[Construct]]`. Знання того, що arrow–функції не можуть використовуватись з `new` дозволяє рушіям JavaScript проводити глибшу оптимізацію їх поведінки.
 
-Also, since the `this` value is determined by the containing function in which the arrow function is defined, you cannot change the value of `this` using `call()`, `apply()`, or `bind()`.
+Також, оскільки значення `this` визначається з зовнішньої функції, в якій arrow–функція є визначеною, ви не можете змінити значення `this` з допомогою `call()`, `apply()` або `bind()`.
 
-### Arrow Functions and Arrays
+### Arrow–функції та масиви
 
-The concise syntax for arrow functions makes them ideal for use with array processing, too. For example, if you want to sort an array using a custom comparator, you'd typically write something like this:
+Лаконічний синтакс arrow–функцій робить їх ідеальними для операцій над масивами. До прикладу, якщо ви хочете посортувати масив за власною умовою, ви могли б написати щось таке:
 
 ```js
 var result = values.sort(function(a, b) {
@@ -1006,17 +1006,17 @@ var result = values.sort(function(a, b) {
 });
 ```
 
-That's a lot of syntax for a very simple procedure. Compare that to the more terse arrow function version:
+Занадто багато синтаксису для такої простої процедури. Порівняйте це з більш короткою версією, що використовує arrow–функції:
 
 ```js
 var result = values.sort((a, b) => a - b);
 ```
 
-The array methods that accept callback functions such as `sort()`, `map()`, and `reduce()` can all benefit from simpler arrow function syntax, which changes seemingly complex processes into simpler code.
+Методи масивів, що приймають функції зворотнього виклику, як от `sort()`, `map()`, та `reduce()`, отримають набагато більше користі від використання arrow–функції, які замінюють здавалося би складні процеси простим кодом.
 
-### No arguments Binding
+### Ніякого зв’язування arguments
 
-Even though arrow functions don't have their own `arguments` object, it's possible for them to access the `arguments` object from a containing function. That `arguments` object is then available no matter where the arrow function is executed later on. For example:
+Хоча arrow–функції і не мають власного об’єкту `arguments`, вони можуть звертатись до об’єкту `arguments` з батьківської функції. Цей об’єкт `arguments` буде доступний незалежно від того, коли arrow–функція буде потім виконана. Наприклад:
 
 ```js
 function createArrowFunctionReturningFirstArg() {
@@ -1028,11 +1028,11 @@ var arrowFunction = createArrowFunctionReturningFirstArg(5);
 console.log(arrowFunction());       // 5
 ```
 
-Inside `createArrowFunctionReturningFirstArg()`, the `arguments[0]` element is referenced by the created arrow function. That reference contains the first argument passed to the `createArrowFunctionReturningFirstArg()` function. When the arrow function is later executed, it returns `5`, which was the first argument passed to `createArrowFunctionReturningFirstArg()`. Even though the arrow function is no longer in the scope of the function that created it, `arguments` remains accessible due to scope chain resolution of the `arguments` identifier.
+Всередині `createArrowFunctionReturningFirstArg()`, створена arrow–функція звертається до елементу `arguments[0]`. Це посилання містить перший аргумент, що був переданий у функцію `createArrowFunctionReturningFirstArg()`. Коли arrow–функція виконається пізніше, вона поверне `5`, що і було першим аргументом преданим в `createArrowFunctionReturningFirstArg()`. Хоча й arrow–функція більше не в області видимості функції, що створила її, `arguments` залишається доступним через ланцюжок контекстів ідентифікатора `arguments`.
 
-### Identifying Arrow Functions
+### Ідентифікація аrrow–функцій
 
-Despite the different syntax, arrow functions are still functions, and are identified as such. Consider the following code:
+Не дивлячись на інший синтакс, arrow–функції є функціями і також можуть бути ідентифікуваними. Розгляньте такий код:
 
 ```js
 var comparator = (a, b) => a - b;
@@ -1041,9 +1041,9 @@ console.log(typeof comparator);                 // "function"
 console.log(comparator instanceof Function);    // true
 ```
 
-The `console.log()` output reveals that both `typeof` and `instanceof` behave the same with arrow functions as they do with other functions.
+Вивід `console.log()` демонструє, що як `typeof`, так і `instanceof` з arrow–функціями поводяться однаково як і з іншими функціями.
 
-Also like other functions, you can still use `call()`, `apply()`, and `bind()` on arrow functions, although the `this`-binding of the function will not be affected. Here are some examples:
+Також, як і з іншими функціями, ви можете використовувати `call()`, `apply()`, та `bind()` на arrow–функціями, хоча `this`-зв’язування цих функцій не працюватиме. Ось кілька прикладів:
 
 ```js
 var sum = (num1, num2) => num1 + num2;
@@ -1056,81 +1056,81 @@ var boundSum = sum.bind(null, 1, 2);
 console.log(boundSum());                // 3
 ```
 
-The `sum()` function is called using `call()` and `apply()` to pass arguments, as you'd do with any function. The `bind()` method is used to create `boundSum()`, which has its two arguments bound to `1` and `2` so that they don't need to be passed directly.
+Функція `sum()` викликається з використанням `call()` та `apply()` для передачі аргументів так, як ви могли б це зробити з будь–якою іншою функцією. Метод `bind()` використовується щоб створити `boundSum()`, яка матиме два прив’язаних аргументи `1` та `2`, тож немає необхідності передавати їх безпосередньо.
 
-Arrow functions are appropriate to use anywhere you're currently using an anonymous function expression, such as with callbacks. The next section covers another major ECMAScript 6 development, but this one is all internal, and has no new syntax.
+Arrow–функції доцільно використовувати всюди, де ви зараз використовуєте анонімні функціональні вирази, як ось функції зворотнього виклику. Наступний розділи розгляне інше суттєве покращення ECMAScript 6, яке є внутрішнім і не має нового синтаксису.
 
-## Tail Call Optimization
+## Оптимізація хвостового виклику
 
-Perhaps the most interesting change to functions in ECMAScript 6 is an engine optimization, which changes the tail call system. A *tail call* is when a function is called as the last statement in another function, like this:
+Напевно найцікавішою зміною в функціях ECMAScript 6 це оптимізація, яка змінює систему хвостового виклику. *Хвостовий виклик (tail call)* це коли функція викликається як остання інструкція в іншій функції, ось так:
 
 ```js
 function doSomething() {
-    return doSomethingElse();   // tail call
+    return doSomethingElse();   // хвостовий виклик
 }
 ```
 
-Tail calls as implemented in ECMAScript 5 engines are handled just like any other function call: a new stack frame is created and pushed onto the call stack to represent the function call. That means every previous stack frame is kept in memory, which is problematic when the call stack gets too large.
+Хвостовий виклик імплементований у рушіях ECMAScript 5 обробляється так само як і виклик будь–якої іншої функції: новий зліпок виклику, що представляє виклик функції, створюється і зберігається в стек викликів. Це означає, що кожет попередній зліпок зберігається в пам’яті, тому це стає проблемою, коли стек викликів стає надто великим.
 
-### What's Different?
+### У чому відмінність?
 
-ECMAScript 6 seeks to reduce the size of the call stack for certain tail calls in strict mode (nonstrict mode tail calls are left untouched). With this optimization, instead of creating a new stack frame for a tail call, the current stack frame is cleared and reused so long as the following conditions are met:
+ECMAScript 6 прагне скоротити розмір стеку для певних хвостових викликів у строгому режимі (у нестрогому режимі хвостові виклики залишаються недоторканими). З такою оптимізацією, замість того щоб створювати новий зліпок для хвостового виклику в стеку, поточний зліпок очищується і перевикористовується до тих пір, як будуть виконані такі умови:
 
-1. The tail call does not require access to variables in the current stack frame (meaning the function is not a closure)
-1. The function making the tail call has no further work to do after the tail call returns
-1. The result of the tail call is returned as the function value
+1. Хвостовий виклик не потребує доступу до змінних у поточному зліпку (тобто функція не є замиканням)
+1. Функція що робить хвостовий виклик не робить нічого після повернення результату хвостового виклику
+1. Результат хвостового виклику повертається повертається як значення функції
 
-As an example, this code can easily be optimized because it fits all three criteria:
+Як приклад, такий код легко буде оптимізованийм, оскільки він відповідає всім трьом критеріям:
 
 ```js
 "use strict";
 
 function doSomething() {
-    // optimized
+    // оптимізовано
     return doSomethingElse();
 }
 ```
 
-This function makes a tail call to `doSomethingElse()`, returns the result immediately, and doesn't access any variables in the local scope. One small change, not returning the result, results in an unoptimized function:
+Ця функція робить хвостовий виклик `doSomethingElse()`, відразу ж повертає результат та не звертається до змінних у локальній області видимості. Одна маленька зміна — не повернення результату — і функція залишеться неоптимізованою:
 
 ```js
 "use strict";
 
 function doSomething() {
-    // not optimized - no return
+    // не оптимізовано - не повертає нічого
     doSomethingElse();
 }
 ```
 
-Similarly, if you have a function that performs an operation after returning from the tail call, then the function can't be optimized:
+Так само, якщо ви маєте функцію, що виконує операцію після повернення результату хвостового виклику, тоді функція не буде оптимізованою:
 
 
 ```js
 "use strict";
 
 function doSomething() {
-    // not optimized - must add after returning
+    // не оптимізовано - додавання після поверненя результату
     return 1 + doSomethingElse();
 }
 ```
 
-This example adds the result of `doSomethingElse()` with 1 before returning the value, and that's enough to turn off optimization.
+Цей приклад додає 1 до результату `doSomethingElse()` перед поверненням значення, а цього досить щоб припинити оптимізацію.
 
-Another common way to inadvertently turn off optimization is to store the result of a function call in a variable and then return the result, such as:
+Іншим частим способом ненавмисно вимкнути оптимізацію є збереження результату виклику функції у змінну і потім повернути її значення, як ось тут:
 
 ```js
 "use strict";
 
 function doSomething() {
-    // not optimized - call isn't in tail position
+    // не оптимізовано - виклик не є хвостовим
     var result = doSomethingElse();
     return result;
 }
 ```
 
-This example cannot be optimized because the value of `doSomethingElse()` isn't immediately returned.
+Цей приклад не може бути оптимізованим оскільки значення `doSomethingElse()` не повертається відразу.
 
-Perhaps the hardest situation to avoid is in using closures. Because a closure has access to variables in the containing scope, tail call optimization may be turned off. For example:
+Можливо найважче уникнути ситуації з використанням замикань. Оскільки замикання має звертатись до змінних із зовнішньої області видимості, хвостова оптимізація може вимкнутись. До прикладу:
 
 ```js
 "use strict";
@@ -1139,16 +1139,16 @@ function doSomething() {
     var num = 1,
         func = () => num;
 
-    // not optimized - function is a closure
+    // не оптимізовано - функція є замиканням
     return func();
 }
 ```
 
-The closure `func()` has access to the local variable `num` in this example. Even though the call to `func()` immediately returns the result, optimization can't occur due to referencing the variable `num`.
+У цьому прикладі, замикання `func()` звертається до локальної змінної `num`. Навіть хоча й виклик `func()` відразу повертає результат, оптимізація не може бути виконаною через звертання до змінної `num`.
 
-### How to Harness Tail Call Optimization
+### Як опанувати оптимізацію звостового виклику
 
-In practice, tail call optimization happens behind-the-scenes, so you don't need to think about it unless you're trying to optimize a function. The primary use case for tail call optimization is in recursive functions, as that is where the optimization has the greatest effect. Consider this function, which computes factorials:
+На практиці, оптимізація хвостового виклику відбувається за кулісами, тож вам не слід думати про це допоки ви не спробуєте оптимізувати функцію. Основним застосуванням оптимізації хвостових викликів є рекурсивні функції — це той випадок, коли оптимізація матиме значний ефект. Розгляньте цю функцію, яка обчислює факторіал:
 
 ```js
 function factorial(n) {
@@ -1157,15 +1157,15 @@ function factorial(n) {
         return 1;
     } else {
 
-        // not optimized - must multiply after returning
+        // не оптимізовано - множення після повернення результату
         return n * factorial(n - 1);
     }
 }
 ```
 
-This version of the function cannot be optimized, because multiplication must happen after the recursive call to `factorial()`. If `n` is a very large number, the call stack size will grow and could potentially cause a stack overflow.
+Така версія функції не може бути оптимізованою, оскільки після рекурсивного виклику `factorial()` відбувається множення. Якщо `n` дуже велике число, розмір стек виклику зростатиме і потенційно може спричинити перемовнення стеку.
 
-In order to optimize the function, you need to ensure that the multiplication doesn't happen after the last function call. To do this, you can use a default parameter to move the multiplication operation outside of the `return` statement. The resulting function carries along the temporary result into the next iteration, creating a function that behaves the same but *can* be optimized by an ECMAScript 6 engine. Here's the new code:
+У відповідності до оптимізації функцій, вам потрібно впевнетись, що множення не відбувається після останнього виклику функції. Щоб зробити це, ви можете скористатись параметром за замовчуванням, щоб винести операцію множення з оператора `return`. Отримана функція передає тимчасовий результат до наступної ітерації, тому ця функція поводиться так само, але *може бути* оптимізованою рушієм ECMAScript 6. Ось новий код:
 
 ```js
 function factorial(n, p = 1) {
@@ -1175,30 +1175,30 @@ function factorial(n, p = 1) {
     } else {
         let result = n * p;
 
-        // optimized
+        // оптимізовано
         return factorial(n - 1, result);
     }
 }
 ```
 
-In this rewritten version of `factorial()`, a second argument `p` is added as a parameter with a default value of 1. The `p` parameter holds the previous multiplication result so that the next result can be computed without another function call. When `n` is greater than 1, the multiplication is done first and then passed in as the second argument to `factorial()`. This allows the ECMAScript 6 engine to optimize the recursive call.
+У цій переписаній версії `factorial()`, другий аргумент `p` додається як параметр з значенням за замовчуванням рівним 1. Параметр `p` зберігає результат попереднього множення, тому наступний результат може бути обчислений без виклику функції. Коли `n` більше 1, спершу відбувається множення і тоді результат передається у якості другого аргументу `factorial()`. Це дозволяє рушію ECMAScript 6 оптимізувати рекурсивний виклик.
 
-Tail call optimization is something you should think about whenever you're writing a recursive function, as it can provide a significant performance improvement, especially when applied in a computationally-expensive function.
+Оптимізація хвостового виклику це те, про що вам сліду думати тоді, коли ви пишете рекурсивну функцію, тому що це дає суттєвий покращення продуктивності, особливо при застосуванні масивних обчислювальних функцій.
 
-## Summary
+## Підсумок
 
-Functions haven't undergone a huge change in ECMAScript 6, but rather, a series of incremental changes that make them easier to work with.
+Функції не зазнали величезних змін у ECMAScript 6. Це скоріше ряд поступових змін, які полегшують роботу з ними.
 
-Default function parameters allow you to easily specify what value to use when a particular argument isn't passed. Prior to ECMAScript 6, this would require some extra code inside the function, to both check for the presence of arguments and assign a different value.
+Параметри за замовчуванням дозволяють вам легко задавати значення, які будуть використовуватись тоді, коли аргумент не передається. До ECMAScript 6 це потребувало би додаткового надлишкового коду всередині функції для перевірки наявності аргументів та присвоєння значень за замовчуванням.
 
-Rest parameters allow you to specify an array into which all remaining parameters should be placed. Using a real array and letting you indicate which parameters to include makes rest parameters a much more flexible solution than `arguments`.
+Залишкові параметри дозволяють вам масив, в якому будуть зберігатись решта переданих параметрів. Використання реального масиву та можливість визначати які параметри мають бути включені, робить залишкові параметри набагато гнучкішем рішенням ніж `arguments`.
 
-The spread operator is a companion to rest parameters, allowing you to deconstruct an array into separate parameters when calling a function. Prior to ECMAScript 6, there were only two ways to pass individual parameters contained in an array: by manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
+Оператор розкладу є схожим до залишкових параметрів і дозволяє вам розкладати масив на окремі параметри при виклику функції. До ECMAScript 6 було два шляхи передачі окремих параметрів, які зберігаються в масиві: безпосереднє задання кожного параметра або використання `apply()`. Використовуючи оператор розкладу, ви можете легко передати масив у будь–яку функцію не турбуючись про контекст `this` цієї функції.
 
-The addition of the `name` property should help you more easily identify functions for debugging and evaluation purposes. Additionally, ECMAScript 6 formally defines the behavior of block-level functions so they are no longer a syntax error in strict mode.
+Додаткова властивість `name` має допомогти вам легше ідентифікувати функції при пошуку помилок та аналізі. До того ж, ECMAScript 6 формально визначає поведінку блочних функцій, тому вони більше не спричинятимуть помилок у строгому режимі.
 
-In ECMAScript 6, the behavior of a function is defined by `[[Call]]`, normal function execution, and `[[Construct]]`, when a function is called with `new`. The `new.target` metaproperty also allows you to determine if a function was called using `new` or not.
+У ECMAScript 6 поведінка функції визначається через `[[Call]]` при нормальному режимі, або через `[[Construct]]`, коли функція визначається з `new`. Метавластивість `new.target` також дозволяє вам визначати чи функція була викликана з використанням `new` чи ні.
 
-The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in place of anonymous function expressions. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding, and so can't be used as constructors.
+Найбільшою зміною функцій в ECMAScript 6 було введення arrow–функцій. Arrow–функції розроблені для використання замість анонімних функціональних виразів. Arrow–функції мають більш лаконічний синтакс, лексичне `this`–зв’язування та не мають об’єкта `arguments`. Крім того, arrow–функції не можуть змінювати свій контекст `this` та не можуть використовуватись як конструктори.
 
-Tail call optimization allows some function calls to be optimized in order to keep a smaller call stack, use less memory, and prevent stack overflow errors. This optimization is applied by the engine automatically when it is safe to do so, however, you may decide to rewrite recursive functions in order to take advantage of this optimization.
+Оптимізація хвостового виклику дозволяє оптимізувати виклики деяких функцій шляхом збереження малого стеку викликів, ощадливішим використанням пам’яті та попередженням переповнення стеку. Ця оптимізація застосовується рушієм автоматично коли це безпечно, однак ви можете переписати рекурсивні функції у відповідності до вимог, щоб скористатись перевагами такої оптимізації.
