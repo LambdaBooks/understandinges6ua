@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 12 Apr 2016 17:05:40 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 12 Apr 2016 17:13:59 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -36,6 +36,13 @@ RSS]]></description>
             <description><![CDATA[Так склалось, що одна із найхитріших частин програмування на JavaScript - спосіб, яким оголошуються змінні. У більшості С-подібних мов змінні (або їх зв'язування) створюються там, де їх оголошують. Проте в JavaScript це не зовсім так. Місце створення ваших змінних залежить від того, як ви їх оголосили і ECMAScript 6 надає вам простіший спосіб контролювати область видимості. Ця глава ілюструє чому класичне var оголошення може заплутати, вводить блочне зв'язування в ECMAScript 6, а тоді пропонує деякі рекомендації для їх використання.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/01-Block-Bindings.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/01-Block-Bindings.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Рядки та регулярні вирази]]></title>
+            <description><![CDATA[Рядки, можливо, є найбільш важливими типами даних в програмуванні. Вони є майже у всіх високорівневих мовах програмування, а вміння працювати з ними ефективно є необхідністю для розробника, при створенні корисних програм. Втім, будучи відвертими, регулярні вирази є не менш важливими, тому що вони дають розробнику додаткові потужні можливості при роботі з рядками. Зважаючи на це, розробники ECMAScript 6 вдосконалили рядки і регулярні вирази, додавши нові можливості та довгоочікуваний функціонал. Ця глава розгляне зміни в обох типах.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/02-Strings-and-Regular-Expressions.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/02-Strings-and-Regular-Expressions.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
