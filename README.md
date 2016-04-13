@@ -1,5 +1,8 @@
-# Рoзуміння ECMAScript 6
+# Рoзуміння ECMAScript 6 
 
+[![PDF][pdf-image]][pdf-url]
+[![ePub][epub-image]][epub-url]
+[![Mobi][mobi-image]][mobi-url] 
 [![Build Status][travis-image]][travis-url]
 [![Twitter][twitter-image]][twitter-url]
 [![RSS][rss-image]][rss-url]
@@ -24,7 +27,9 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 ## Де читати
 
-Онлайн-версія книги [доступна для читання](#) безкоштовно та містить найсвіжіші зміни. Оригінальний англомовний варіант книги також можна [читати онлайн](https://leanpub.com/understandinges6/read/). Розділи можуть бути незакінченими, проте переклад має бути правильним. Переклад оновлюється кілька разів на місяць.
+Переклад доступний для завантаження у форматах [PDF][pdf-url], [ePub][epub-url] та [Mobi][mobi-url]. Онлайн-версія перекладу [доступна для читання](#) безкоштовно та містить найсвіжіші зміни. Розділи можуть бути незакінченими, проте переклад має бути правильним. Переклад оновлюється кілька разів на місяць. 
+
+Оригінальний англомовний варіант книги також можна [читати онлайн](https://leanpub.com/understandinges6/read/).
 
 ## Придбати копію
 
@@ -63,6 +68,17 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 ## Ліцензія
 
 [CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com) and [Terry Sahaidak](https://github.com/terrysahaidak)
+
+<!-- Download links -->
+
+[pdf-url]: https://www.gitbook.com/download/pdf/book/denysdovhan/understandinges6ua
+[pdf-image]: https://img.shields.io/badge/get-PDF-EB4E33.svg?style=flat-square
+
+[epub-url]: https://www.gitbook.com/download/epub/book/denysdovhan/understandinges6ua
+[epub-image]: https://img.shields.io/badge/get-ePub-85B916.svg?style=flat-square
+
+[mobi-url]: https://www.gitbook.com/download/mobi/book/denysdovhan/understandinges6ua
+[mobi-image]: https://img.shields.io/badge/get-Mobi-E8A138.svg?style=flat-square
 
 <!-- References -->
 
