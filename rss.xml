@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 13 Apr 2016 13:21:36 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 14 Apr 2016 09:29:02 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -22,7 +22,8 @@ ePub
 Mobi
 Build Status
 Twitter
-RSS]]></description>
+RSS
+Stars]]></description>
             <link>http://understandinges6.denysdovhan.com/</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
