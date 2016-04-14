@@ -90,7 +90,7 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 [travis-image]: https://img.shields.io/travis/denysdovhan/understandinges6ua.svg?style=flat-square
 
 [twitter-url]: https://twitter.com/es6ua
-[twitter-image]: https://img.shields.io/badge/twitter-%40es5ua-00ACEE.svg?style=flat-square
+[twitter-image]: https://img.shields.io/badge/twitter-%40es6ua-00ACEE.svg?style=flat-square
 
 [rss-url]: http://understandinges6.denysdovhan.com/rss.xml
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
