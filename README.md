@@ -6,6 +6,7 @@
 [![Build Status][travis-image]][travis-url]
 [![Twitter][twitter-image]][twitter-url]
 [![RSS][rss-image]][rss-url]
+[![Stars][github-image]][github-url]
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
 > Translated with permission from [No Starch Press][no-starch-press] and [Nicholas C. Zakas](https://www.nczonline.net/).
@@ -93,3 +94,6 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 [rss-url]: http://understandinges6.denysdovhan.com/rss.xml
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
+
+[github-image]: https://img.shields.io/github/stars/denysdovhan/understandinges6ua.svg?style=social&label=Star
+[github-url]: https://github.com/denysdovhan/understandinges6ua
