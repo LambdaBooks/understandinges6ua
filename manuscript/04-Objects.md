@@ -1,27 +1,27 @@
-# Expanded Object Functionality
+# Розширення функціональності об’єктів
 
-ECMAScript 6 focuses heavily on improving the utility of objects, which makes sense because nearly every value in JavaScript is some type of object. Additionally, the number of objects used in an average JavaScript program continues to increase as the complexity of JavaScript applications increases, meaning that programs are creating more objects all the time. With more objects comes the necessity to use them more effectively.
+ECMAScript 6 значною мірою спрямований на поліпшення функціональності об’єктів, що має зміст, адже майже будь–яке значення в JavaScript є певною мірою об’ктами. Крім того, кількість об’єктів, що використовують в переісчних JavaScript–програмах продовжує зростати разом зі збільшенням складності JavaScript–додатків, а це означає, що програми постійно створюють все більше і більше об’єктів. Зі збільшенням кількості об’єктів з’являється і необхідність використовувати їх більш ефективно.
 
-ECMAScript 6 improves objects in a number of ways, from simple syntax extensions to options for manipulating and interacting with them.
+ECMAScript 6 покращує ряд властивостей об’єктів, від простого розширення синтаксису, до опцій для їх маніпулювання та взаємодії.
 
-## Object Categories
+## Категорії об’єктів
 
-JavaScript uses a mix of terminology to describe objects found in the standard as opposed to those added by execution environments such as the browser or Node.js, and the ECMAScript 6 specification has clear definitions for each category of object. It's important to understand this terminology to have a good understanding of the language as a whole. The object categories are:
+JavaScript використовує змішану термінологію для опису об’єктів, які знаходяться у стандарті, на відміну від об’єктів у різноманітних оточеннях, як от у браузерах, чи Node.js. Специфікація ECMAScript 6 має внести чітке визначення для кожної з категорій об’єктів. Важливо зрозуміти цю термінологію, щоб мати хороше розуміння мови в цілому. Об’кти бувають таких категорій:
 
-* *Ordinary objects* Have all the default internal behaviors for objects in JavaScript.
-* *Exotic objects* Have internal behavior that differs from the default in some way.
-* *Standard objects* Are those defined by ECMAScript 6, such as `Array`, `Date`, and so on. Standard objects may be ordinary or exotic.
-* *Built-in objects* Are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.
+* *Звичайні об’єкти* — мають повну поведінку за замовчуванням для об’єктів у JavaScript.
+* *Незвичайні об’єкти* — мають внутрішню поведінку, яка певним чином відрізняється від поведінки за замовчуванням.
+* *Стандартні об’єкти* — об’єкти визначені у ECMAScript 6, такі як `Array`, `Date` і так далі. Стандартні об’єкти можуть бути звичайними, або незвичайними.
+* *Вбудовані об’єкти* — об’єкти, що присутні у середовищі виконання JavaScript, коли скрипт починає виконуватись. Всі стандратні об’єкти є вбудованими об’єктами.
 
-I will use these terms throughout the book to explain the various objects defined by ECMAScript 6.
+У книзі я користуватимусь цією термінологією для пояснення різноманітних об’єктів, визначених у ECMAScript 6.
 
-## Object Literal Syntax Extensions
+## Розширення синтаксису об’єктного літерала
 
-The object literal is one of the most popular patterns in JavaScript. JSON is built upon its syntax, and it's in nearly every JavaScript file on the Internet. The object literal is so popular because it's a succinct syntax for creating objects that otherwise would take several lines of code. Luckily for developers, ECMAScript 6 makes object literals more powerful and even more succinct by extending the syntax in several ways.
+Об’єктний літерал є одним з найбільш популярних паттернів у JavaScript. JSON побудований на його синтаксисі і він є майжу у будь—якому JavaScript–файлі в Інтернеті. Об’єктний літерал став таким популярним задяки своєму лаконічному синтаксису для створення об’єктів, що у іншому випадку могло би зайняти кілька рядків коду. На щастя розробників, ECMAScript 6 робить об’єктні літерали більш потужними та навіть більш лаконічними, завдяки розширенню синтаксису кількома способами.
 
-### Property Initializer Shorthand
+### Скорочення ініціалізації властивостей
 
-In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are initialized. For example:
+У ECMAScript 5 та раніше, літерали об’єктів були простими колекціями пар ім’я–значення. Це означало, що могли виникати дублюваня тоді, коли значення властивостей вже ініціалізовані. До прикладу:
 
 ```js
 function createPerson(name, age) {
@@ -32,9 +32,9 @@ function createPerson(name, age) {
 }
 ```
 
-The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result appears to be duplication of `name` and `age` even though one is the name of an object property while the other provides the value for that property. The key `name` in the returned object is assigned the value contained in the variable `name`, and the key `age` in the returned object is assigned the value contained in the variable `age`.
+Функція `createPerson()` створює об’єкт у якого властивість name така ж сама, як і параметер name у функції. У результаті це виглядає як дублювання `name` та `age`, хоча й один name є властивістю об’єкта, а інший встановлює значення цій властивості. Ключеві `name` у об’єкті, що буде повернений, буде присвоєно значення, яке міститься у змінній `name`, а ключеві `age`, у об’єкті, що повернеться, буде присвоєно значення, що зберігається у змінній `age`.
 
-In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the *property initializer* shorthand. When an object property name is the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten for ECMAScript 6 as follows:
+У ECMAScript 6 ви можете позбутись такого дублювання завдяки скороченню *ініціалізації властивостей*. Коли ім’я властивості таке ж, як і ім’я локальної змінної, ви можете просто написати лише ім’я, без двокрапки та значення. До прикладу, `createPerson()` може бути переписана на ECMAScript 6 ось так:
 
 ```js
 function createPerson(name, age) {
@@ -45,13 +45,13 @@ function createPerson(name, age) {
 }
 ```
 
-When a property in an object literal only has a name, the JavaScript engine looks into the surrounding scope for a variable of the same name. If it finds one, that variable's value is assigned to the same name on the object literal. In this example, the object literal property `name` is assigned the value of the local variable `name`.
+Коли властивість у об’єктному літералі має лише ім’я, рушій JavaScript шукає у суміжній області видимості змінну з таким самим ім’ям. Якщо він знаходить таку, значення цієї змінної присвоюється такому ж імені у об’єктному літералі.У цьому прикладі, властивості `name` літералу об’єкта присвоюється значення локальної змінної `name`.
 
-This extension makes object literal initialization even more succinct and helps to eliminate naming errors. Assigning a property with the same name as a local variable is a very common pattern in JavaScript, making this extension a welcome addition.
+Таке розширення робить ініціалізацію об’єктних літералів навіть більш лаконічною та допомагає скоротити кількість помилок, пов’язаних з іменуванням. Присвоєння властивості локальної змінної з таким же самим ім’ям є дуже поширеним паттерному у JavaScript, що робить це нововведення дуже бажаним.
 
-### Concise Methods
+### Лаконічні методи
 
-ECMAScript 6 also improves the syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object, as follows:
+ECMAScript 6 також вдосконалює синтаксис присвоєння методів у об’єктних літералах. У ECMAScript 5 та раніше, щоб додати об’єкту метод, ви мусили задавати ім’я, а тоді повне визначення функції, ось так:
 
 ```js
 var person = {
@@ -62,7 +62,7 @@ var person = {
 };
 ```
 
-In ECMAScript 6, the syntax is made more concise by eliminating the colon and the `function` keyword. That means you can rewrite the previous example like this:
+У ECMAScript 6 синтаксис зроблено більше лаконічним, щоб позбутись двокрапки та ключового слова `function`. Це означає, що ви можете переписати попередній приклад так:
 
 ```js
 var person = {
@@ -73,13 +73,13 @@ var person = {
 };
 ```
 
-This shorthand syntax, also called *concise method* syntax, creates a method on the `person` object just as the previous example did. The `sayName()` property is assigned an anonymous function and has all the same characteristics as the ECMAScript 5 `sayName()` function. The one difference is that concise methods may use `super` (discussed later in the "Easy Prototype Access with Super References" section), while the nonconcise methods may not.
+Такий скорочений синтаксис, який також називають синтаксисом *лаконічних методів*, створює метод об’єкту `person` точно так само як і у попередньому прикладі. Властивості `sayName()` присвоюється анонімна функція, яка має точно такі ж характеристики, як і функція `sayName()` на  ECMAScript 5. Єдина відмінність у тому, що лаконічні методи можуть використовувати `super` (йтиметься пізніше у розділі «Легкий доступ до прототипу через посилання super section), тоді як нелаконічні методи не можуть.
 
-I> The `name` property of a method created using concise method shorthand is the name used before the parentheses. In the last example, the `name` property for `person.sayName()` is `"sayName"`.
+I> Властивість `name` методу, що створюється з допомогою цього скорочення, є ім’ям, яке вказане перед круглими дужками. У останньому прикладі, властивістю `name` для `person.sayName()` буде `"sayName"`.
 
-### Computed Property Names
+### Обчислювані імена властивостей
 
-ECMAScript 5 and earlier could compute property names on object instances when those properties were set with square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would cause a syntax error if used in an identifier. Here's an example:
+У ECMAScript 5 та раніше можна було обчислювати імена властивостей об’єкту встановлюючи їх з допомогою квадратних дужок, замість використання крапкового запису. Квадратні дужки дозволяють вам задавати імена властивостей використовуючи змінні та рядкові літерали, що можуть містити символи, які би спричинили синтаксичну помилку, якби використовувались у якості ідентифікаторів. Ось приклад:
 
 ```js
 var person = {},
@@ -92,9 +92,9 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-Since `lastName` is assigned a value of `"last name"`, both property names in this example use a space, making it impossible to reference them using dot notation. However, bracket notation allows any string value to be used as a property name, so assigning `"first name"` to `"Nicholas"` and "`last name"` to `"Zakas"` works.
+Оскільки `lastName` присвоєно значення `"last name"`, обидві властивості у цьому прикладі містять пробіли, роблячи неможливим звернення до них з допомогою крапкового запису. Однак, квадратні дужки дозволяють використовувати будь–який рядок у якості ім’я властивості, тому присвоєння `"first name"` значення `"Nicholas"` та "`last name"` значення `"Zakas"` працює.
 
-Additionally, you can use string literals directly as property names in object literals, like this:
+Окрім того, ви можете використовувати рядкові літерали безпосередньо в якості імен властивостей об’єктних літералів, як тут:
 
 ```js
 var person = {
@@ -104,9 +104,9 @@ var person = {
 console.log(person["first name"]);      // "Nicholas"
 ```
 
-This pattern works for property names that are known ahead of time and can be represented with a string literal. If, however, the property name `"first name"` were contained in a variable (as in the previous example) or had to be calculated, then there would be no way to define that property using an object literal in ECMAScript 5.
+Цей паттерн працює для імен властивостей, що відомі наперед і можуть бути представлені у вигляді рядкового літералу. Однак, якщо би ім'я властивості `"first name"` зберігалося у змінній (як у попередньому прикладі) або обчислювалось, тоді неможливо було би задати цю властивість з допомогою об’єктного літералу у ECMAScript 5.
 
-In ECMAScript 6, computed property names are part of the object literal syntax, and they use the same square bracket notation that has been used to reference computed property names in object instances. For example:
+У ECMAScript 6 обчислювані імена властивостей є частиною синтаксису об’єктного літералу і вони можуть використовуватись з допомогою тих самих квадратних дужок, що використовувались для посилання на імена властивостей у екземплярах об’єктів. Наприклад:
 
 ```js
 var lastName = "last name";
@@ -120,7 +120,7 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-The square brackets inside the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
+Квадратні дужки всередині об’єктного літералу показують, що ім’я властивості має бути обчислюваним, тому його вміст обчислюється як рядок. Це означає, що ви можете також використовувати вирази ось так:
 
 ```js
 var suffix = " name";
@@ -134,17 +134,17 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person["last name"]);       // "Zakas"
 ```
 
-These properties evaluate to `"first name"` and `"last name"`, and those strings can be used to reference the properties later. Anything you would put inside square brackets while using bracket notation on object instances will also work for computed property names inside object literals.
+Результатом обчислення властивостей будуть `"first name"` та `"last name"`, і ці рядки можуть використовуватись для звердення до властивостей згодом. Будь–що, що ви могли би вкласти до квадратних дужок у записі з екземплярами об’єктів, також працюватиме для обчислюваних властивостей всередині об’єктних літералів.
 
-## New Methods
+## Нові методи
 
-One of the design goals of ECMAScript beginning with ECMAScript 5 was to avoid creating new global functions or methods on `Object.prototype`, and instead try to find objects on which new methods should be available. As a result, the `Object` global has received an increasing number of methods when no other objects are more appropriate. ECMAScript 6 introduces a couple new methods on the `Object` global that are designed to make certain tasks easier.
+Однією з цілей ECMAScript починаючи з ECMAScript 5 було уникнення створення нових глобальних функцій та методів у `Object.prototype`, а замість цього спробувати знайти об’єкти у яких нові методи повинні бути доступними. У результаті, Глобальний `Object` отримав більшу кількість методів, у той час як усі інші об’єкти ні. ECMAScript 6 вводить пару нових методів у глобального `Object`, які розроблені для спрощення певних завдань.
 
-### The Object.is() Method
+### Метод Object.is()
 
-When you want to compare two values in JavaScript, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many developers prefer the latter, to avoid type coercion during comparison. But even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
+Коли ви хочете порівняти два значення у JavaScript, скоріш за все, ви звикли використовувати оператор рівності (`==`), або оператор ідентичної рівності (`===`). Багато розробників надають перевагу останньом, щоб уникнути примусового зведення типів. проте навіть оператор ідентичної рівності є не зовсім точним. Наприклад, значення +0 та -0 розглядаються оператором `===` рівними, хоча рушії JavaScript описують їх як різні. Також `NaN === NaN` повертає `false`, що призводить до необхідності використовувати `isNaN()`, щоб перевірити `NaN` точно.
 
-ECMAScript 6 introduces the `Object.is()` method to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. Here are some examples:
+ECMAScript 6 вводить метод `Object.is()`, щоб компенсувати недоліки оператору ідентичної рівності. Цей метод приймає два аргументи та повертає `true`, якщо значення є еквівалентними. Два значення вважаються еквівалентними тоді, коли вони є мають однакові типи та значення. Ось кілька прикладів:
 
 ```js
 console.log(+0 == -0);              // true
@@ -163,11 +163,11 @@ console.log(Object.is(5, 5));       // true
 console.log(Object.is(5, "5"));     // false
 ```
 
-In many cases, `Object.is()` works the same as the `===` operator. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. But there's no need to stop using equality operators altogether. Choose whether to use `Object.is()` instead of `==` or `===` based on how those special cases affect your code.
+У багатьох випадках, `Object.is()` працює так само як і оператор `===`. Єдина відмінність полягає у тому, що +0 та -0 розглядаються як нееквівалентні та `NaN` вважається еквівалентним до `NaN`. Проте немає потреби переставати використовувати оператори рівності зовсім. Визначайте коли користуватись `Object.is()` замість `==` або `===` виходячи з того, як має поводитись ваш код.
 
-### The Object.assign() Method
+### Метод Object.assign()
 
-*Mixins* are among the most popular patterns for object composition in JavaScript. In a mixin, one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
+*Домішки (mixins)* є одним з найпопулярніших патернів для композиції об’єктів у JavaScript. У домішці один об’єкт отримує властивості та методи від іншого. Багато JavaScript–бібліотек мають метод mixin схожий на цей:
 
 ```js
 function mixin(receiver, supplier) {
@@ -179,7 +179,7 @@ function mixin(receiver, supplier) {
 }
 ```
 
-The `mixin()` function iterates over the own properties of `supplier` and copies them onto `receiver` (a shallow copy, where object references are shared when property values are objects). This allows the `receiver` to gain new properties without inheritance, as in this code:
+Функція `mixin()` ітерується по власних властивостях `supplier` та копіює їх до `receiver` (неповну копію, у якій посилання на об’єкти є загальними, тоді як значення властивостей є об’єктами). Це дозволяє `receiver` отримувати нові властивості без наслідування, як у цьому прикладі:
 
 ```js
 function EventTarget() { /*...*/ }
@@ -195,13 +195,13 @@ mixin(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-Here, `myObject` receives behavior from the `EventTarget.prototype` object. This gives `myObject` the ability to publish events and subscribe to them using the `emit()` and `on()` methods, respectively.
+Тут `myObject` отримує поведінку з об’єкту `EventTarget.prototype`. Це дає `myObject` можливість публікувати події та підписуватись на них з допомогою методів `emit()` та `on()` відповідно.
 
-This pattern became popular enough that ECMAScript 6 added the `Object.assign()` method, which behaves the same way. The name change from `mixin()` to `assign()` reflects the actual operation that occurs. Since the `mixin()` method uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction. Note, however, that `Object.assign()` does not copy properties whose keys are symbols, which I cover in Chapter 6.
+Цей патерн став досить популярним, тому ECMAScript 6 додає метод `Object.assign()`, який поводиться так само. Зміна імені з `mixin()` на `assign()` відображає дійсну операцію, що відбувається. Оскільки метод `mixin()` використовує оператор присвоєння (`=`), він не зможе скопіювати властивость–аксесор приймачу у вигляді властивості–аксесора. Ім’я `Object.assign()` було обране щоб відображати цю відмінність. Однак зауважте, що `Object.assign()` не копіює властивості, ключі яких є символами, які я опишу у Главі 6.
 
-I> Similar methods in various libraries may have other names for the same basic functionality; popular alternates include the `extend()` and `mix()` methods. There was also, briefly, an `Object.mixin()` method in ECMAScript 6 in addition to the `Object.assign()` method. The primary difference was that `Object.mixin()` also copied over accessor properties, but the method was removed due to concerns over the use of `super` (discussed in the "Easy Prototype Access with Super References" section of this chapter).
+I> Схожі методи у різних бібліотеках можуть мати різні імена для одного і того ж функціоналу: популярними альтернативами є включення методів `extend()` та `mix()`. У ECMAScript 6 також був метод `Object.mixin()` на додачу до методу `Object.assign()`. Основною відмінністю було те, що `Object.mixin()` копіює ще й властивості-аксесори, але цей метод було виключено через можливість `super` (описано у розділі "Легкий доступ до прототипу через посилання super" цієї глави).
 
-You can use `Object.assign()` anywhere the `mixin()` function would have been used. Here's an example:
+Ви можете використовувати `Object.assign()` усюди де, функція `mixin()` могла би використовуватись. Ось приклад:
 
 ```js
 function EventTarget() { /*...*/ }
@@ -217,7 +217,7 @@ Object.assign(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-The `Object.assign()` method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver, which is what happens in this snippet:
+Метод `Object.assign()` приймає будь–яку кількість віддавачів властивостей. Приймач отримуватиме властивості у тому порядку, в якому віддавачі були вказані. Це означає, що другий віддавач може перезаписати значення з першого віддавача у отримувачі, що й ілюструє цей приклад:
 
 ```js
 var receiver = {};
@@ -236,71 +236,71 @@ console.log(receiver.type);     // "css"
 console.log(receiver.name);     // "file.js"
 ```
 
-The value of `receiver.type` is `"css"` because the second supplier overwrote the value of the first.
+Значенням `receiver.type` буде `"css"` оскільки другий віддавач перезаписав значення першого.
 
-The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function found in many JavaScript libraries.
+Метод `Object.assign()` не є великим доповненням до ECMAScript 6, проте він формалізує загальну функцію, яка надається багатьма JavaScript–бібліотеками.
 
-A> ### Working with Accessor Properties
-A>
-A> Keep in mind that `Object.assign()` doesn't create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
-A>
-A> ```js
-A> var receiver = {},
-A>     supplier = {
-A>         get name() {
-A>             return "file.js"
-A>         }
-A>     };
-A>
-A> Object.assign(receiver, supplier);
-A>
-A> var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
-A>
-A> console.log(descriptor.value);      // "file.js"
-A> console.log(descriptor.get);        // undefined
-A> ```
-A>
-A> In this code, the `supplier` has an accessor property called `name`. After using the `Object.assign()` method, `receiver.name` exists as a data property with a value of `"file.js"` because `supplier.name` returned `"file.js"` when `Object.assign()` was called.
+### A> Робота з властивостями–аксесорами
 
-## Duplicate Object Literal Properties
+Запам’ятайте, якщо віддавач має властивості–аксесори, то `Object.assign()` не створить їх у отримувачі. Оскільки `Object.assign()` використовує оператор присвоєння, властивість аксесора у віддавачі стане полем даних у отримувачі. Наприклад:
 
-ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example, this code was problematic:
+ ```js
+ var receiver = {},
+     supplier = {
+         get name() {
+             return "file.js"
+         }
+     };
+
+ Object.assign(receiver, supplier);
+
+ var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
+
+ console.log(descriptor.value);      // "file.js"
+ console.log(descriptor.get);        // undefined
+ ```
+
+У цьому прикладі, `supplier` має властивість–аксесор під назвою `name`. Після використання методу `Object.assign()`, властивість `receiver.name` буде полем даних зі значенням `"file.js"`, тому що `supplier.name` поверне `"file.js"`, коли `Object.assign()` буде викликано.
+
+## Дублювання властивостей у об’єктних літералах
+
+Строгий режим у ECMAScript 5 вводив перевірку дублювання властивостей у об’єктних літералах, що провокувала помилку, якщо відбувалось дублювання. Наприклад, цей код спричинив би помилку:
 
 ```js
 "use strict";
 
 var person = {
     name: "Nicholas",
-    name: "Greg"        // syntax error in ES5 strict mode
+    name: "Greg"        // синтаксична помилка у строгому режимі ES5
 };
 ```
 
-When running in ECMAScript 5 strict mode, the second `name` property causes a syntax error. But in ECMAScript 6, the duplicate property check was removed. Both strict and nonstrict mode code no longer check for duplicate properties. Instead, the last property of the given name becomes the property's actual value, as shown here:
+При запуску у строгому режимі ECMAScript 5, друга властивість `name` призведе до синтаксичної помилки. Проте у ECMAScript 6, перевірка дублювання властивостей була видаленою. Як у строгому так і в нестрогому режимах код більше не перевіряється на дублювання властивостей. Замість цього, значення останньої властивісті з даним ім’ям стане актуальним значенням, як і показано тут:
 
 ```js
 "use strict";
 
 var person = {
     name: "Nicholas",
-    name: "Greg"        // no error in ES6 strict mode
+    name: "Greg"        // ніякої помилки у строгому режимі ES6
 };
 
 console.log(person.name);       // "Greg"
 ```
 
-In this example, the value of `person.name` is `"Greg"` because that's the last value assigned to the property.
+У цьому прикладі, значенням `person.name` буде is `"Greg"` тому, що це останнє значення присвоєне цій властивості.
 
-## Own Property Enumeration Order
+## Власний порядок перелічення властивостей
 
-ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using `Object.getOwnPropertyNames()` and `Reflect.ownKeys` (covered in Chapter 12). It also affects the order in which properties are processed by `Object.assign()`.
+ECMAScript 5 не задає порядку перелічення властивостей об’єкту — це покладалось на постачальників JavaScript–рушіїв. Однак ECMAScript 6 строго задає порядок у якому власні властивості мають повертатись, коли вони перераховані. Це впливає на те як властивості повертаються з `Object.getOwnPropertyNames()` та `Reflect.ownKeys` (описано у Главі 12). Це також впливає на те, як властивості обробляються у `Object.assign()`.
 
-The basic order for own property enumeration is:
+Базовий порядок переліку власних властих властивостей такий:
 
-1. All numeric keys in ascending order
-2. All string keys in the order in which they were added to the object
-3. All symbol keys (covered in Chapter 6) in the order in which they were added to the object
+1. Всі нумеровані ключі у порядку зростання;
+2. Всі рядкові ключі у порядку, в якому вони були додані до об’єкту;
+3. Всі символьні ключі (описано у Главі 6) у порядку, в якому вони були додані до об’єкту;
 
-Here's an example:
+Ось приклад:
 
 ```js
 var obj = {
@@ -317,21 +317,21 @@ obj.d = 1;
 console.log(Object.getOwnPropertyNames(obj).join(""));     // "012acbd"
 ```
 
-The `Object.getOwnPropertyNames()` method returns the properties in `obj` in the order `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted, even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`. The keys in the object literal itself come first, followed by any dynamic keys that were added later (in this case, `d`).
+Метод `Object.getOwnPropertyNames()` повертає властивості `obj` у порядку: `0`, `1`, `2`, `a`, `c`, `b`, `d`. Зауважте, що нумеровані ключі згруповані та посортовані, хоча об’єктному літералів вони записані у довільному порядку. Рядкові ключі ідуть після нумерованих та йдуть у порядку, в якому їх було додано до `obj`. Ключі задані у об’єктному літералі йдуть попереду, за ними слідують динамічні ключі, що було додані пізніше (у цьому випадку `d`).
 
-W> The `for-in` loop still has an unspecified enumeration order because not all JavaScript engines implement it the same way. The `Object.keys()` method and `JSON.stringify()` are both specified to use the same (unspecified) enumeration order as `for-in`.
+W> Цикл `for-in` продовжує мати незаданий порядок перелічення, оскільки не всі JavaScript–рушії реалізують його однаково. Метод `Object.keys()` та `JSON.stringify()` обоє мають однаковий (невказаний) порядок перелічення, як і `for-in`.
 
-While enumeration order is a subtle change to how JavaScript works, it's not uncommon to find programs that rely on a specific enumeration order to work correctly. ECMAScript 6, by defining the enumeration order, ensures that JavaScript code relying on enumeration will work correctly regardless of where it is executed.
+Порядок перелічення є маленькою зміною у тому як працює JavaScript, адже досить важко знайти програму, коректна робота якої залежиться від конкретного порядку перелічення. ECMAScript 6, встановленням порядку перелічення, дозволяє бути певними, що JavaScript–код, який залежиться від порядку переліку буде праюцвати коректно, незалежно від того, де він виконується.
 
-## More Powerful Prototypes
+## Більш потужні прототипи
 
-Prototypes are the foundation of inheritance in JavaScript, and ECMAScript 6 continues to make prototypes more powerful. Early versions of JavaScript severely limited what could be done with prototypes. However, as the language matured and developers became more familiar with how prototypes work, it became clear that developers wanted more control over prototypes and easier ways to work with them. As a result, ECMAScript 6 introduced some improvements to prototypes.
+Прототипи є фундаментом наслідування у JavaScript, а ECMAScript 6 продовжує робити прототипи більш потужними. Ранні версії JavaScript мають невелику свободу дій над прототипами. Однак зі становленням мови та тим що розробники починали краще розуміти як працюють прототипи, стало зрозуміло, що розробники бажають більшого контролю над прототипами та легших способів роботи з ними. Як результат, ECMAScript 6 вводить кілька покращень прототипів.
 
-### Changing an Object's Prototype
+### Зміна прототипу об’єкта
 
-Normally, the prototype of an object is specified when the object is created, via either a constructor or the `Object.create()` method. The idea that an object's prototype remains unchanged after instantiation was one of the biggest assumptions in JavaScript programming through ECMAScript 5. ECMAScript 5 did add the `Object.getPrototypeOf()` method for retrieving the prototype of any given object, but it still lacked a standard way to change an object's prototype after instantiation.
+Зазвичай прототип об’єкту задається під час створення об’єкту, або через конструктор, або через метод `Object.create()`. Ідея, що прототип об’єкту залишається незмінним після ініціалізації була однією з найбільших допущень програмування JavaScript на ECMAScript 5. ECMAScript 5 додав метод `Object.getPrototypeOf()` для отримання прототипу будь–якого переданого об’єкту, проте не вистачало способу зміни прототипу об’єкта після ініціалізації.
 
-ECMAScript 6 changes that assumption by adding the `Object.setPrototypeOf()` method, which allows you to change the prototype of any given object. The `Object.setPrototypeOf()` method accepts two arguments: the object whose prototype should change and the object that should become the first argument's prototype. For example:
+ECMAScript 6 змінює це допущення шляхом введення методу `Object.setPrototypeOf()`, який дозволяє змінювати прототип будь–якого переданого об’єкту. Метод `Object.setPrototypeOf()` приймає два аргументи: об’єкт який потрібно змінити та об’єкт що стане його прототипом. До прикладу:
 
 ```js
 let person = {
@@ -346,24 +346,24 @@ let dog = {
     }
 };
 
-// prototype is person
+// person — це прототип
 let friend = Object.create(person);
 console.log(friend.getGreeting());                      // "Hello"
 console.log(Object.getPrototypeOf(friend) === person);  // true
 
-// set prototype to dog
+// встановлюємо прототип dog
 Object.setPrototypeOf(friend, dog);
 console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a `getGreeting()` method that returns a string. The object `friend` first inherits from the `person` object, meaning that `getGreeting()` outputs `"Hello"`. When the prototype becomes the `dog` object, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
+Цей код задає два базових об’єкти: `person` та `dog`. Обидва мають метод `getGreeting()`, що повертає рядок. Об’єкт `friend` спершу наслідується від об’єкту `person`, тому `getGreeting()` виводить `"Hello"`. Коли прототипом стає об’єкт `dog`, `person.getGreeting()` виводить `"Woof"` тому, що початкове відношення з `person` було розірване.
 
-The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
+Дійсне значення прототипу об’єкту зберігається у суто внутрішній властивості під назвою `[[Prototype]]`. Метод `Object.getPrototypeOf()` повертає значення, що зберігається у `[[Prototype]]`, а `Object.setPrototypeOf()` змінює значення, що зберігається у `[[Prototype]]`. Однак, це не єдиний спосіб взаємодії зі значенням `[[Prototype]]`.
 
-### Easy Prototype Access with Super References
+### Легкий доступ до прототипу через посилання super
 
-As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Another improvement is the introduction of `super` references, which make accessing functionality on an object's prototype easier. For example, to override a method on an object instance such that it also calls the prototype method of the same name, you'd do the following in ECMAScript 5:
+Як вже згадувалось раніше, прототипи дуже важливі для JavaScript і у ECMAScript 6 було зроблено багато для того, щоб зробити їх використання легшим. Ще одним покращенням є введення посилання `super`, яке робить легшим доступ до функціоналу прототипу. Наприклад, щоб перезаписати метод у екземпляра об’єкта, що також викликає метод прототипу з таким самим ім’ям, на ECMAScript 5 ви зробилиби щось таке:
 
 ```js
 let person = {
@@ -385,32 +385,32 @@ let friend = {
     }
 };
 
-// set prototype to person
+// встановлюємо прототип person
 Object.setPrototypeOf(friend, person);
 console.log(friend.getGreeting());                      // "Hello, hi!"
 console.log(Object.getPrototypeOf(friend) === person);  // true
 
-// set prototype to dog
+// встановлюємо прототип dog
 Object.setPrototypeOf(friend, dog);
 console.log(friend.getGreeting());                      // "Woof, hi!"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method ensures the correct prototype is called, and then an additional string is appended to the output. The additional `.call(this)` ensures that the `this` value inside the prototype method is set correctly.
+У цьому прикладі, `getGreeting()` у `friend` викликає метод прототипа з таким самим ім’ям. Метод `Object.getPrototypeOf()` перевіряє, що викликається правильний прототип, а тоді додатвовий рядок додається до виводу. Додатковий `.call(this)` перевіряє, що значення `this` всередині прототипу встановлено коректно.
 
-Remembering to use `Object.getPrototypeOf()` and `.call(this)` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`. At its simplest, `super` is a pointer to the current object's prototype, effectively the `Object.getPrototypeOf(this)` value. Knowing that, you can simplify the `getGreeting()` method as follows:
+Не забувати про використання `Object.getPrototypeOf()` та `.call(this)` для виклику методу прототипу — це дещо складно, тому ECMAScript 6 вводить `super`. Простота полягає у тому, що `super` — це вказівник на поточний прототип об’єкту, фактично значення `Object.getPrototypeOf(this)`. Знаючи це, ви можете спростити метод `getGreeting()` ось так:
 
 ```js
 let friend = {
     getGreeting() {
-        // in the previous example, this is the same as:
+        // у попередньому прикладі це те саме, що:
         // Object.getPrototypeOf(this).getGreeting.call(this)
         return super.getGreeting() + ", hi!";
     }
 };
 ```
 
-The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` in this context. Similarly, you can call any method on an object's prototype by using a `super` reference, so long as it's inside a concise method. Attempting to use `super` outside of concise methods results in a syntax error, as in this example:
+Виклик `super.getGreeting()` — це те саме, що `Object.getPrototypeOf(this).getGreeting.call(this)` у цьому контексті. Так само ви можете викликати будь–який метод прототипу об’єкта з використанням посилання `super` всередині лаконічного методу. Спроба використати `super` поза лаконічними методами призведе до синтаксичної помилки, як у цьому прикладі:
 
 ```js
 let friend = {
@@ -419,12 +419,12 @@ let friend = {
     }
 };
 
-friend.getGreeting();       // throws error!
+friend.getGreeting();       // кине помилку!
 ```
 
-This example uses a named property with a function, and the call to `friend.getGreeting()` throws an error because `super` is invalid in this context.
+Цей приклад використовує іменовану властивість з функцією, тому виклик `friend.getGreeting()` кидає помилку, оскільки `super` не є валідним у цьому контексті.
 
-The `super` reference is really powerful when you have multiple levels of inheritance, because in that case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
+Посилання `super` справді є дуже потужним коли ви маєте кілька рівнів наслідування, оскільки у цьому випадку, `Object.getPrototypeOf()` більше не працює для всіх випадків. Наприклад:
 
 ```js
 let person = {
@@ -433,7 +433,7 @@ let person = {
     }
 };
 
-// prototype is person
+// person — це прототип
 let friend = {
     getGreeting() {
         return Object.getPrototypeOf(this).getGreeting.call(this) + ", hi!";
@@ -442,7 +442,7 @@ let friend = {
 Object.setPrototypeOf(friend, person);
 
 
-// prototype is friend
+// friend — це прототип
 let relative = Object.create(friend);
 
 console.log(person.getGreeting());                  // "Hello"
@@ -450,9 +450,9 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // error!
 ```
 
-The call to `Object.getPrototypeOf()` results in an error when `relative.getGreeting()` is called. That's because `this` is `relative`, and the prototype of `relative` is the `friend` object. When `friend.getGreeting().call()` is called with `relative` as `this`, the process starts over again and continues to call recursively until a stack overflow error occurs.
+Звернення до `Object.getPrototypeOf()` спричинить помилку коли `relative.getGreeting()` буде викликаний. Це тому, що `this` є `relative`, а прототипом `relative` є об’єкт `friend`. Коли `friend.getGreeting().call()` викликається з `relative` у якості `this`, процес починається знову і знову та продовжується рекурсивно доки не виникне переповнення стеку.
 
-That problem is difficult to solve in ECMAScript 5, but with ECMAScript 6 and `super`, it's easy:
+Цю проблему важко вирішити у ECMAScript 5, проте з ECMAScript 6 та `super` це просто:
 
 ```js
 let person = {
@@ -461,7 +461,7 @@ let person = {
     }
 };
 
-// prototype is person
+// person — це прототип
 let friend = {
     getGreeting() {
         return super.getGreeting() + ", hi!";
@@ -470,7 +470,7 @@ let friend = {
 Object.setPrototypeOf(friend, person);
 
 
-// prototype is friend
+// friend — це прототип
 let relative = Object.create(friend);
 
 console.log(person.getGreeting());                  // "Hello"
@@ -478,30 +478,30 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // "Hello, hi!"
 ```
 
-Because `super` references are not dynamic, they always refer to the correct object. In this case, `super.getGreeting()` always refers to `person.getGreeting()`, regardless of how many other objects inherit the method.
+Оскільки посилання `super` не є динамічним, воно зважди посила на правильний об’єкт. У цьому випадку, `super.getGreeting()` завжди повертатиме `person.getGreeting()`, незалежно від того скільки інших об’єктів наслідують цей метод.
 
-## A Formal Method Definition
+## Формальне визначення методів
 
-Prior to ECMAScript 6, the concept of a "method" wasn't formally defined. Methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal `[[HomeObject]]` property containing the object to which the method belongs. Consider the following:
+До ECMAScript 6, поняття «метод» не було формально визначеним. Методами були просто властивості об’єктів, що містили функції замість даних. ECMAScript 6 формально визначає метод як функцію, що має внутрішню властивість `[[HomeObject]]` та міститься у об’єкті, якому цей метод належить. Розгляньте наступне:
 
 ```js
 let person = {
 
-    // method
+    // метод
     getGreeting() {
         return "Hello";
     }
 };
 
-// not a method
+// не метод
 function shareGreeting() {
     return "Hi!";
 }
 ```
 
-This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases, this difference isn't important, but it becomes very important when using `super` references.
+Цей приклад задає `person` з єдиним методом `getGreeting()`. `[[HomeObject]]` для `getGreeting()` буде `person` внаслідок призвоєння цієї функції безпосереньо до об’єкта. З іншого боку, функція `shareGreeting()`, не має заданого `[[HomeObject]]` тому, що вона не була об’єкту під час створення. У більшості випадків, ця відмнінність не є важливою, проте вона стає дуже важливою при використанні посилання `super`.
 
-Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this`-binding is set and the method is called. If a function has no `[[HomeObject]]`, or has a different `[[HomeObject]]` than expected, then this process won't work and an error is thrown, as in this code snippet:
+Будь—яке посилання до `super` використовує `[[HomeObject]]` для визначення того, що робити. Першим кроком є виклик `Object.getPrototypeOf()` для `[[HomeObject]]`, щоб отримати посилання на прототип. Потім у прототипі шукається функція з таким самим ім’ям. Нарешті встановлюється `this`-зв’язування і метод викликається. Якщо функція не має `[[HomeObject]]`, або має відмнінний `[[HomeObject]]` від очікуваного, тоді цей процес припиниться і кинеться помилки, як у цьому шматочку коду:
 
 ```js
 let person = {
@@ -510,7 +510,7 @@ let person = {
     }
 };
 
-// prototype is person
+// person — це прототип
 let friend = {
     getGreeting() {
         return super.getGreeting() + ", hi!";
@@ -524,12 +524,12 @@ function getGlobalGreeting() {
 
 console.log(friend.getGreeting());  // "Hello, hi!"
 
-getGlobalGreeting();                // throws error
+getGlobalGreeting();                // кидається помилка
 ```
 
-Calling `friend.getGreeting()` returns a string, while calling `getGlobalGreeting()` throws an error for improper use of the `super` keyword. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup.
+Виклик `friend.getGreeting()` повертає рядок, тоді як виклик `getGlobalGreeting()` кидає помилку про неправильне використання ключового слова `super`. Оскільки фукнція `getGlobalGreeting()` не має `[[HomeObject]]`, неможливо визначити метод у наслідуваного прототипу.
 
-Interestingly, the situation doesn't change if `getGlobalGreeting()` is later assigned as a method on the `friend` object, like this:
+Цікаво, що ситуація не зміниться, якщо `getGlobalGreeting()` присвоїти як метод об’єкту `friend`, ось так:
 
 ```js
 // prototype is person
@@ -546,24 +546,24 @@ function getGlobalGreeting() {
 
 console.log(friend.getGreeting());  // "Hello, hi!"
 
-// assign getGreeting to the global function
+// присвоюємо getGreeting глобальну функцію
 friend.getGreeting = getGlobalGreeting;
 
-friend.getGreeting();               // throws error
+friend.getGreeting();               // кидає помилку
 ```
 
-Here the `getGlobalGreeting()` function overwrites the previously-defined `getGreeting()` method on the `friend` object. Calling `friend.getGreeting()` at that point results in an error as well, because it's now calling the `getGlobalGreeting()` method, which does not have a `[[HomeObject]]`. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning the method onto an object doesn't fix the problem.
+Тут функція `getGlobalGreeting()` перезаписує попередньо визначений метод `getGreeting()` об’єкту `friend`. Звернення до `friend.getGreeting()`, у цьому випадку, також призводить до помилки, тому що тепер `getGlobalGreeting()` буде методом, який не має `[[HomeObject]]`. Значення `[[HomeObject]]` встановлюється лише тоді, коли функція створюється, тож навіть присвоєння методу до об’єкту не вирішує проблеми.
 
-## Summary
+## Підсумок
 
-Objects are the center of programming in JavaScript, and ECMAScript 6 made some helpful changes to objects that both make them easier to deal with and more powerful.
+Об’єкти є стовпом програмування на JavaScript, а ECMAScript 6 зробив кілька корисних змін об’єктів, що роблять їх потужнішими та простішими.
 
-ECMAScript 6 makes several changes to object literals. Shorthand property definitions make assigning properties with the same names as in-scope variables easier. Computed property names allow you to specify non-literal values as property names, which you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals, by completely omitting the colon and `function` keyword. ECMAScript 6 loosens the strict mode check for duplicate object literal property names as well, meaning you can have two properties with the same name in a single object literal without throwing an error.
+ECMAScript 6 вносить кілька змін до об’єктних літералів. Скорочене визначення  властивостивостей спрощує присвоєння властивостям значень змінних з поточної області видимості. Обчислювані імена властивостивостей дозволяються вам встановлювати нелітеральні значення у якості імен властивостей так, як це було можливо в інших частинах мови. Лаконічні методи дозволяють вам писати писати значено менше символів для визначення методів у об’єктних літералах, шляхом упускання двокрапки та ключового слова `function`. ECMAScript 6 послаблює перевірку дублювання імен властивостей у об’єктних літералах, тому ви можете мати дві властивості з однаковими іменами в одному об’єкті без виникнення помилки.
 
-The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
+Метод `Object.assign()` спрощує зміну кількох властивостей одного об’єкту одночасно. Він може виявитись дуже корисним, якщо ви користуєтесь mixin–паттерном. Метод `Object.is()` обчислює строгу рівність будь–яких значеня, будучи ефектнивною та безпечнішою версіює `===` при роботі з спеціальними значеннями JavaScript.
 
-Enumeration order for own properties is now clearly defined in ECMAScript 6. When enumerating properties, numeric keys always come first in ascending order followed by string keys in insertion order and symbol keys in insertion order.
+Порядо перелічення власних властивостей тепер чітко визначений у ECMAScript 6. При переліченні властивостей, нумеровані ключі йдуть попереду у порядку зростання, після ідуть рядкові ключі у порядку встановлення та символьні ключі у порядку встановлення.
 
-It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method.
+Завдяки методу `Object.setPrototypeOf()` тепер можливо змінювати прототип об’єкту після того, як об’єкт було створено.
 
-Finally, you can use the `super` keyword to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is set up automatically to work with the current value of `this`.
+Нарешті, ви можете використовувати ключове слово `super` для виклику методів прототипу об’єкту. Ві може використовуватись як самостійно, так і з методом, як от `super()`, або з посиланням до самого прототипа, як от `super.getGreeting()`. У обох випадках, `this`-зв’язування буде встановлено автоматично для роботи з поточним значенням `this`.
