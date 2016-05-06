@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
   "devDependencies": {
-    "gh-pages": "^0.8.0",
-    "gitbook-cli": "^1.0.1"
+    "gh-pages": "^0.11.0",
+    "gitbook-cli": "^2.1.3"
   }
 }
