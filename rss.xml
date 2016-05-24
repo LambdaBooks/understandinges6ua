@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 24 May 2016 13:42:19 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 24 May 2016 13:44:57 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -47,6 +47,13 @@ Stars]]></description>
             <description><![CDATA[Рядки, можливо, є найбільш важливими типами даних в програмуванні. Вони є майже у всіх високорівневих мовах програмування, а вміння працювати з ними ефективно є необхідністю для розробника, при створенні корисних програм. Втім, будучи відвертими, регулярні вирази є не менш важливими, тому що вони дають розробнику додаткові потужні можливості при роботі з рядками. Зважаючи на це, розробники ECMAScript 6 вдосконалили рядки і регулярні вирази, додавши нові можливості та довгоочікуваний функціонал. Ця глава розгляне зміни в обох типах.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/02-Strings-and-Regular-Expressions.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/02-Strings-and-Regular-Expressions.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Функції]]></title>
+            <description><![CDATA[Функції — важлива частина будь–якої мови програмування. До ECMAScript 6, функції в JavaScript з моменту створення мови, не зазнавали значних змін. Це накопичувало проблеми та нюанси поведінки, які призводили до помилкок та потребували більше коду для виконання базових завдань.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/03-Functions.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/03-Functions.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
