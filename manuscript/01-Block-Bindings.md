@@ -149,7 +149,7 @@ if (condition) {
 var message = "Hello!";
 let age = 25;
 
-// Кожна із цих змінник викличе помилку
+// Оголошення кожної із цих змінних викличе помилку
 const message = "Goodbye!";
 const age = 30;
 ```
