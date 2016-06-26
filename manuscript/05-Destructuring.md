@@ -1,10 +1,10 @@
-# Destructuring for Easier Data Access
+# Деструктурування для легшого доступу до даних
 
-Object and array literals are two of the most frequently used notations in JavaScript, and thanks to the popular JSON data format, they've become a particularly important part of the language. It's quite common to define objects and arrays, and then systematically pull out relevant pieces of information from those structures. ECMAScript 6 simplifies this task by adding *destructuring*, which is the process of breaking a data structure down into smaller parts. This chapter shows you how to harness destructuring for both objects and arrays.
+Масиви та об’єктні літерали є двома найбільш вживаними видами запису, а завдяки формату даних JSON вони стали особливо важливою частиною мови. Це доволі загальний спосіб задання об’єктів та масивів, а згодом і систематичної передачі відповідної інформації до цих структур. ECMAScript 6 спрощує цей процес шляхом введення *деструктурування (destructuring)* — процесу розбиття структури даних на менші частини. Ця глава покаже як приборкати деструктурування як об’єктів, так і для масивів.
 
-## Why is Destructuring Useful?
+## Чому деструктурування корисне?
 
-In ECMAScript 5 and earlier, the need to fetch information from objects and arrays could lead to a lot of code that looks the same, just to get certain data into local variables. For example:
+У ECMAScript 5 та раніше, потреба зчитати інформацію з об’єктів чи масивів в локальні змінні могла вилитись у велику кількість однакового коду. Наприклад:
 
 ```js
 let options = {
@@ -12,18 +12,18 @@ let options = {
         save: false
     };
 
-// extract data from the object
+// отримання даних з об’єкту
 let repeat = options.repeat,
     save = options.save;
 ```
 
-This code extracts the values of `repeat` and `save` from the `options` object and stores that data in local variables with the same names. While this code looks simple, imagine if you had a large number of variables to assign; you would have to assign them all one by one. And if there was a nested data structure to traverse to find the information instead, you might have to dig through the entire structure just to find one piece of data.
+Цей код отримує значення полів `repeat` та `save` з об’єкту `options` та зберігає ці данні у локальні змінні з відповідними іменами. Цей код виглядає просто, але уявіть якби б ви мали велику кількість змінних та полів, вам би довелось присвоювати всіх їх присвоювати одне одному. А якщо дані були б ще й вкладеними, вам би довелось “прокопати” всю цю структуру лише для того, щоб знайти одну частинку даних.
 
-That's why ECMAScript 6 adds destructuring for both objects and arrays. When you break a data structure into smaller parts, getting the information you need out of it becomes much easier. Many languages implement destructuring with a minimal amount of syntax to make the process simpler to use. The ECMAScript 6 implementation actually makes use of syntax you're already familiar with: the syntax for object and array literals.
+Ось чому ECMAScript 6 додає деструктурування для об’єктів та масивів. Якщо розбивати структуру даних на дрібніші шматочки, отримання потрібної інформації буде значно легшим. Багато мов імплементують деструтурування з мінімальним синтаксисом, щоб зробити цей процес простішим для використання. Імплементація ECMAScript 6 використовує синтаксис, з яким ви насправді вже знайомі: синтаксис об’єктних та масивних літералів.
 
-## Object Destructuring
+## Деструктурування об’єктів
 
-Object destructuring syntax uses an object literal on the left side of an assignment operation. For example:
+Синтаксис деструктурування об’єктів використовує об’єктний літерал з лівої сторони операції присвоєння. Наприклад:
 
 ```js
 let node = {
@@ -37,28 +37,28 @@ console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-In this code, the value of `node.type` is stored in a variable called `type` and the value of `node.name` is stored in a variable called `name`. This syntax is the same as the object literal property initializer shorthand introduced in Chapter 4. The identifiers `type` and `name` are both declarations of local variables and the properties to read the value from on the `options` object.
+У цьому коді, значення `node.type` зберігається у змінну `type`, а значення `node.name` у змінну `name`. Цей синтаксис такий самий як і скорочення ініціалізації властивостей в об’єктних літералах про яке ми говорили у Главі 4. Ідентифікатори `type` та `name` є оголошеннями локальних змінних та властивостями об’єкту `options` з яких мають бути прочитані значення.
 
-A> #### Don't Forget the Initializer
-A>
-A>When using destructuring to declare variables using `var`, `let`, or `const`, you must supply an initializer (the value after the equals sign). The following lines of code will all throw syntax errors due to a missing initializer:
-A>
-A>```js
-A>// syntax error!
-A>var { type, name };
-A>
-A>// syntax error!
-A>let { type, name };
-A>
-A>// syntax error!
-A>const { type, name };
-A>```
-A>
-A>While `const` always requires an initializer, even when using nondestructured variables, `var` and `let` only require initializers when using destructuring.
+#### A> Не забудьте ініціалізатор
 
-#### Destructuring Assignment
+А> При використанні деструктурування для оголошення змінних з використанням `var`, `let` або `const`, ви повинні вказувати ініціалізатор (значення після знаку рівності). Всі наступні рядки коду будуть кидати помилку, спричинену пропущеним ініціалізатором:
 
-The object destructuring examples so far have used variable declarations. However, it's also possible to use destructuring in assignments. For instance, you may decide to change the values of variables after they are defined, as follows:
+```js
+// syntax error!
+var { type, name };
+
+// syntax error!
+let { type, name };
+
+// syntax error!
+const { type, name };
+```
+
+A> Якщо `const` завжди потребує ініціалізатора, навіть при використанні недеструктуровних змінних, `var` та `let` потребують ініціалізаторів лише при використанні деструктурування.
+
+#### Деструктивне присвоєння
+
+Приклади деструктурування вище використовували оголошення змінних. Однак, можливе використання деструктурування з присвоєнням. Для прикладу, ви можете вирішити змінити значення змінних після того, як вони були задані, ось так:
 
 ```js
 let node = {
@@ -68,16 +68,16 @@ let node = {
     type = "Literal",
     name = 5;
 
-// assign different values using destructuring
+// присвоєння інших значень через деструктурування
 ({ type, name } = node);
 
 console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-In this example, `type` and `name` are initialized with values when declared, and then two variables with the same names are initialized with different values. The next line uses destructuring assignment to change those values by reading from the `node` object. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
+У цьому прикладі, `type` та `name` ініціалізовані з значенням, далі дві змінні з такими ж іменами були ініціалізовані з іншими значеннями. Наступний рядок використовує деструктивне присвоєння для зміни цих значень шляхом читання з об’єкту `node`. Зауважте, що вам необхідно огорнути вираз деструктивного присвоєння у круглі дужки. Це тому, що відкриваючі фігурні дужки сприймаються як початок блоку операторів, а блок операторів не може стояти у лівій частині присвоєння. Круглі дужки сигналізують про те, що фігурні дужки, які слідують за ними, не є блоком операторів і мають бути інтерпретовані як вираз, дозволяючи тим самим виконувати присвоєння.
 
-A destructuring assignment expression evaluates to the right side of the expression (after the `=`). That means you can use a destructuring assignment expression anywhere a value is expected. For instance, passing a value to a function:
+Вираз деструктивного присвоєння приймає значення правої частини виразу (після `=`). Це означає, що ви можете використовувати деструктивне присвоєння всюди, де очікується значення. Наприклад, при передачі значення у функцію:
 
 ```js
 let node = {
@@ -97,13 +97,13 @@ console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-The `outputInfo()` function is called with a destructuring assignment expression. The expression evaluates to `node` because that is the value of the right side of the expression. The assignment to `type` and `name` both behave as normal and `node` is passed into `outputInfo()`.
+Функція `outputInfo()` викликається з виразом деструктивного присвоєння. Вираз приймає значення `node`, оскільки воно знаходиться у лівій частині виразу. Присвоєння значень в `type` та `name` поводиться так само, як і передача `node`в якості аргументу `outputInfo()`.
 
-W> An error is thrown when the right side of the destructuring assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
+W> Якщо права частина деструктивного присвоєння (вираз після `=`) приймає значення `null` або `undefined`, це призведе до помилки. Це станеться тому, що будь–яка спроба зчитати властивість з `null` або `undefined` призведе до помилки виконання.
 
-#### Default Values
+#### Значення за замовчуванням
 
-When you use a destructuring assignment statement, if you specify a local variable with a property name that doesn't exist on the object, then that local variable is assigned a value of `undefined`. For example:
+При використанні деструктивного присвоєння, якщо ви вказуєте локальну змінну з ім’ям властивості, що не існує в об’єкті, тоді цій локальній змінні буде присвоєно значення `undefined`. Для прикладу:
 
 ```js
 let node = {
@@ -118,9 +118,9 @@ console.log(name);      // "foo"
 console.log(value);     // undefined
 ```
 
-This code defines an additional local variable called `value` and attempts to assign it a value. However, there is no corresponding `value` property on the `node` object, so the variable is assigned the value of `undefined` as expected.
+Цей код задає додаткову локальну змінну `value` та намагається присвоїти їй значення. Однак, в об’єкті `node` немає відповідної властивості `value`, тому очікувано, що цій змінній буде присвоєно значення `undefined`.
 
-You can optionally define a default value to use when a specified property doesn't exist. To do so, insert an equals sign (`=`) after the property name and specify the default value, like this:
+За бажанням ви можете вказати значення за замовчуванням, що використовуватиметься, якщо певної властивості не існує. Щоб зробити це, скористайтесь знаком рівності (`=`) після ім’я властивості та вкажіть значення за замовчуванням, ось так:
 
 ```js
 let node = {
@@ -135,11 +135,11 @@ console.log(name);      // "foo"
 console.log(value);     // true
 ```
 
-In this example, the variable `value` is given `true` as a default value. The default value is only used if the property is missing on `node` or has a value of `undefined`. Since there is no `node.value` property, the variable `value` uses the default value. This works similarly to the default parameter values for functions, as discussed in Chapter 3.
+У цьому прикладі змінній `value` присвоюється `true` в якості значення за замовчуванням. Це значення використовується лише тоді, коли властивості немає в `node`, або вона має значення `undefined`. Оскільки властивості `node.value` немає, змінна `value` використовує значення за замовчуванням. Це працює так само як і значення за замовчуванням для функцій, які ми розглянули у Главі 3.
 
-#### Assigning to Different Local Variable Names
+#### Присвоєння локальним змінним з іншими іменами
 
-Up to this point, each example destructuring assignment has used the object property name as the local variable name; for example, the value of `node.type` was stored in a `type` variable. That works well when you want to use the same name, but what if you don't? ECMAScript 6 has an extended syntax that allows you to assign to a local variable with a different name, and that syntax looks like the object literal nonshorthand property initializer syntax. Here's an example:
+До цього моменту, кожен приклад деструктуруючого присвоєння використовував властивості об’єктів в якості назв локальних змінних: для прикладу, значення `node.type` зберігалось у змінній `type`. Це чудово, якщо ви хочете використовувати таке ж саме ім’я, але що якщо для вас це небажано? ECMAScript 6 має розширений синтаксис, що дозволяє присвоювати значення локальним змінним з іншими іменами і він виглядає так, як звичайний об’єктний літерал без використання скороченого запису для властивостей. Ось приклад:
 
 ```js
 let node = {
@@ -153,9 +153,9 @@ console.log(localType);     // "Identifier"
 console.log(localName);     // "foo"
 ```
 
-This code uses destructuring assignment to declare the `localType` and `localName` variables, which contain the values from the `node.type` and `node.name` properties, respectively. The syntax `type: localType` says to read the property named `type` and store its value in the `localType` variable. This syntax is effectively the opposite of traditional object literal syntax, where the name is on the left of the colon and the value is on the right. In this case, the name is on the right of the colon and the location of the value to read is on the left.
+Цей код використовує деструктивне присвоєння, щоб оголосити змінні `localType` та `localName`, які будуть містити значення властивостей `node.type` та `node.name`, відповідно. Запис `type: localType` говорить, що потрібно зчитати властивість з ім’ям `type` та зберегти її значення у змінній `localType`. Такий синтаксис є ефективно протилежним до традиційного синтаксису об’єктних літералів, в яких ім’я властивості знаходиться ліворуч від двокрапки, а її значення праворуч. У цьому випадку, ім’я змінної знаходиться праворуч від двокрапки, а поле з якого має бути зчитане значення знаходиться ліворуч.
 
-You can add default values when using a different variable name, as well. The equals sign and default value are  still placed after the local variable name. For example:
+Ви також можете додавати значення за замовчуванням у цьому випадку. Знак рівності та значення за замовчуванням, у цьому випадку, також знаходитимуться після ім’я локальної змінної. Наприклад:
 
 ```js
 let node = {
@@ -168,13 +168,13 @@ console.log(localType);     // "Identifier"
 console.log(localName);     // "bar"
 ```
 
-Here, the `localName` variable has a default value of `"bar"`. The variable is assigned its default value because there's no `node.name` property.
+Тут, змінна `localName` має значення за замовчуванням `"bar"`. Цій змінній буде присвоєно значення за замовчуванням, оскільки властивості `node.name` немає.
 
-So far, you've seen how to deal with destructuring of an object whose properties are primitive values. Object destructuring can also be used to retrieve values in nested object structures.
+Ви вже познайомились з тим, як працювати з деструктуруванням об’єктів, властивості яких є примітивними значеннями. Проте деструктурування о’єктів може діставати значення і з вкладених структур об’єктів.
 
-#### Nested Object Destructuring
+#### Деструктурування вкладених об’єктів
 
-By using a syntax similar to object literals, you can navigate into a nested object structure to retrieve just the information you want. Here's an example:
+З використанням синтаксису, що схожий на об’єктні літерали, ви можете діставати з вкладених об’єктів ту інформацію, яка вам потрібна. Наприклад:
 
 ```js
 let node = {
@@ -198,9 +198,9 @@ console.log(start.line);        // 1
 console.log(start.column);      // 1
 ```
 
-The destructuring pattern in this example uses curly braces to indicate that the pattern should descend into the property named `loc` on `node` and look for the `start` property. Remember from the last section that whenever there's a colon in a destructuring pattern, it means the identifier before the colon is giving a location to inspect, and the right side assigns a value. When there's a curly brace after the colon, that indicates that the destination is nested another level into the object.
+У цьому прикладі шаблон деструктурування використовує фігурні дужки, які вказують, що шаблону слід спуститись у властивість `loc` об’єкту `node` та знайти там властивість `start`. Пам'ятайте з попереднього розділу про те, що кожного разу, коли шаблоні деструктурування використовується двокрапка, це означає, що ідентифікатор перед двокрапкою позначає місце звідки потрібно дістати інформацію, а правій стороні присвоюється значення. Якщо після двокрапки стоїть фігурна дужка, це означає, що потрібна властивість є властивістю вкладеного об’єкту.
 
-You can go one step further and use a different name for the local variable as well:
+Ви також можете заглиблюватись і використовувати інші імена для локальних змінних:
 
 ```js
 let node = {
@@ -218,31 +218,31 @@ let node = {
         }
     };
 
-// extract node.loc.start
+// дістаємо node.loc.start
 let { loc: { start: localStart }} = node;
 
 console.log(localStart.line);   // 1
 console.log(localStart.column); // 1
 ```
 
-In this version of the code, `node.loc.start` is stored in a new local variable called `localStart`. Destructuring patterns can be nested to an arbitrary level of depth, with all capabilities available at each level.
+У цьому коді, `node.loc.start` зберігається у новій локальній змінній з ім’ям `localStart`. Шаблон деструктурування може мати довільний рівень вкладненості, з усіма можливостями, що доступні на кожному з рівнів.
 
-Object destructuring is very powerful and has a lot of options, but array destructuring offers some unique capabilities that allow you to extract information from arrays.
+Деструктурування об’єктів є дуже потужним і має багато опцій, проте деструктурування масивів пропонує деякі унікальні властивості, що дозволяють діставати інформацію з масивів.
 
-A> #### Syntax Gotcha
-A>
-A>Be careful when using nested destructuring because you can inadvertently create a statement that has no effect. Empty curly braces are legal in object destructuring, however, they don't do anything. For example:
-A>
-A>```js
-A>// no variables declared!
-A>let { loc: {} } = node;
-A>```
-A>
-A>There are no bindings declared in this statement. Due to the curly braces on the right, `loc` is used as a location to inspect rather than a binding to create. In such a case, it's likely that the intent was to use `=` to define a default value rather than `:` to define a location. It's possible that this syntax will be made illegal in the future, but for now, this is a gotcha to look out for.
+#### A> Синтаксична особливість
 
-## Array Destructuring
+A> Будьте обережні з використанням вкладеного деструктурування, оскільки ви можете ненароком створити оператор, що не створює жодного ефекту. Порожні фігурні дужки дозволені при деструктуруванні об’єктів, однак вони не роблять нічого. Наприклад:
 
-Array destructuring syntax is very similar to object destructuring; it just uses array literal syntax instead of object literal syntax. The destructuring operates on positions within an array, rather than the named properties that are available in objects. For example:
+```js
+// не оголошує жодної змінної!
+let { loc: {} } = node;
+```
+
+A> Немає жодного зв’язування у цьому операторі. Оскільки справа знаходяться фігурні дужки, `loc` сприймається як вказівка де шукати значення, а не як змінна, яку потрібно створити. В цьому випадку, ймовірно була необхідність вказати значення за замовчуванням з використанням `=`, ніж використовувати `:`, яка вказує де шукати властивості. Цілком можливо, що такий синтаксис буде забороненим у майбутньому, проте зараз, це синтаксична особливість.
+
+## Деструктурування масивів
+
+Синтаксис декструктурування масивів дуже схожий на деструктурування об’єктів і відрізняється тим, що використовує синтаксис літералів масивів замість синтаксису об’єктних літералів. Деструктурування оперує позиціями в масиві замість іменованих властивостей, які доступні в об’єктів. Наприклад:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -253,9 +253,9 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-Here, array destructuring pulls out the values `"red"` and `"green"` from the `colors` array and stores them in  the `firstColor` and `secondColor` variables. Those values are chosen because of their position in the array; the actual variable names could be anything. Any items not explicitly mentioned in the destructuring pattern are ignored. Keep in mind that the array itself isn't changed in any way.
+Тут деструктурування масиву витягує значення `"red"` та `"green"` з масиву `colors` і зберігає їх в змінних `firstColor` та `secondColor`. Ці значення вибрані через їхні позиції в масиві, а значення локальних змінних можуть бути будь–якими. Елементи, які не були явно вказані у шаблоні деструктурування будуть проігноровані. Також запам'ятайте, що деструктурування не змінює масив жодним чином.
 
-You can also omit items in the destructuring pattern and only provide variable names for the items you're interested in. If, for example, you just want the third value of an array, you don't need to supply variable names for the first and second items. Here's how that works:
+Ви також можете упускати елементи у шаблоні деструктурування і передати ім’я змінної яка вам потрібна. Якщо, наприклад, вам потрібний третій елемент масиву, немає потреби підставляти імена для першого та другого елементів. Ось як це працює:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -265,13 +265,13 @@ let [ , , thirdColor ] = colors;
 console.log(thirdColor);        // "blue"
 ```
 
-This code uses a destructuring assignment to retrieve the third item in `colors`. The commas preceding `thirdColor` in the pattern are placeholders for the array items that come before it. By using this approach, you can easily pick out values from any number of slots in the middle of an array without needing to provide variable names for them.
+Цей код використовує деструктивне присвоєння, щоб дістати третій елемент з `colors`. Коми, що передують `thirdColor` у цьому шаблоні займають місце елементів, що йдуть перед ним. Використовуючи цей підхід, ви можете легко отримувати значення з будь–якої кількості комірок всередині масиву без потреби передавати імена змінних для них.
 
-W> Similar to object destructuring, you must always provide an initializer when using array destructuring with `var`, `let`, or `const`.
+W> Як і для випадку з об’єктами, ви обов’язково повинні ініціалізатор при використанні деструктурування масиву з `var`, `let` або `const`.
 
-#### Destructuring Assignment
+#### Деструктивне присвоєння
 
-You can use array destructuring in the context of an assignment, but unlike object destructuring, there is no need to wrap the expression in parentheses. For example:
+Ви можете використовувати деструктурування масивів і в контексті присвоєння, проте, на відміну від деструктурування об’єктів, немає потреби огортати вираз у круглі дужки. Наприклад:
 
 ```js
 let colors = [ "red", "green", "blue" ],
@@ -284,12 +284,12 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-The destructured assignment in this code works in a similar manner to the last array destructuring example. The only difference is that `firstColor` and `secondColor` have already been defined. Most of the time, that's probably all you'll need to know about array destructuring assignment, but there's a little bit more to it that you will probably find useful.
+Деструктивне присвоєння у цьому коді працює так само, як і в передостанньому прикладі деструктурування масиву. Єдина відмінність полягає у тому, що `firstColor` та `secondColor` вже були задані. У більшості випадків, це все, що вам потрібно знати про деструктивне присвоєння з масивами, проте є ще дещо, що може бути для вас корисним.
 
-Array destructuring assignment has a very unique use case that makes it easier to swap the values of two variables. Value swapping is a common operation in sorting algorithms, and the ECMAScript 5 way of swapping variables involves a third, temporary variable, as in this example:
+Деструктивне присвоєння масивів можна використовувати для зміни місцями значень двох змінних. Зміна значень місцями є загальною операцією в алгоритмах сортування. В ECMAScript 5, щоб змінити місцями значення двох змінних потрібно було вводити третю, тимчасову змінні, як у цьому прикладі:
 
 ```js
-// Swapping variables in ECMAScript 5
+// Зміна місцями значень у ECMAScript 5
 let a = 1,
     b = 2,
     tmp;
@@ -302,10 +302,11 @@ console.log(a);     // 2
 console.log(b);     // 1
 ```
 
-The intermediate variable `tmp` is necessary in order to swap the values of `a` and `b`. Using array destructuring assignment, however, there's no need for that extra variable. Here's how you can swap variables in ECMAScript 6:
+
+Тимчасова змінна `tmp` необхідна для зміни місцями значень `a` та `b`. Однак, з використанням деструктивного присвоєння зникає потреба в додатковій змінній. Ось як ви можете переставляти місцями значення у ECMAScript 6:
 
 ```js
-// Swapping variables in ECMAScript 6
+// Зміна місцями значень у ECMAScript 6
 let a = 1,
     b = 2;
 
@@ -315,13 +316,13 @@ console.log(a);     // 2
 console.log(b);     // 1
 ```
 
-The array destructuring assignment in this example looks like a mirror image. The left side of the assignment (before the equals sign) is a destructuring pattern just like those in the other array destructuring examples. The right side is an array literal that is temporarily created for the swap. The destructuring happens on the temporary array, which has the values of `b` and `a` copied into its first and second positions. The effect is that the variables have swapped values.
+Деструктивне присвоєння у цьому прикладі виглядає як дзеркальне відображення. Ліва частина присвоєння (до знаку рівності) є шаблоном деструктурування, точно так само, як і у інших прикладах з деструктуруванням. Права частина є літералом масиву, що тимчасово створений для зміни значень місцями. Деструктурування виконується над тимчасовим масивом, який містить значення `b` та `a` в якості першого та другого елементу. Результатом є те, що значення цих змінних міняються місцями.
 
-W> Like object destructuring assignment, an error is thrown when the right side of an array destructured assignment expression evaluates to `null` or `undefined`.
+W> Як і у випадку з деструктуруванням об’єктів, якщо права частина виразу деструктивного присвоєння приймає значення `null` або `undefined` це призведе до помилки.
 
-#### Default Values
+#### Значення за замовчуванням
 
-Array destructuring assignment allows you to specify a default value for any position in the array, too. The default value is used when the property at the given position either doesn't exist or has the value `undefined`. For example:
+Деструктивне присвоєння дозволяє вам вказати значення за замовчуванням для будь–якого елемента масиву. Значення за замовчуванням використовується тоді, коли властивість у вказаній позиції не існує, або її значення рівне `undefined`. Наприклад:
 
 ```js
 let colors = [ "red" ];
@@ -332,16 +333,16 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-In this code, the `colors` array has only one item, so there is nothing for `secondColor` to match. Since there is a default value, `secondColor` is set to `"green"` instead of `undefined`.
+У цьому коді, масив `colors` має лише один елемент, тому жоден елемент не відповідає `secondColor`. Оскільки є значення за замовчуванням для `secondColor`, йому встановлюється значення `"green"` замість `undefined`.
 
-#### Nested Destructuring
+#### Вкладене деструктурування
 
-You can destructure nested arrays in a manner similar to destructuring nested objects. By inserting another array pattern into the overall pattern, the destructuring will descend into a nested array, like this:
+Ви можете деструктурувати вкладені масиви таким же чином як це робиться при деструктуруванні об’єктів. Деструктурування заглибиться у вкладений масив, якщо вставити шаблон масиву у загальний шаблон деструктурування, ось так:
 
 ```js
 let colors = [ "red", [ "green", "lightgreen" ], "blue" ];
 
-// later
+// потім
 
 let [ firstColor, [ secondColor ] ] = colors;
 
@@ -349,11 +350,11 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-Here, the `secondColor` variable refers to the `"green"` value inside the `colors` array. That item is contained within a second array, so the extra square brackets around `secondColor` in the destructuring pattern are necessary. As with objects, you can nest arrays arbitrarily deep.
+Тут змінна `secondColor` посилається на значення `"green"` всередині масиву `colors`. Цей елемент знаходиться всередині іншого масиву, тому у деструктуруючому шаблоні обов’язкові квадратні дужки довкола `secondColor`. Як у випадку з об’єктами, вкладеність масивів може мати довільну глибину.
 
-#### Rest Items
+#### Залишкові (rest) елементи
 
-Chapter 3 introduced rest parameters for functions, and array destructuring has a similar concept called *rest items*. Rest items use the `...` syntax to assign the remaining items in an array to a particular variable. Here's an example:
+Глава 3 вводила поняття залишкових параметрів (rest–параметрів) для функцій. Деструктурування масивів має схожу концепцію — *залишкові елементи*, або (*rest–елементи*). Залишкові елементи використовують синтаксис `...` для присвоєння елементів, що залишились у масиві певній змінній. Ось приклад:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -366,35 +367,35 @@ console.log(restColors[0]);     // "green"
 console.log(restColors[1]);     // "blue"
 ```
 
-The first item in `colors` is assigned to `firstColor`, and the rest are assigned into a new `restColors` array. The `restColors` array, therefore, has two items: `"green"` and `"blue"`. Rest items are useful for extracting certain items from an array and keeping the rest available, but there's another helpful use.
+Перший елемент `colors` присвоюється `firstColor`, а решта елементів присвоюються новому масиву `restColors`. Відповідно масив `restColors` має два елементи: `"green"` та `"blue"`. Залишкові елементи корисні для того, щоб діставати з масиву певні елементи і залишати решту доступними, проте є ще один спосіб використання.
 
-A glaring omission from JavaScript arrays is the ability to easily create a clone. In ECMAScript 5, developers frequently used the `concat()` method as an easy way to clone an array. For example:
+Очевидним недоліком масивів у JavaScript є можливість їх легкого клонування. У ECMAScript 5 розробники часто використовували метод `concat()` у якості легкого способу клонувати масив. До прикладу:
 
 ```js
-// cloning an array in ECMAScript 5
+// клонування масиву ECMAScript 5
 var colors = [ "red", "green", "blue" ];
 var clonedColors = colors.concat();
 
 console.log(clonedColors);      //"[red,green,blue]"
 ```
 
-While the `concat()` method is intended to concatenate two arrays together, calling it without an argument returns a clone of the array. In ECMAScript 6, you can use rest items to achieve the same thing through syntax intended to function that way. It works like this:
+Оскільки метод `concat()` створений для конкатинації двох масивів, його виклик без аргументів поверне копію поточного масиву. У ECMAScript 6 для цього ви можете використовувати залишкові елементи. Це працює ось так:
 
 ```js
-// cloning an array in ECMAScript 6
+// клонування масиву ECMAScript 6
 let colors = [ "red", "green", "blue" ];
 let [ ...clonedColors ] = colors;
 
 console.log(clonedColors);      //"[red,green,blue]"
 ```
 
-In this example, rest items are used to copy values from the `colors` array into the `clonedColors` array. While it's a matter of perception as to whether this technique makes the developer's intent clearer than using the `concat()` method, this is a useful ability to be aware of.
+У цьому прикладі, залишкові елементи використовуються для копіювання значень з масиву `colors` у масив `clonedColors`. Хоча це й залежиться від сприйняття, такий підхід значно краще відображає наміри розробника, ніж використання методу `concat()`. Це корисна можливість про яку вам слід знати.
 
-W> Rest items must be the last entry in the destructured array and cannot be followed by a comma. Including a comma after rest items is a syntax error.
+W> Залишкові елементи повинні йти останніми при деструктуруванні масивів, після них не можна ставити коми. Кома після залишкових елементів призведе до синтаксичної помилки.
 
-## Mixed Destructuring
+## Змішане деструктурування
 
-Object and array destructuring can be used together to create more complex expressions. In doing so, you are able to extract just the pieces of information you want from any mixture of objects and arrays. For example:
+Деструктурування об’єктів та масивів можна використовувати разом для створення більш складних виразів. Використовуючи його ви маєте можливість діставати ту частину інформації, яка вам потрібна, з будь–якої комбінації об’єктів та масивів. До прикладу:
 
 ```js
 let node = {
@@ -423,14 +424,14 @@ console.log(start.column);      // 1
 console.log(startIndex);        // 0
 ```
 
-This code extracts `node.loc.start` and `node.range[0]` into `start` and `startIndex`, respectively. Keep in mind that `loc:` and `range:` in the destructured pattern are just locations that correspond to properties in the `node` object. There is no part of `node` that cannot be extracted using destructuring when you use a mix of object and array destructuring. This approach is particularly useful for pulling values out of JSON configuration structures without navigating the entire structure.
+Цей код дістає `node.loc.start` та `node.range[0]` у змінні `start` та `startIndex` відповідно. Пам’ятайте, що `loc:` та `range:` у шаблоні деструктурування є лише відповідними властивостями об’єкту `node`. Немає такої частини `node`, яку не можна було би дістати з допомогою комбінування деструктурування об’єктів та масивів. Такий підхід зокрема зручний для отримання значень з JSON структур, без необхідності проходу по всій структурі.
 
-## Destructured Parameters
+## Деструктивні параметри
 
-Destructuring has one more particularly helpful use case, and that is when passing function arguments. When a JavaScript function takes a large number of optional parameters, one common pattern is to create an `options` object whose properties specify the additional parameters, like this:
+Деструктурування має ще один корисний спосіб використання і це передача аргументів у функцію. Коли функція у JavaScript приймає велику кількість параметрів, загальноприйнятим є створення об’єкту `options`, властивості якого задають додаткові параметри, ось так:
 
 ```js
-// properties on options represent additional parameters
+// властивості options є додатковими параметрами
 function setCookie(name, value, options) {
 
     options = options || {};
@@ -440,23 +441,24 @@ function setCookie(name, value, options) {
         domain = options.domain,
         expires = options.expires;
 
-    // code to set the cookie
+    // код, що встановлює cookie
 }
 
-// third argument maps to options
+// третій аргумент передає аргументи у опції
 setCookie("type", "js", {
     secure: true,
     expires: 60000
 });
 ```
-Many JavaScript libraries contain `setCookie()` functions that look similar to this one. In this function, the `name` and `value` arguments are required, but `secure`, `path`, `domain`, and `expires` are not. And since there is no priority order for the other data, it's efficient to just have an `options` object with named properties, rather than list extra named parameters. This approach works, but now you can't tell what input the function expects just by looking at the function definition; you need to read the function body.
 
-Destructured parameters offer an alternative that makes it clearer what arguments a function expects. A destructured parameter uses an object or array destructuring pattern in place of a named parameter. To see this in action, look at this rewritten version of the `setCookie()` function from the last example:
+Багато JavaScript–бібліотек містять функції, що схожі на функцію `setCookie()`. У цій функції, аргументи `name` та `value` є обов’язковими, проте `secure`, `path`, `domain` та `expires` — ні. Оскільки перелік додаткових даних не важливий, ефективно було би просто мати об’єкт `options` з іменованими властивостями, аніж список додаткових іменованих параметрів. Такий підхід працює, але ви не можете сказати якого вводу очікує функція, просто подивившись на її оголошення: вам необхідно читати тіло функції.
+
+Деструктивні параметри пропонують альтернативу, яка краще показує які аргументи очікує функція. Деструктивні параметри використовують шаблон деструктурування масиву, або об’єкту на місці іменованого параметру. Щоб побачити це у дії, подивіться на переписану версію функції `setCookie()` з останнього прикладу:
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires }) {
 
-    // code to set the cookie
+    // код, що встановлює cookie
 }
 
 setCookie("type", "js", {
@@ -465,33 +467,33 @@ setCookie("type", "js", {
 });
 ```
 
-This function behaves similarly to the previous example, but now, the third argument uses destructuring to pull out the necessary data. The parameters outside the destructured parameter are clearly expected, and at the same time, it's clear to someone using `setCookie()` what options are available in terms of extra arguments. And of course, if the third argument is required, the values it should contain are crystal clear. The destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
+Така функція поводиться точно так само як у попередньому прикладі, проте тепер третій аргумент використовує деструктурування для отримання необхідних даних. Параметри поза деструктивним параметром є чітко зрозумілими, і в той же час, для будь—кого, хто використовує функцію `setCookie()` зрозуміло які опції вона очікує. І звісно, третій аргумент є обов’язковим, а значення які він повинен містити є чітко зрозумілими. Деструктивні параметри також поводяться як звичайні параметри, тобто якщо вони не будуть передані, їх значення будуть рівні `undefined`.
 
-A>Destructured parameters have all of the capabilities of destructuring that you've learned so far in this chapter. You can use default values, mix object and array patterns, and use variable names that differ from the properties you're reading from.
+A> Деструктивні параметри мають усі можливості про які ви дізнались з цієї глави. Ви можете використовувати значення за замовчуванням, змішувати шаблони масивів та об’єктів та використовувати імена змінних, що відмінні від властивостей з яких ви читаєте дані.
 
-### Destructured Parameters are Required
+### Обов’язковість деструктивних параметрів
 
-One quirk of using destructured parameters is that, by default, an error is thrown when they are not provided in a function call. For instance, this call to the `setCookie()` function in the last example throws an error:
+Особливістю використання деструктивних параметрів є те, що за замовчуванням, якщо не передати їх при виклику функції, буде кинута помилка. Такий виклик функції `setCookie()` з попереднього прикладу кине помилку:
 
 ```js
-// Error!
+// Помилка!
 setCookie("type", "js");
 ```
 
-The third argument is missing, and so it evaluates to `undefined` as expected. This causes an error because destructured parameters are really just a shorthand for destructured declaration. When the `setCookie()` function is called, the JavaScript engine actually does this:
+Тут третій аргумент був упущений і тому очікувано, що він приймає значення `undefined`. Це спричиняє помилку, оскільки деструктивні параметри насправді є лише скороченням оголошення деструктурування. Коли викликається функція `setCookie()`, рушій JavaScript насправді робить таке:
 
 ```js
 function setCookie(name, value, options) {
 
     let { secure, path, domain, expires } = options;
 
-    // code to set the cookie
+    // код, що встановлює cookie
 }
 ```
 
-Since destructuring throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed to the `setCookie()` function.
+Деструктурування кидає помилку, коли права частина виразу приймає значення `null` або `undefined`, а саме це і стається коли третій аргумент не передається у функцію `setCookie()`.
 
-If you want the destructured parameter to be required, then this behavior isn't all that troubling. But if you want the destructured parameter to be optional, you can work around this behavior by providing a default value for the destructured parameter, like this:
+Якщо ви хочете, що деструктивний параметр був обов’язковим, тоді така поведінка не буде для вас проблемною. Проте, якщо вам потрібно, щоб деструктивний параметр був опціональним, ви можете обійти таку поведінку просто передавши значення за замовчування для деструктивного параметру, ось так:
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires } = {}) {
@@ -500,11 +502,11 @@ function setCookie(name, value, { secure, path, domain, expires } = {}) {
 }
 ```
 
-This example provides a new object as the default value for the third parameter. Providing a default value for the destructured parameter means that the `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided, and no error will be thrown.
+У цьому прикладі в якості значення за замовчуванням для третього параметру передається новий об’єкт. Передача цього значення за замовчуванням означає означає, що `secure`, `path`, `domain` та `expires` завжди будуть `undefined`, якщо у `setCookie()` не було передано третього аргументу, а тому помилка кидатись не буде.
 
-### Default Values for Destructured Parameters
+### Значення за замовчуванням для деструктивних параметрів
 
-You can specify destructured default values for destructured parameters just as you would in destructured assignment. Just add the equals sign after the parameter and specify the default value. For example:
+Ви можете вказувати значення за замовчуванням для деструктивних параметрів точно так само, як ви би це робили з деструктивним присвоєнням. Просто додайте знак рівності після параметру і вкажуть значення за замовчуванням. Наприклад:
 
 ```js
 function setCookie(name, value,
@@ -520,14 +522,14 @@ function setCookie(name, value,
 }
 ```
 
-Each property in the destructured parameter has a default value in this code, so you can avoid checking to see if a given property has been included in order to use the correct value. Also, the entire destructured parameter has a default value of an empty object, making the parameter optional. This does make the function declaration look a bit more complicated than usual, but that's a small price to pay for ensuring each argument has a usable value.
+Тепер кожна властивість у деструктивному параметрів має власне значення за замовчуванням, тож ви можете не перевіряти чи дана властивість має допустиме значення. Крім того, третій параметр є опціональним, оскільки самий деструктивний параметр має порожній об’єкт у якості значення за замовчуванням. Це робить оголошення функції дещо складнішим для сприйняття, проте це невелика ціна за те, щоб кожен з аргументів мав допустиме значення.
 
-## Summary
+## Підсумок
 
-Destructuring makes working with objects and arrays in JavaScript easier. Using the familiar object literal and array literal syntax, you can pick data structures apart to get at just the information you're interested in. Object patterns allow you to extract data from objects while array patterns let you extract data from arrays.
+Деструктурування полегшує роботу з об’єктами та масивами у JavaScript. Використовуючи схожий синтаксис літералів об’єктів та масивів ви можете розбивати структури даних на частини, щоб отримати потрібну інформацію. Шаблони об’єктів дозволяють вам діставати дані з об’єктів, а шаблони масивів, відповідно, з масивів.
 
-Both object and array destructuring can specify default values for any property or item that is `undefined` and both throw errors when the right side of an assignment evaluates to `null` or `undefined`. You can also navigate deeply nested data structures with object and array destructuring, descending to any arbitrary depth.
+Як для об’єктів, так і для масивів, при деструктуруванні ви можете задавати значення за замовчуванням для будь–яких властивостей або елементів, що мають значення `undefined`, інакше в обох випадках, якщо права частина присвоєння приймає значення `null` або `undefined` буде кинута помилка. Ви також можете діставати данні з вкладених структур даних.
 
-Destructuring declarations use `var`, `let`, or `const` to create variables and must always have an initializer. Destructuring assignments are used in place of other assignments and allow you to destructure into object properties and already-existing variables.
+Деструктурування, що оголошують змінні через `var`, `let` або `const` обов’язково повинні мати ініціалізатор. Деструктивні присвоєння використовуються для того, щоб записати значення властивостей об’єктів у змінні, які вже існують.
 
-Destructured parameters use the destructuring syntax to make "options" objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters. Destructured parameters can be array patterns, object patterns, or a mixture, and you can use all of the features of destructuring.
+Деструктивні параметри використовують щоб зробити об’єкт "опцій" у параметрах функцій більш зрозумілим. Допоміжні параметри, які вам потрібні, можуть бути перераховані в одному ряду з іншими іменованими параметрами. Шаблон деструктурування може бути шаблоном масиву, об’єкту, або комбінацією масиву та об’єкту. Для кожного з випадків ви можете використовувати всі можливості  деструктурування.
