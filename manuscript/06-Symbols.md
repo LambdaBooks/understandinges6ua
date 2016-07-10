@@ -1,12 +1,12 @@
-# Symbols and Symbol Properties
+# Символи та властивості символів
 
-Symbols are a primitive type introduced in ECMAScript 6, joining the existing primitive types: strings, numbers, booleans, `null`, and `undefined`. Symbols began as a way to create private object members, a feature JavaScript developers wanted for a long time. Before symbols, any property with a string name was easy to access regardless of the obscurity of the name, and the "private names" feature was meant to let developers create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
+Символи (symbols) є примітивним типом, який вводиться у ECMAScript 6 на додачу до існуючих: рядків, чисел, булевих значень, `null` та `undefined`. Символи є способом створення приватних членів об’єктів (private object members) — можливість на яку JavaScript–розробники чекали протягом довгого часу. До символів, будь–яка властивість з рядком у якості імені була легкодоступною, незалежно від безвісності (obscurity) імені, а можливість «приватних імен» має на увазі можливість створювати нерядкові імена властивостей. Тобто, тоді звичайні підходи для виявлення цих приватних імен не мали б працювати.
 
-The private names proposal eventually evolved into ECMAScript 6 symbols, and this chapter will teach you how to use symbols effectively. While the implementation details remained the same (that is, they added non-string values for property names), the goal of privacy was dropped. Instead, symbol properties are categorized separately from other object properties.
+Пропозиція приватних імен, в кінцевому випадку, вилилась у символи в ECMAScript 6, а ця глава навчить вас як працювати з символами ефективно. Тоді як деталі реалізації залишились тими ж самими (вони додають нерядкові значення для імен властивостей), приватності, як мету, було відкинуто. Замість цього, символьні властивості зберігаються окремо від інших властивостей об’єкту.
 
-## Creating Symbols
+## Створення символів
 
-Symbols are unique among JavaScript primitives in that they don't have a literal form, like `true` for booleans or `42` for numbers. You can create a symbol by using the global `Symbol` function, as in this example:
+Символи є унікальними серед всіх примітивів у JavaScript тим, що вони не мають літеральної форми, як от `true` для булевого типу, або `42` для числа. Ви можете створити символ з допомогою глобальної функції `Symbol`, як у цьому прикладі:
 
 ```js
 let firstName = Symbol();
@@ -16,11 +16,11 @@ person[firstName] = "Nicholas";
 console.log(person[firstName]);     // "Nicholas"
 ```
 
-Here, the symbol `firstName` is created and used to assign a new property on the `person` object. That symbol must be used each time you want to access that same property. Naming the symbol variable appropriately is a good idea, so you can easily tell what the symbol represents.
+Тут символ `firstName` створюється та використовується для присвоєння нової властивості об’єкту `person`. Цей символ повинен використовуватись щоразу, коли ви хочете отримати доступ до цієї властивості. Називати символьну змінну зрозумілими ім’ям є хорошою ідеєю, адже ви з легкістю зможете зрозуміти яку функцію виконує цей символ.
 
-W> Because symbols are primitive values, calling `new Symbol()` throws an error when called. You can create an instance of `Symbol` via `new Object(yourSymbol)` as well, but it's unclear when this capability would be useful.
+W> Оскільки символи є примітивними значеннями, виклик `new Symbol()` кине помилку. Ви також можете створити символ через `new Object(yourSymbol)`, проте незрозуміло, коли така можливість може бути корисною.
 
-The `Symbol` function also accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property, but is used for debugging purposes. For example:
+Функція `Symbol` також приймає необов’язковий аргумент, що є описом символу. Цей опис не може використовуватись для отримання доступу до властивості, проте він зручний для налагодження. Наприклад:
 
 ```js
 let firstName = Symbol("first name");
@@ -33,32 +33,32 @@ console.log(person[firstName]);             // "Nicholas"
 console.log(firstName);                     // "Symbol(first name)"
 ```
 
-A symbol's description is stored internally in the `[[Description]]` property. This property is read whenever the symbol's `toString()` method is called either explicitly or implicitly. The `firstName` symbol's `toString()` method is called implictly by `console.log()` in this example, so the description gets printed to the log. It is not otherwise possible to access `[[Description]]` directly from code. I recommended always providing a description to make both reading and debugging symbols easier.
+Опис символу зберігається у внутрішній властивості `[[Description]]`. Ця властивість читається щоразу, коли метод `toString()` символу викликається явним або неявним способом. У цьому прикладі, метод `toString()` символу `firstName` викликається неявно через `console.log()`, тому опис виводиться у лог. Іншого способу отримати доступ до `[[Description]]` з коду немає. Я раджу завжди передавати опис символу, щоб полегшити роботу з символами.
 
-A> ### Identifying Symbols
-A>
-A>Since symbols are primitive values, you can use the `typeof` operator to determine if a variable contains a symbol. ECMAScript 6 extends `typeof` to return `"symbol"` when used on a symbol. For example:
-A>
-A>```js
-A>let symbol = Symbol("test symbol");
-A>console.log(typeof symbol);         // "symbol"
-A>```
-A>
-A>While there are other indirect ways of determining whether a variable is a symbol, the `typeof` operator is the most accurate and preferred technique.
+### A> Ідентифікація символів
 
-## Using Symbols
+A> Оскільки символи є примітивними значеннями, ви можете використовувати оператор `typeof` щоб визначати чи змінна містить символ. ECMAScript 6 розширює `typeof` так, щоб він повертав `"symbol"` при використанні його з символом. Наприклад:
 
-You can use symbols anywhere you'd use a computed property name. You've already seen bracket notation used with symbols in this chapter, but you can use symbols in computed object literal property names as well as with `Object.defineProperty()` and `Object.defineProperties()` calls, such as:
+```js
+let symbol = Symbol("test symbol");
+console.log(typeof symbol);         // "symbol"
+```
+
+A> Хоча й існують інші непрямі способи визначення чи змінна є символом, проте оператор `typeof` є найбільш прийнятним та точним способом.
+
+## Використання символів
+
+Ви можете використовувати символи всюди, де ви можете використовувати обчислювані імена властивостей. Ви вже бачили запис використання символів з квадратними дужками у цій главі, проте ви можете використовувати їх і в літералах об’єктів з обчислюваними іменами властивостей, а також з викликами `Object.defineProperty()` та `Object.defineProperties()`, як от:
 
 ```js
 let firstName = Symbol("first name");
 
-// use a computed object literal property
+// використання об’єктного літералу з обчислюваною властивістю
 let person = {
     [firstName]: "Nicholas"
 };
 
-// make the property read only
+// робимо властивість доступною лише для читання
 Object.defineProperty(person, firstName, { writable: false });
 
 let lastName = Symbol("last name");
@@ -74,15 +74,15 @@ console.log(person[firstName]);     // "Nicholas"
 console.log(person[lastName]);      // "Zakas"
 ```
 
-This example first uses a computed object literal property to create the `firstName` symbol property. The property is created as nonenumerable, which is different from computed properties created using nonsymbol names. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
+Цей приклад використовує об’єктний літерал з обчислюваною властивістю для створення символьної властивості `firstName`. На відміну від обчислюваних властивостей з несимвольними іменами, створена властивість є неперелічуваною (nonenumerable). Наступний рядок робить цю властивість доступною лише для читання. Потім, методом `Object.defineProperties()` створюється доступна лише для читання символьна властивість `lastName`. Тут ще раз використовується об’єктний літерал з обчислюваною властивістю, проте цього разу як частина виклику `Object.defineProperties()`.
 
-While symbols can be used in any place that computed property names are allowed, you'll need to have a system for sharing these symbols between different pieces of code in order to use them effectively.
+Хоча символи й можуть використовуватись будь–де в якості імен для обчислюваних властивостей, вам потрібно мати систему поширення цих символів  між різними частинами вашого коду, щоб використовувати їх ефективно.
 
-## Sharing Symbols
+## Поширення символів
 
-You may find that you want different parts of your code to use the same symbols. For example, suppose you have two different object types in your application that should use the same symbol property to represent a unique identifier. Keeping track of symbols across files or large codebases can be difficult and error-prone. That's why ECMAScript 6 provides a global symbol registry that you can access at any point in time.
+У певний момент ви можете зрозуміти, що різні частини вашого коду використовують одні і ті ж самі символи. Наприклад, припустимо ви маєте два різних типи об’єктів у вашому додатку, що повинні використовувати символьні властивості для представлення унікальних ідентифікаторів. Слідкувати за символами у всіх файлах, або у проектах з великою кодовою базою буде складно та призводитиме до помилок. Ось чому ECMAScript 6 вводить глобальний реєстр символів, до якого ви маєте доступ у будь–який момент.
 
-When you want to create a symbol to be shared, use the `Symbol.for()` method instead of calling the `Symbol()` method. The `Symbol.for()` method accepts a single parameter, which is a string identifier for the symbol you want to create. That parameter is also used as the symbol's description. For example:
+Коли ви хочете створити символ, яким треба поділитись, використовуйте метод `Symbol.for()` замість виклику методу `Symbol()`. Метод `Symbol.for()` приймає єдиний параметр, який є рядковим ідентифікатором символу, який ви хочете створити. Цей параметр також використовується в якості опису символу. Наприклад:
 
 ```js
 let uid = Symbol.for("uid");
@@ -94,7 +94,7 @@ console.log(object[uid]);       // "12345"
 console.log(uid);               // "Symbol(uid)"
 ```
 
-The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, the method returns the existing symbol. If no such symbol exists, then a new symbol is created and registered to the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol, as follows:
+Спочатку метод `Symbol.for()` шукає символ з ключем `"uid"` існує у глобальному реєстрі символів. Якщо він існує, тоді метод повертає існуючий символ. Якщо такого символу не існує, тоді створюється новий символ з заданим ключем, який реєструється у глобальному реєстрі символів. Після цього повертається цей новий символ. Це означає, що наступні виклики `Symbol.for()` з однаковим ключем повернуть один і той же символ, ось так:
 
 ```js
 let uid = Symbol.for("uid");
@@ -112,9 +112,9 @@ console.log(object[uid2]);      // "12345"
 console.log(uid2);              // "Symbol(uid)"
 ```
 
-In this example, `uid` and `uid2` contain the same symbol and so they can be used interchangeably. The first call to `Symbol.for()` creates the symbol, and the second call retrieves the symbol from the global symbol registry.
+У цьому прикладі, `uid` та `uid2` містять один і той же символ, тому вони можуть використовуватись однаково. Перший виклик `Symbol.for()` створює символ, а другий виклик дістає символ з глобального реєстру символів.
 
-Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by calling the `Symbol.keyFor()` method. For example:
+Іншим унікальним аспектом поширених символів є можливість отримати ключ, що асоційований з символом у глобальному реєстрі символів з допомогою виклику методу `Symbol.keyFor()`. Наприклад:
 
 ```js
 let uid = Symbol.for("uid");
@@ -127,15 +127,15 @@ let uid3 = Symbol("uid");
 console.log(Symbol.keyFor(uid3));   // undefined
 ```
 
-Notice that both `uid` and `uid2` return the `"uid"` key. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and `Symbol.keyFor()` returns `undefined`.
+Зауважте, що як `uid`, так і `uid2` повертають ключ `"uid"`. Символу `uid3` немає у глобальному реєстрі, він не має жодного ключа асоційованого з собою і тому `Symbol.keyFor()` повертає `undefined`.
 
-W> The global symbol registry is a shared environment, just like the global scope. That means you can't make assumptions about what is or is not already present in that environment. Use namespacing of symbol keys to reduce the likelihood of naming collisions when using third-party components. For example, jQuery code might use `"jquery."` to prefix all keys, for keys like `"jquery.element"` or similar.
+W> Глобальний реєстр символів є спільним середовищем, так само як і глобальна область видимості. Це означає, що ви не можете зробити висновок про те що є, а чого ще немає у цьому середовищі. Використовуйте простори імен для ключів символів, щоб уникнути можливих конфліктів імен при використанні сторонніх компонентів. Наприклад, код jQuery може використовувати префікс `"jquery."` для всіх ключів, наприклад `"jquery.element"` або щось схоже.
 
-## Symbol Coercion
+## Приведення символів
 
-Type coercion is a significant part of JavaScript, and there's a lot of flexibility in the language's ability to coerce one data type into another. Symbols, however, are quite inflexible when it comes to coercion because other types lack a logical equivalent to a symbol. Specifically, symbols cannot be coerced into strings or numbers so that they cannot accidentally be used as properties that would otherwise be expected to behave as symbols.
+Приведення типів є значною частиною JavaScript. Можливість мови приводити один тип даних до іншого є дуже гнучкою можливістю. Символи, однак, є недостатньо гнучкими при приведенні, оскільки інші типи не мають логічних еквівалентів символів. Зокрема, символи не можуть бути приведеними до рядків, або чисел, тому що вони не можуть використовуватись в якості властивостей, що поводилися би як символи.
 
-The examples in this chapter have used `console.log()` to indicate the output for symbols, and that works because `console.log()` calls `String()` on symbols to create useful output. You can use `String()` directly to get the same result. For instance:
+Приклади у цій главі використовували `console.log()` для виводу символів, і це працює тому, що `console.log()` викликає `String()` для цього символу, щоб створити інформативний вивід. Ви можете використовувати `String()` безпосередньо, щоб отримати такий самий результат, ось так:
 
 ```js
 let uid = Symbol.for("uid"),
@@ -144,29 +144,29 @@ let uid = Symbol.for("uid"),
 console.log(desc);              // "Symbol(uid)"
 ```
 
-The `String()` function calls `uid.toString()` and the symbol's string description is returned. If you try to concatenate the symbol directly with a string, however, an error will be thrown:
+Функція `String()` викликає `uid.toString()`, що повертає рядок опису цього символу. Однак, якщо ви спробуєте сконкатинувати з рядком, кинеться помилка:
 
 ```js
 let uid = Symbol.for("uid"),
-    desc = uid + "";            // error!
+    desc = uid + "";            // помилка!
 ```
 
-Concatenating `uid` with an empty string requires that `uid` first be coerced into a string. An error is thrown when the coercion is detected, preventing its use in this manner.
+Конкатенація `uid` з порожнім рядком потребує спершу того, щоб `uid` був приведений до рядка. Помилка кидається щоб попередити використання у такій манері, коли використовується приведення.
 
-Similarly, you cannot coerce a symbol to a number. All mathematical operators cause an error when applied to a symbol. For example:
+Так само, ви не можете привести символ до числа. Всі математичні оператори спричинять помилку при застосуванні їх до символу. Наприклад:
 
 ```js
 let uid = Symbol.for("uid"),
-    sum = uid / 1;            // error!
+    sum = uid / 1;            // помилка!
 ```
 
-This example attempts to divide the symbol by 1, which causes an error. Errors are thrown regardless of the mathematical operator used (logical operators do not throw an error because all symbols are considered equivalent to `true`, just like any other non-empty value in JavaScript).
+Цей приклад пробує розділити символ на 1, що провокує помилку. Помилки кидаються незалежно від того, який математичний оператор використовується (логічні оператори не кидають помилку, тому що всі символи розглядаються еквівалентними до `true`, як і будь–яке непорожнє значення у JavaScript).
 
-## Retrieving Symbol Properties
+## Отримання символьних властивостей
 
-The `Object.keys()` and `Object.getOwnPropertyNames()` methods can retrieve all property names in an object. The former method returns all enumerable property names, and the latter returns all properties regardless of enumerability. Neither method returns symbol properties, however, to preserve their ECMAScript 5 functionality. Instead, the `Object.getOwnPropertySymbols()` method was added in ECMAScript 6 to allow you to retrieve property symbols from an object.
+Методи `Object.keys()` та `Object.getOwnPropertyNames()` можуть отримувати імена всіх властивостей об'єкту. Перший метод повертає імена усіх перелічуваних властивостей, а другий повертає усі властивості незалежно від їх перелічуваності. Жоден з цих методів не повертає символьні властивості, для збереження їхньої ECMAScript 5 функціональності. Замість цього, у ECMAScript 6 було додано метод `Object.getOwnPropertySymbols()`, щоб дозволити вам отримувати символьні властивості з об’єкту.
 
-The return value of `Object.getOwnPropertySymbols()` is an array of own property symbols. For example:
+Значення, що повертається з `Object.getOwnPropertySymbols()` є масивом символьних властивостей. Наприклад:
 
 ```js
 let uid = Symbol.for("uid");
@@ -181,53 +181,53 @@ console.log(symbols[0]);            // "Symbol(uid)"
 console.log(object[symbols[0]]);    // "12345"
 ```
 
-In this code, `object` has a single symbol property called `uid`. The array returned from `Object.getOwnPropertySymbols()` is an array containing just that symbol.
+У цьому коді, `object` має єдину символьну властивість `uid`. Масив, який поверне `Object.getOwnPropertySymbols()` буде масивом, що містить лише цей символ.
 
-All objects start with zero own symbol properties, but objects can inherit symbol properties from their prototypes. ECMAScript 6 predefines several such properties, implemented using what are called well-known symbols.
+Всі об’єкти не мають жодної символьної властивості від початку, проте об’єкти можуть наслідувати символьні властивості від їхніх прототипів. ECMAScript 6 наперед задає кілька таких властивостей, імплементованих з використанням так званих добревідомих (well-known) символів.
 
-## Exposing Internal Operations with Well-Known Symbols
+## Дослідження внутрішніх операцій з добревідомими символами
 
-A central theme for ECMAScript 5 was exposing and defining some of the "magic" parts of JavaScript, the parts that developers couldn't emulate at the time. ECMAScript 6 carries on that tradition by exposing even more of the previously internal logic of the language, primarily by using symbol prototype properties to define the basic behavior of certain objects.
+Центральною темою ECMAScript 5 було відкриття та визначення деяких “магічних” частин JavaScript, тих частин, які тоді не могли емулюватись розробниками. ECMAScript 6 продовжує цю традицію, відкриваючи навіть більше внутрішньої логіки мови, в першу чергу через символьні властивості прототипів, що задають базову поведінку певних об’єктів.
 
-ECMAScript 6 has predefined symbols called *well-known symbols* that represent common behaviors in JavaScript that were previously considered internal-only operations. Each well-known symbol is represented by a property on the `Symbol` object, such as `Symbol.create`.
+ECMAScript 6 має наперед задані символи, які називаються *добревідомими символами*, що відображають загальну поведінку у JavaScript, що раніше розглядалась виключно внутрішніми операціями. Кожен добревідомий символ відображений властивістю об’єкту `Symbol`, як от `Symbol.create`.
 
-The well-known symbols are:
+Добревідомими символами є:
 
-* `Symbol.hasInstance` - A method used by `instanceof` to determine an object's inheritance.
-* `Symbol.isConcatSpreadable` - A Boolean value indicating that `Array.prototype.concat()` should flatten the collection's elements if the collection is passed as a parameter to `Array.prototype.concat()`.
-* `Symbol.iterator` - A method that returns an iterator. (Iterators are covered in Chapter 7.)
-* `Symbol.match` - A method used by `String.prototype.match()` to compare strings.
-* `Symbol.replace` - A method used by `String.prototype.replace()` to replace substrings.
-* `Symbol.search` - A method used by `String.prototype.search()` to locate substrings.
-* `Symbol.species` - The constructor for making derived objects. (Derived objects are covered in Chapter 8.)
-* `Symbol.split` - A method used by `String.prototype.split()` to split up strings.
-* `Symbol.toPrimitive` - A method that returns a primitive value representation of an object.
-* `Symbol.toStringTag` - A string used by `Object.prototype.toString()` to create an object description.
-* `Symbol.unscopables` - An object whose properties are the names of object properties that should not be included in a `with` statement.
+* `Symbol.hasInstance` - метод, який використовується у `instanceof` для визначення успадкування об’єкта;
+* `Symbol.isConcatSpreadable` - булева значення, що вказує, що `Array.prototype.concat()` слід “сплюснути” елементи колекції, якщо вона була передана в якості параметру до `Array.prototype.concat()`;
+* `Symbol.iterator` - метод, що повертає ітератор (про ітератори піде мова у Главі 7);
+* `Symbol.match` - метод, що використовується у `String.prototype.match()` для порівняння рядків;
+* `Symbol.replace` - метод, що використовується у `String.prototype.replace()` для заміни підрядків;
+* `Symbol.search` - метод, що використовується у `String.prototype.search()` для знаходження підрядків;
+* `Symbol.species` - конструктор для створення похідних об’єктів (про похідні об’єкти буде йтись у Главі 8);
+* `Symbol.split` - метод, що використовується `String.prototype.split()` для розбиття рядків;
+* `Symbol.toPrimitive` - метод, що повертає примітивне представлення об’єкту;
+* `Symbol.toStringTag` - рядок, що використовується у `Object.prototype.toString()` для створення описів об’єктів;
+* `Symbol.unscopables` - об’єкт, властивості якого є іменами властивостей, що не повинні включатись в операторі `with`.
 
-Some commonly used well-known symbols are discussed in the following sections, while others are discussed throughout the rest of the book to keep them in the correct context.
+Про символи, які використовуються найчастіше піде мова у наступних розділах, тоді як про інші ви дізнаєтесь з решти книги, щоб не порушувати зрозумілого контексту.
 
-I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior. There is no practical impact to your code as a result, it just changes the way the specification describes the object.
+I> Перезапис методу, що визначається з допомогою добревідомого символу перетворює звичайний об’єкт на незвичайний, тому що це змінює деяку внутрішню поведінку. В кінцевому результаті, ці зміни ніяк не повпливають на ваш код — вони просто змінюють те, як специфікація описує об’єкти.
 
-### The Symbol.hasInstance Property
+### Властивість Symbol.hasInstance
 
-Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property. The `Symbol.hasInstance` property itself is defined as nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
+Кожна функція має метод `Symbol.hasInstance`, що визначає чи є даний об’єкт екземпляром цієї функції, чи ні. Цей метод визначений в `Function.prototype`, тому всі функції наслідують поведінку за замовчуванням для властивості `instanceof`. Сама властивість `Symbol.hasInstance` визначається недоступною для запису та конфігурування і є неперелічуваною, щоб бути певними у тому, що вона не буде випадково змінена.
 
-The `Symbol.hasInstance` method accepts a single argument: the value to check. It returns true if the value passed is an instance of the function. To understand how `Symbol.hasInstance` works, consider the following code:
+Метод `Symbol.hasInstance` приймає єдиний аргумент: значення для перевірки. Він повертає true, якщо передане значення є екземпляром функції. Щоб зрозуміти як працює `Symbol.hasInstance`, розгляньте такий код:
 
 ```js
 obj instanceof Array;
 ```
 
-This code is equivalent to:
+Цей код є еквівалентним до:
 
 ```js
 Array[Symbol.hasInstance](obj);
 ```
 
-ECMAScript 6 essentially redefined the `instanceof` operator as shorthand syntax for this method call. And now that there's a method call involved, you can actually change how `instanceof` works.
+По суті, ECMAScript 6 перевизначає оператор `instanceof` як скорочення для виклику цього методу. І тепер, коли використовується виклик методу, ви можете змінити те, як працює `instanceof`.
 
-For instance, suppose you want to define a function that claims no object as an instance. You can do so by hardcoding the return value of `Symbol.hasInstance` to `false`, such as:
+Наприклад, припустимо ви хочете визначити функцію, що не матиме об’єктів–екземплярів. Ви можете зробити це, якщо жорстко встановите, що `Symbol.hasInstance` має повертати `false`, як ось тут:
 
 ```js
 function MyObject() {
@@ -245,13 +245,13 @@ let obj = new MyObject();
 console.log(obj instanceof MyObject);       // false
 ```
 
-You must use `Object.defineProperty()` to overwrite a nonwritable property, so this example uses that method to overwrite the `Symbol.hasInstance` method with a new function. The new function always returns `false`, so even though `obj` is actually an instance of the `MyObject` class, the `instanceof` operator returns `false` after the `Object.defineProperty()` call.
+Ви повинні використовувати `Object.defineProperty()`, щоб перезаписати властивість, що недоступна для запису, тому у цьому прикладі використовується цей метод для перезапису методу `Symbol.hasInstance` на нову функцію. Нова функція завжди повертає `false`, тому навіть хоча й `obj` насправді є екземпляром класу `MyObject`, оператор `instanceof` поверну `false` після виклику `Object.defineProperty()`.
 
-Of course, you can also inspect the value and decide whether or not a value should be considered an instance based on any arbitrary condition. For instance, maybe numbers with values between 1 and 100 are to be considered instances of a special number type. To achieve that behavior, you might write code like this:
+Звісно, ви також можете перевіряти значення та вирішувати чи має воно вважатись екземпляром. Для прикладу, числа зі значеннями від 1 до 100 мають розглядатись як екземпляри деякого спеціального чисельного типу. Щоб отримати таку поведінку, ви можете написати ось такий код:
 
 ```js
 function SpecialNumber() {
-    // empty
+    // порожньо
 }
 
 Object.defineProperty(SpecialNumber, Symbol.hasInstance, {
@@ -267,13 +267,13 @@ console.log(two instanceof SpecialNumber);    // true
 console.log(zero instanceof SpecialNumber);   // false
 ```
 
-This code defines a `Symbol.hasInstance` method that returns `true` if the value is an instance of `Number` and also has a value between 1 and 100. Thus, `SpecialNumber` will claim `two` as an instance even though there is no directly defined relationship between the `SpecialNumber` function and the `two` variable. Note that the left operand to `instanceof` must be an object to trigger the `Symbol.hasInstance` call, as nonobjects cause `instanceof` to simply return `false` all the time.
+Цей код задає метод `Symbol.hasInstance`, що повертає `true`, якщо значення є екземпляром `Number` і має значення від 1 до 100. Таким чином, `two` буде екземпляром `SpecialNumber`, не дивлячись на те, що немає жодних безпосередніх зв’язків між функцією `SpecialNumber` та змінною `two`. Зауважте, що лівий операнд у `instanceof` мусить бути об’єктом для якого викличеться `Symbol.hasInstance`, оскільки для необ’єктів `instanceof` просто завжди повертає `false`.
 
-W> You can also overwrite the default `Symbol.hasInstance` property for all builtin functions such as the `Date` and `Error` functions. This isn't recommended, however, as the effects on your code can be unexpected and confusing. It's a good idea to only overwrite `Symbol.hasInstance` on your own functions and only when necessary.
+W> Ви також можете перезаписати значення за замовчуванням властивості `Symbol.hasInstance` для всіх вбудованих функцій, як от `Date` та `Error`. Це не рекомендовано, оскільки це може зробити ваш код складним для розуміння та непрогнозованим. Хорошою ідеєю є лише перезапис `Symbol.hasInstance` у ваших власних функцій і лише тоді, коли це необхідно.
 
-### The Symbol.isConcatSpreadable Symbol
+### Символ Symbol.isConcatSpreadable
 
-JavaScript arrays have a `concat()` method designed to concatenate two arrays together. Here's how that method is used:
+JavaScript має метод `concat()` для конкатинації двох масивів. Ось як цей метод використовується:
 
 ```js
 let colors1 = [ "red", "green" ],
@@ -283,7 +283,7 @@ console.log(colors2.length);    // 4
 console.log(colors2);           // ["red","green","blue","black"]
 ```
 
-This code concatenates a new array to the end of `colors1` and creates `colors2`, a single array with all items from both arrays. However, the `concat()` method can also accept nonarray arguments and, in that case, those arguments are simply added to the end of the array. For example:
+Такий код конкатеную новий масив у кінець `colors1` та створює `colors2` — єдиний масив з усіма елементами обох масивів. Однак, метод `concat()` може також приймати необов’язкові аргументи і, у цьому випадку, ці аргументи будуть просто додаватись в кінець масиву. Наприклад:
 
 ```js
 let colors1 = [ "red", "green" ],
@@ -293,9 +293,9 @@ console.log(colors2.length);    // 5
 console.log(colors2);           // ["red","green","blue","black","brown"]
 ```
 
-Here, the extra argument `"brown"` is passed to `concat()` and it becomes the fifth item in the `colors2` array. Why is an array argument treated differently than a string argument? The JavaScript specification says that arrays are automatically split into their individual items and all other types are not. Prior to ECMAScript 6, there was no way to adjust this behavior.
+Тут, додатковий аргумент `"brown"` переданий у `concat()` і він стає п’ятим елементом у масиві `colors2`. Чому аргументи–масиви трактуються інакше ніж рядкові аргументи? Специфікація JavaScript каже, що масиви автоматично розбиваються на окремі елементи, а всі інші типи ні. До ECMAScript 6 не було можливості змінити цю поведінку.
 
-The `Symbol.isConcatSpreadable` property is a boolean value indicating that an object has a `length` property and numeric keys, and that its numeric property values should be added individually to the result of a `concat()` call. Unlike other well-known symbols, this symbol property doesn't appear on any standard objects by default. Instead, the symbol is available as a way to augment how `concat()` works on certain types of objects, effectively short-circuiting the default behavior. You can define any type to behave like arrays do in a `concat()` call, like this:
+Властивість `Symbol.isConcatSpreadable` є булевим значенням, що вказує на те, чи цей об’єкт має властивість `length` і числові ключі і ці числові властивості повинні додаватись окремо в результат виклику `concat()`. На відміну від інших добревідомих символів, ця властивість не з’являється у будь–яких об’єктів за замовчуванням. Замість цього, цей символ доступний в якості способу, щоб вказати як `concat()` працює з окремими типами об’єктів. Ви можете вказати як буде поводитись `concat()` при виклику для будь–якого типу, ось так:
 
 ```js
 let collection = {
@@ -308,37 +308,37 @@ let collection = {
 let messages = [ "Hi" ].concat(collection);
 
 console.log(messages.length);    // 3
-console.log(messages);           // ["hi","Hello","world"]
+console.log(messages);           // ["Hi","Hello","world"]
 ```
 
-The `collection` object in this example is set up to look like an array: it has a `length` property and two numeric keys. The `Symbol.isConcatSpreadable` property is set to `true` to indicate that the property values should be added as individual items to an array. When `collection` is passed to the `concat()` method, the resulting array has `"Hello"` and `"world"` as separate items after the `"hi"` element.
+Об’єкт `collection` у цьому прикладі встановлюється так, щоб виглядати наче масив: він має властивість `length` та два числові ключі. Властивість `Symbol.isConcatSpreadable` встановлюється в `true`, щоб вказувати на те, що значення властивостей мають бути додані у масив як окремі елементи. Коли у метод `concat()` передасться `collection`, результуючий масив матиме окремі елементи `"Hello"` та `"world"` після елементу `"Hi"`.
 
-I> You can also set `Symbol.isConcatSpreadable` to `false` on array subclasses to prevent items from being separated by `concat()` calls. Subclassing is discussed in Chapter 8.
+I> Ви також можете встановити `Symbol.isConcatSpreadable` значення `false` для підкласів масивів, щоб попередити їх розбиття при виклику `concat()`. Про підкласи піде мова у Главі 8.
 
-### The Symbol.match, Symbol.replace, Symbol.search, and Symbol.split Symbols
+### Символи Symbol.match, Symbol.replace, Symbol.search та Symbol.split
 
-Strings and regular expressions have always had a close relationship in JavaScript. The string type, in particular, has several methods that accept regular expressions as arguments:
+Рядки та регулярні вирази завжди мали тісні зв’язки у JavaScript. Рядковий тип, зокрема, має ряд методів, що приймають регулярний вирази в якості аргументів:
 
-* `match(regex)` - Determines whether the given string matches a regular expression
-* `replace(regex, replacement)` - Replaces regular expression matches with a `replacement`
-* `search(regex)` - Locates a regular expression match inside the string
-* `split(regex)` - Splits a string into an array on a regular expression match
+* `match(regex)` - визначає чи даний рядок співпадає з регулярним виразом;
+* `replace(regex, replacement)` - замінює співпадіння з регулярним виразом на `replacement`;
+* `search(regex)` - знаходить відповідності регулярному виразу в рядку;
+* `split(regex)` - розбиває рядок на масив за регулярним виразом.
 
-Prior to ECMAScript 6, the way these methods interacted with regular expressions was hidden from developers, leaving no way to mimic regular expressions using developer-defined objects. ECMAScript 6 defines four symbols that correspond to these four methods, effectively outsourcing the native behavior to the `RegExp` builtin object.
+До ECMAScript 6 те, як ці методи взаємодіють з рядками були приховані від розробників, не залишаючи жодної можливості для імітації регулярних виразів через об’єкти, які створювались розробниками. ECMAScript 6 визначає чотири символи, що відповідають за ці чотири методи, відкриваючи нативну поведінку вбудованого об’єкту `RegExp`.
 
-The `Symbol.match`, `Symbol.replace`, `Symbol.search`, and `Symbol.split` symbols represent methods on the regular expression argument that should be called on the first argument to the `match()` method, the `replace()` method, the `search()` method, and the `split()` method, respectively. The four symbol properties are defined on `RegExp.prototype` as the default implementation that the string methods should use.
+Символи `Symbol.match`, `Symbol.replace`, `Symbol.search` та `Symbol.split` відповідають методам, які мають мають викликатись з регулярними виразами в якості першого аргументу: метод `match()`, метод `replace()`, метод `search()` та метод `split()`, відповідно. Ці чотири символьні властивості задаються в `RegExp.prototype` в якості імплементації, яку рядкові методи мають використовувати за замовчуванням.
 
-Knowing this, you can create an object to use with the string methods in a way that is similar to regular expressions. To do, you can use the following symbol functions in code:
+Знаючи це, ви можете створити об’єкт, який буде використовуватись з рядковими методами. Щоб зробити це, ви можете використовувати такі символьні функції у коді:
 
-* `Symbol.match` - A function that accepts a string argument and returns an array of matches, or `null` if no match is found.
-* `Symbol.replace` - A function that accepts a string argument and a replacement string, and returns a string.
-* `Symbol.search` - A function that accepts a string argument and returns the numeric index of the match, or -1 if no match is found.
-* `Symbol.split` - A function that accepts a string argument and returns an array containing pieces of the string split on the match.
+* `Symbol.match` - функція, що приймає аргумент та повертає масив співпадінь, або `null`, якщо не було знайдено жодних співпадінь;
+* `Symbol.replace` - функція, що приймає рядок–аргумент та рядок–заміну та повертає новий рядок;
+* `Symbol.search` - функція, що приймає рядок–аргумент та повертає числовий індекс входження першого співпадіння, або -1, якщо не було знайдено жодних співпадінь;
+* `Symbol.split` - функція, що приймає рядок–аргумент та повертає масив, що містить фрагменти рядка, що були розділені за співпадінням.
 
-The ability to define these properties on an object allows you to create objects that implement pattern matching without regular expressions and use them in methods that expect regular expressions. Here's an example that shows these symbols in action:
+Можливість визначати ці властивості об’єктів дозволяються вам створювати об’єкти, що реалізують співпадіння за шаблоном без регулярних виразів та використовувати їх у методах, що приймають регулярний вираз. Ось приклад, що демонструє ці символи в дії:
 
 ```js
-// effectively equivalent to /^.{10}$/
+// ефективна заміна для /^.{10}$/
 let hasLengthOf10 = {
     [Symbol.match]: function(value) {
         return value.length === 10 ? [value.substring(0, 10)] : null;
@@ -384,33 +384,33 @@ console.log(split1);            // ["Hello world"]
 console.log(split2);            // ["", ""]
 ```
 
-The `hasLengthOf10` object is intended to work like a regular expression that matches whenever the string length is exactly 10. Each of the four methods on `hasLengthOf10` is implemented using the appropriate symbol, and then the corresponding methods on two strings are called. The first string, `message1`, has 11 characters and so it will not match; the second string, `message2`, has 10 characters and so it will match. Despite not being a regular expression, `hasLengthOf10` is passed to each string method and used correctly due to the additional methods.
+Об’єкт `hasLengthOf10` націлений на те, щоб працювати так, як регулярний вираз, що знаходить будь–який рядок, що, має довжину в 10 символів. Кожен з чотирьох методів `hasLengthOf10` реалізований через відповідний символ, а тоді відповідні методи викликаються для двох рядків. Перший рядок, `message1`, має довжину 11 символів і тому не співпадає; другий рядок, `message2`, має довжину 10 символів і тому відповідає умові. Не дивлячись на те, що `hasLengthOf10` не є регулярним виразом, від передається кожному рядковому методу і використовується правильно з додатковими методами.
 
-While this is a simple example, the ability to perform more complex matches than are currently possible with regular expressions opens up a lot of possibilities for custom pattern matchers.
+Це простий приклад, проте можливість знаходити більш складні співпадіння, ніж можливі з регулярними виразами, відкриває широкі можливості для користувацьких шаблонів співпадінь.
 
-### The Symbol.toPrimitive Symbol
+### Символ Symbol.toPrimitive
 
-JavaScript frequently attempts to convert objects into primitive values implicitly when certain operations are applied. For instance, when you compare a string to an object using the double equals (`==`) operator, the object is converted into a primitive value before comparing. Exactly what primitive value should be used was previously an internal operation, but ECMAScript 6 exposes that value (making it changeable) through the `Symbol.toPrimitive` method.
+JavaScript часто намагається конвертувати об’єкти у примітивні значення при застосуванні певних операцій. Наприклад, коли ви порівнюєте рядок з об’єктом з допомогою оператора рівності (`==`), об’єкт конвертується у примітивне значення перед порівнянням. Саме це примітивне значення, яке має використовуватись, раніше було внутрішнім, проте ECMAScript 6 відкриває це значення (дає змогу змінити його) через метод `Symbol.toPrimitive`.
 
-The `Symbol.toPrimitive` method is defined on the prototype of each standard type and prescribes what should happen when the object is converted into a primitive. When a primitive conversion is needed, `Symbol.toPrimitive` is called with a single argument, referred to as `hint` in the specification. The `hint` argument is one of three string values. If `hint` is `"number"` then `Symbol.toPrimitive` should return a number. If `hint` is `"string"` then a string should be returned, and if it's `"default"` then the operation has no preference as to the type.
+Метод `Symbol.toPrimitive` заданий в прототипі усіх стандартних типів та описує що має статись при конвертації об’єкту у примітивний тип. Коли конвертація необхідна, викликається `Symbol.toPrimitive` з єдиним аргументом, який згадується у специфікації як `hint`. Аргумент `hint` одним з трьох значень. Якщо `hint` є `"number"`, тоді `Symbol.toPrimitive` має повернути число. Якщо `hint` є `"string"`, тоді має повернутись рядок, а якщо він рівний `"default"`, тоді операція не має бажаного типу (результатом може бути будь–який інший).
 
-For most standard objects, number mode has the following behaviors, in order by priority:
+Для більшості стандартних об’єктів, числовий режим має таку поведінку, у порядку пріоритету:
 
-1. Call the `valueOf()` method, and if the result is a primitive value, return it.
-1. Otherwise, call the `toString()` method, and if the result is a primitive value, return it.
-1. Otherwise, throw an error.
+1. Викликати метод `valueOf()` і якщо результат є примітивним значенням, повернути його;
+1. Інакше, викликати метод `toString()` і якщо результат є примітивним значенням, повернути його;
+1. Інакше, кинути помилку.
 
-Similarly, for most standard objects, the behaviors of string mode have the following priority:
+Так само, для більшості стандартних типів, поведінка рядкового режиму має такий порядок:
 
-1. Call the `toString()` method, and if the result is a primitive value, return it.
-1. Otherwise, call the `valueOf()` method, and if the result is a primitive value, return it.
-1. Otherwise, throw an error.
+1. Викликати метод `toString()` і якщо результат є примітивним значенням, повернути його;
+1. Інакше, викликати метод `valueOf()` і якщо результатом є примітивне значення, повернути його;
+1. Інакше, кинути помилку.
 
-In many cases, standard objects treat default mode as equivalent to number mode (except for `Date`, which treats default mode as equivalent to string mode). By defining an `Symbol.toPrimitive` method, you can override these default coercion behaviors.
+У багатьох випадках, стандартні об’єкти трактують режим за замовчуванням (default mode) як еквівалентний до чисельного режиму (окрім `Date`, яка трактує режим за замовчуванням як еквівалент до рядкового режиму). Через задання методу `Symbol.toPrimitive` ви можете перевизначити поведінку приведення за замовчуванням.
 
-I> Default mode is only used for the `==` operator, the `+` operator, and when passing a single argument to the `Date` constructor. Most operations use string or number mode.
+I> Режим за замовчуванням використовується лише при використанні оператора `==`, оператора `+` та при передачі одного аргументу конструктор `Date`. Більшість операцій використовують рядковий або чисельний режими.
 
-To override the default conversion behaviors, use `Symbol.toPrimitive` and assign a function as its value. For example:
+Для перезапису поведінки приведення за замовчуванням використовуйте `Symbol.toPrimitive` та присвойте йому функцію в якості значення. Наприклад:
 
 ```js
 function Temperature(degrees) {
@@ -421,7 +421,7 @@ Temperature.prototype[Symbol.toPrimitive] = function(hint) {
 
     switch (hint) {
         case "string":
-            return this.degrees + "\u00b0"; // degrees symbol
+            return this.degrees + "\u00b0"; // символ градусів
 
         case "number":
             return this.degrees;
@@ -438,19 +438,19 @@ console.log(freezing / 2);              // 16
 console.log(String(freezing));          // "32°"
 ```
 
-This script defines a `Temperature` constructor and overrides the default `Symbol.toPrimitive` method on the prototype. A different value is returned depending on whether the `hint` argument indicates string, number, or default mode (the `hint` argument is filled in by the JavaScript engine). In string mode, the `Temperature()` function returns the temperature with the Unicode degrees symbol. In number mode, it returns just the numeric value, and in default mode, it appends the word "degrees" after the number.
+Такий скрипт оголошує конструктор `Temperature` та перезаписує метод за замовчуванням `Symbol.toPrimitive` на його прототипі. Різне значення повертається в залежності від того, чи аргумент `hint` вказує на рядок, число, або режим за замовчуванням (аргумент `hint` встановлюється рушієм JavaScript). У рядковому режимі, функція `Temperature()` повертає температуру з Unicode–символом градусів. У числовому режимі, вона повертає просто числове значення, а у режимі за замовчуванням вона додає слово "degrees" після числа.
 
-Each of the log statements triggers a different `hint` argument value. The `+` operator triggers default mode by setting `hint` to `"default"`, the `/` operator triggers number mode by setting `hint` to `"number"`, and the `String()` function triggers string mode by setting `hint` to `"string"`. Returning different values for all three modes is possible, it's much more common to set the default mode to be the same as string or number mode.
+Кожен оператор `console.log` створює різне значення для аргументу `hint`. Оператор `+` призводить до того, що буде використовуватись режим за замочуванням, а `hint` буде встановлено значення `"default"`, оператор `/` призведе до того в `hint` буде значення `"number"` і буде використовуватись числовий режим, а функція `String()` призводить до того, що використовуватиметься рядковий режим і `hint` буде рівний `"string"`. Також можливо повертати однакові значення для всіх трьох режимів — часто потрібно, що режим за замовчуванням був таким самим як і рядковий, або числовий.
 
-### The Symbol.toStringTag Symbol
+### Символ Symbol.toStringTag
 
-One of the most interesting problems in JavaScript has been the availability of multiple global execution environments. This occurs in web browsers when a page includes an iframe, as the page and the iframe each have their own execution environments. In most cases, this isn't a problem, as data can be passed back and forth between the environments with little cause for concern. The problem arises when trying to identify what type of object you're dealing with after the object has been passed between different objects.
+Однією з найцікавіших проблем у JavaScript була можливість кількох глобальних середовищ виконання. Вона з’являється у web–браузерах, коли сторінка містить фрейм (iframe), оскільки як і сторінка, так і фрейм мають свої власні середовища виконання. У більшості випадків, це не проблема, оскільки дані можуть передаватись між середовищами. Проблема з’являється тоді, коли ви спробуєте ідентифікувати з яким типом об’єкту ви працюєте після того, як того як цей об’єкт передавався між різними об’єктами.
 
-The canonical example of this issue is passing an array from an iframe into the containing page or vice-versa. In ECMAScript 6 terminology, the iframe and the containing page each represent a different *realm* which is an execution environment for JavaScript. Each realm has its own global scope with its own copy of global objects. In whichever realm the array is created, it is definitely an array. When it's passed to a different realm, however, an `instanceof Array` call returns `false` because the array was created with a constructor from a different realm and `Array` represents the constructor in the current realm.
+Загальним прикладом цієї проблеми є передача масиву з фрейму у сторінку, що містить його, або навпаки. В термінології ECMAScript 6, як фрейм, так і сторінка, що містить його представляють різні *сфери*, які є середовищами виконання для JavaScript. Кожна сфера має власну глобальну область видимості зі своїми власними копіями глобальних об’єктів. Незалежно від сфери, масив, що створюється, завжди буде масивом. Однак, при передачі його до іншої сфери, виклик `instanceof Array` поверне `false` тому, що цей масив, створений через конструктор з іншої сфери, а `Array` відображає конструктор з поточної сфери.
 
-#### A Workaround for the Identification Problem
+#### Обхід проблеми з ідентифікацією
 
-Faced with this problem, developers soon found a good way to identify arrays. They discovered that by calling the standard `toString()` method on the object, a predictable string was always returned. Thus, many JavaScript libraries began including a function like this:
+Зустрівшись з цією проблемою, розробники швидко знайшли хороший спосіб ідентифікації масивів. Вони зрозуміли, що при виклику стандартного методу `toString()`, завжди повертається передбачуваний рядок. Таким чином, багато JavaScript–бібліотек почали включати в себе таку функцію:
 
 ```js
 function isArray(value) {
@@ -460,11 +460,11 @@ function isArray(value) {
 console.log(isArray([]));   // true
 ```
 
-This may look a bit roundabout, but it worked quite well for identifying arrays in all browsers. The `toString()` method on arrays isn't useful for identifying an object because it returns a string representation of the items the object contains. But the `toString()` method on `Object.prototype` had a quirk: it included internally-defined name called `[[Class]]` in the returned result. Developers could use this method on an object to retrieve what the JavaScript environment thought the object's data type was.
+Це може виглядати як хак, проте це ідентифікує масиви однаково добре у всіх браузерах. Метод `toString()` для масивів не є дуже зручним для ідентифікації об’єктів, оскільки він повертає рядкове представлення елементів, що містяться у об’єктів. Проте метод `toString()` на `Object.prototype` має причуду: він включає внутрішньозадане ім'я `[[Class]]` у результат, що повертається. Розробники можуть використовувати цей метод для об’єктів, щоб дізнатись з якого JavaScript–оточення прийшли дані об’єкту.
 
-Developers quickly realized that since there was no way to change this behavior, it was possible to use the same approach to distinguish between native objects and those created by developers. The most important case of this was the ECMAScript 5 `JSON` object.
+Розробники швидко зрозуміли, що оскільки немає способу змінити цю поведінку, можна використовувати цей підхід щоб розрізняти нативні об’єкти від об’єктів, створених розробниками. Найпоширенішим прикладом є об’єкт `JSON` в ECMAScript 5.
 
-Prior to ECMAScript 5, many developers used Douglas Crockford's *json2.js*, which creates a global `JSON` object. As browsers started to implement the `JSON` global object, figuring out whether the global `JSON` was provided by the JavaScript environment itself or through some other library became necessary. Using the same technique I showed with the `isArray()` function, many developers created functions like this:
+До ECMAScript 5 багато розробників використовували *json2.js* від Дугласа Крокфорда (Douglas Crockford), який створював глобальний об’єкт `JSON`. Оскільки браузери почали імплементувати глобальний об’єкт `JSON`, з’явилася потреба розрізняти глобальний об’єкт `JSON` з самого JavaScript–оточення та об’єкт `JSON` з інших бібліотек. Використовуючи той самий підхід, який я показав на прикладі функції `isArray()`, багато розробників написали ось такі функції:
 
 ```js
 function supportsNativeJSON() {
@@ -473,13 +473,13 @@ function supportsNativeJSON() {
 }
 ```
 
-The same characteristic of `Object.prototype` that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native `JSON` object or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object JSON]` instead. This approach became the de facto standard for identifying native objects.
+Та властивість `Object.prototype`, що дозволяла розробникам ідентифікувати масиви між фреймами, також дала допомагала сказати чи `JSON` є нативним об’єктом `JSON`, чи ні. Ненативний об’єкт `JSON` повернув би `[object Object]`, тоді як нативна версія поверне `[object JSON]`. Такий підхід став де-факто стандартом для ідентифікації нативних об’єктів.
 
-#### The ECMAScript 6 Answer
+#### ECMAScript 6 відповідь
 
-ECMAScript 6 redefines this behavior through the `Symbol.toStringTag` symbol. This symbol represents a property on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. For an array, the value that function returns is explained by storing `"Array"` in the `Symbol.toStringTag` property.
+ECMAScript 6 перевизначає цю поведінку через символ `Symbol.toStringTag`. Цей символ представляє властивість кожного об’єкта, що визначає яке значення слід повернути при виклику `Object.prototype.toString.call()` для цього об’єкта. Для масивів, функція поверне `"Array"`, оскільки саме це значення міститься у властивості `Symbol.toStringTag`.
 
-Likewise, you can define the `Symbol.toStringTag` value for your own objects:
+Також ви можете встановлювати значення `Symbol.toStringTag` для ваших власних об’єктів:
 
 ```js
 function Person(name) {
@@ -494,7 +494,7 @@ console.log(me.toString());                         // "[object Person]"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
 ```
 
-In this example, a `Symbol.toStringTag` property is defined on `Person.prototype` to provide the default behavior for creating a string representation. Since `Person.prototype` inherits the `Object.prototype.toString()` method, the value returned from `Symbol.toStringTag` is also used when calling the `me.toString()` method. However, you can still define your own `toString()` method that provides a different behavior without affecting the use of the `Object.prototype.toString.call()` method. Here's how that might look:
+У цьому прикладі, властивість `Symbol.toStringTag` встановлена на `Person.prototype` для забезпечення поведінки за замовчуванням при створенні рядкового представлення. Оскільки `Person.prototype` наслідує метод `Object.prototype.toString()`, значення, яке повертається з `Symbol.toStringTag` також використовується при виклику методу `me.toString()`. Однак, ви все ще можете задати власний метод `toString()`, що матиме іншу поведінку без впливу на те, як використовується метод `Object.prototype.toString.call()`. Ось приклад того, як це може виглядати:
 
 ```js
 function Person(name) {
@@ -513,11 +513,11 @@ console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
 ```
 
-This code defines `Person.prototype.toString()` to return the value of the `name` property. Since `Person` instances no longer inherit the `Object.prototype.toString()` method, calling `me.toString()` exhibits a different behavior.
+Цей код визначає, що `Person.prototype.toString()` повертає значення властивості `name`. Оскільки екземпляр `Person` більше не наслідує метод `Object.prototype.toString()`, виклик `me.toString()` демонструє іншу поведінку.
 
-I> All objects inherit `Symbol.toStringTag` from `Object.prototype` unless otherwise specified. The string `"Object"` is the default property value.
+I> Всі об’єкти наслідують `Symbol.toStringTag` від `Object.prototype`, якщо не було вказано інакше. Рядок `"Object"` є значенням цієї властивості за замовчуванням.
 
-There is no restriction on which values can be used for `Symbol.toStringTag` on developer-defined objects. For example, nothing prevents you from using `"Array"` as the value of the `Symbol.toStringTag` property, such as:
+Немає жодних обмежень стосовно того, яке значення має використовуватись у `Symbol.toStringTag` для об’єктів, що визначені розробниками. Для прикладу, ніщо не забороняє вам використовувати значення `"Array"` для властивості `Symbol.toStringTag`, як ось тут:
 
 ```js
 function Person(name) {
@@ -536,9 +536,9 @@ console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Array]"
 ```
 
-The result of calling `Object.prototype.toString()` is `"[object Array]"` in this code, which is the same result you'd get from an actual array. This highlights the fact that `Object.prototype.toString()` is no longer a completely reliable way of identifying an object's type.
+У цьому прикладі, результатом виклику `Object.prototype.toString()` є `"[object Array]"`, тобто результат є таким же як і для звичайного масиву. Це підкреслює факт, що `Object.prototype.toString()` не є абсолютно надійним способом визначення типу об’єктів.
 
-Changing the string tag for native objects is also possible. Just assign to `Symbol.toStringTag` on the object's prototype, like this:
+Також можна змінювати значення цієї властивості для нативних об’єктів. Просто присвойте щось властивості `Symbol.toStringTag` на прототипі об’єкту, ось так:
 
 ```js
 Array.prototype[Symbol.toStringTag] = "Magic";
@@ -548,17 +548,17 @@ let values = [];
 console.log(Object.prototype.toString.call(values));    // "[object Magic]"
 ```
 
-Even though `Symbol.toStringTag` is overwritten for arrays in this example, the call to `Object.prototype.toString()` results in `"[object Magic]"` instead. While I recommended not changing built-in objects in this way, there's nothing in the language that forbids doing so.
+Властивість `Symbol.toStringTag` є перевизначеною для масивів, у цьому прикладі, тому виклик `Object.prototype.toString()` дасть результат `"[object Magic]"`. Я не раджу змінювати щось у нативних об’єктах таким чином, проте у мові немає нічого, що може заборонити вам це зробити.
 
-### The Symbol.unscopables Symbol
+### Символ Symbol.unscopables
 
-The `with` statement is one of the most controversial parts of JavaScript. Originally designed to avoid repetitive typing, the `with` statement later became roundly criticized for making code harder to understand and for negative performance implications as well as being error-prone.
+Оператор `with` є однією з найбільш суперечливих частин JavaScript. Оператор `with` спочатку розроблявся як спосіб уникнути коду, що повторюється, проте пізніше його піддали гострій критиці через те, що він робить код набагато складнішим для розуміння, має погану швидкодію та продукує помилки.
 
-As a result, the `with` statement is not allowed in strict mode; that restriction also affects classes and modules, which are strict mode by default and have no opt-out.
+В результаті, оператор `with` заборонений у строгому режимі; це обмеження також стосується класів та модулів, що є у строгому режимі за замовчуванням без можливості вибору.
 
-While future code will undoubtedly not use the `with` statement, ECMAScript 6 still supports `with` in nonstrict mode for backwards compatibility and, as such, had to find ways to allow code that does use `with` to continue to work properly.
+Тоді у майбутньому оператор `with` безсумнівно використовуватись не буде, ECMAScript 6 досі підтримує `with` у нестрогому режимі для зворотньої сумісності. Таким чином, ми маємо знайти способи, щоб код, що досі використовує `with`, продовжував працювати справно.
 
-To understand the complexity of this task, consider the following code:
+Щоб зрозуміти складність цього завдання, розглянемо такий приклад:
 
 ```js
 let values = [1, 2, 3],
@@ -573,37 +573,37 @@ with(colors) {
 console.log(colors);    // ["red", "green", "blue", "black", 1, 2, 3]
 ```
 
-In this example, the two calls to `push()` inside the `with` statement are equivalent to `colors.push()` because the `with` statement added `push` as a local binding. The `color` reference refers to the variable created outside the `with` statement, as does the `values` reference.
+У цьому прикладі, два виклики `push()` всередині оператора `with` є еквівалентними до `colors.push()` тому, що оператор `with` додає `push` як локальне зв’язування. `color` та  `values` посилаються на змінні, що створені поза оператором `with`.
 
-But ECMAScript 6 added a `values` method to arrays. (The `values` method is discussed in detail in Chapter 7, "Iterators and Generators.") That would mean in an ECMAScript 6 environment, the `values` reference inside the `with` statement should refer not to the local variable `values`, but to the array's `values` method, which would break the code. This is why the `Symbol.unscopables` symbol exists.
+Проте ECMAScript 6 вводить для масивів метод `values`. (Про метод `values` детально піде мова у Главі 7, «Ітератори та генератори») Це б означало, що в оточенні ECMAScript 6, `values` всередині оператора `with` має посилатись не на локальну змінну `values`, а на метод масиву `values`, і це зламає код. Ось для чого існує символ `Symbol.unscopables`.
 
-The `Symbol.unscopables` symbol is used on `Array.prototype` to indicate which properties shouldn't create bindings inside of a `with` statement. When present, `Symbol.unscopables` is an object whose keys are the identifiers to omit from `with` statement bindings and whose values are `true` to enforce the block. Here's the default `Symbol.unscopables` property for arrays:
+Символ `Symbol.unscopables` використовується на `Array.prototype` для індикації того, які властивості не мають створювати зв’язувань всередині оператора `with`. При наявності, `Symbol.unscopables` є об’єктом, чиї ключі є ідентифікаторами, які мають ігноруватись оператором `with`, а чиї значення рівні `true` мають прив’язуватись до блоку. Ось значення за замовчуванням властивості `Symbol.unscopables` для масивів:
 
 ```js
-// built into ECMAScript 6 by default
+// є в ECMAScript 6 за замовчуванням
 Array.prototype[Symbol.unscopables] = Object.assign(Object.create(null), {
     copyWithin: true,
     entries: true,
     fill: true,
-    find, true,
+    find: true,
     findIndex: true,
     keys: true,
     values: true
 });
 ```
 
-The `Symbol.unscopables` object has a `null` prototype, which is created by the `Object.create(null)` call, and contains all of the new array methods in ECMAScript 6. (These methods are covered in detail in Chapter 7, "Iterators and Generators," and Chapter 9, "Arrays.") Bindings for these methods are not created inside a `with` statement, allowing old code to continue working without any problem.
+Об’єкт `Symbol.unscopables` має прототип `null`, що створюється викликом `Object.create(null)`, і містить всі нові методи масивів у ECMAScript 6. (Ці методи розглядатимуться у Главі 7, «Ітератори та генератори» та Главі 9, «Масиви».) Для цих методів, всередині оператора `with`, не створюються зв’язування, дозволяючи старому коду продовжувати працювати без проблем.
 
-In general, you shouldn't need to define `Symbol.unscopables` for your objects unless you use the `with` statement and are making changes to an existing object in your code base.
+Загалом, вам не слід задавати `Symbol.unscopables` для ваших об’єктів, доки ви не використовуєте оператор `with` та робити зміни в об’єктах у вашому коді.
 
-## Summary
+## Підсумок
 
-Symbols are a new type of primitive value in JavaScript and are used to create nonenumerable properties that can't be accessed without referencing the symbol.
+Символи — це новий тип примітивних значень у JavaScript і використовується для створення неперелічуваних властивостей, доступу до яких не буде без посилання на відповідний символ.
 
-While not truly private, these properties are harder to accidentally change or overwrite and are therefore suitable for functionality that needs a level of protection from developers.
+Ці властивості не є насправді приватними, проте їх важче випадково змінити і саме тому вони добре підходять для функціональності, що потребує певного рівня захисту від розробників.
 
-You can provide descriptions for symbols that allow for easier identification of symbol values. There is a global symbol registry that allows you to use shared symbols in different parts of code by using the same description. In this way, the same symbol can be used for the same reason in multiple places.
+Ви можете передавати описи для символів, що дозволені для легшої ідентифікації символьних значень. Існує глобальний реєстр символів, що дозволяє вам поширювати символи між різними частинами вашого коду з допомогою однакових описів. Таким чином, один символ може використовуватись з однаковою метою у різних місцях.
 
-Methods like `Object.keys()` or `Object.getOwnPropertyNames()` don't return symbols, so a new method called `Object.getOwnPropertySymbols()` was added in ECMAScript 6 to allow retrieval of symbol properties. You can still make changes to symbol properties by calling the `Object.defineProperty()` and `Object.defineProperties()` methods.
+Методи `Object.keys()` та `Object.getOwnPropertyNames()` не повертають символів, для цього в ECMAScript 6 було додано новий метод `Object.getOwnPropertySymbols()`, що дозволяє отримати символьні властивості. Ви можете вносити зміни у символьні властивості з допомогою методів `Object.defineProperty()` та `Object.defineProperties()`.
 
-Well-known symbols define previously internal-only functionality for standard objects and use globally-available symbol constants, such as the `Symbol.hasInstance` property. These symbols use the prefix `Symbol.` in the specification and allow developers to modify standard object behavior in a variety of ways.
+Добревідомі символи визначають функціональність стандартних об’єктів, яка раніше була виключно внутрішньою, і використовують символьні константи, що доступні глобально, як от властивість `Symbol.hasInstance`. У специфікації ці символи мають префікс `Symbol.` та дозволяють розробникам змінювати поведінку стандартних об’єктів різноманітними способами.
