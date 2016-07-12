@@ -1,12 +1,12 @@
-# Introducing JavaScript Classes
+# Знайомство з класами JavaScript
 
-Unlike most formal object-oriented programming languages, JavaScript didn't support classes and classical inheritance as the primary way of defining similar and related objects when it was created. This left many developers confused, and from pre-ECMAScript 1 all the way through ECMAScript 5, many libraries created utilities to make JavaScript look like it supports classes. While some JavaScript developers do feel strongly that the language doesn't need classes, the number of libraries created specifically for this purpose led to the inclusion of classes in ECMAScript 6.
+На відміну від більшості формально об'єктно-орієнтованих мов програмування, JavaScript не підтримував класи і класичне наслідування в якості основного засобу визначення подібних і пов'язаних об'єктів, коли його було створено. Це спантеличило багато розробників, і починаючи з pre-ECMAScript 1, весь час до ECMAScript 5 включно, багато бібліотек створювали утиліти, щоб імітувати підтримку класів в JavaScript. У той час, коли деякі JavaScript розробники булі впевнені, що мова не потребує класів, велика кількість бібліотек, створених спеціально для цієї мети призвела до включення класів в ECMAScript 6.
 
-While exploring ECMAScript 6 classes, it's helpful to understand the underlying mechanisms that classes use, so this chapter starts by discussing how ECMAScript 5 developers achieved class-like behavior. As you will see after that, however, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
+Під час вивчення класів ECMAScript 6 корисно зрозуміти основні механізми, які використовують класи, тому цей розділ починається з обговорення, як ECMAScript 5 розробники домоглися поведінки подібної до класу. Однак, як ви побачите згодом, ECMAScript 6 класи не є саме такими класами, як класи в інших мовах. Вони мають унікальні особливості, які надає динамічний характер JavaScript.
 
-## Class-Like Structures in ECMAScript 5
+## Подібні до класів структури в ECMAScript 5
 
-In ECMAScript 5 and earlier, JavaScript had no classes. The closest equivalent to a class was creating a constructor and then assigning methods to the constructor's prototype, an approach typically called creating a custom type. For example:
+В ECMAScript 5 та раніше, JavaScript не мав класів. Найближчим еквівалентом до класу було створення конструктору з подальшим зв'язування методів з прототипом конструктора, такий підхід, як правило, називається створенням кастомних типів. Наприклад:
 
 ```js
 function PersonType(name) {
@@ -18,40 +18,40 @@ PersonType.prototype.sayName = function() {
 };
 
 let person = new PersonType("Nicholas");
-person.sayName();   // outputs "Nicholas"
+person.sayName();   // виводить "Nicholas"
 
 console.log(person instanceof PersonType);  // true
 console.log(person instanceof Object);      // true
 ```
 
-In this code, `PersonType` is a constructor function that creates a single property called `name`. The `sayName()` method is assigned to the prototype so the same function is shared by all instances of the `PersonType` object. Then, a new instance of `PersonType` is created via the `new` operator. The resulting `person` object is considered an instance of `PersonType` and of `Object` through prototypal inheritance.
+В цьому коді, `PersonType` — це функція конструктор, яка створює єдину властивість з ім'ям `name`. Метод `sayName()` зв'язаний з прототипом, таким чином одна й та сама функція є доступною всім екземплярам об'єкту `PersonType`. Потім, новий екземпляр об'єкту `PersonType` створюється за допомогою оператору `new`. Отриманій об'єкт `person` вважається екземпляром об'єктів `PersonType` та `Object` відповідно до наслідування прототипів.
 
-This basic pattern underlies a lot of the class-mimicking JavaScript libraries, and that's where ECMAScript 6 classes start.
+Цей базовий шаблон є основою багатьох JavaScript бібліотек,які імітують класи, і ось де починаються класи ECMAScript 6.
 
-## Class Declarations
+## Оголошення класів
 
-The simplest class form in ECMAScript 6 is the class declaration, which looks similar to classes in other languages.
+Найпростішою формою класів в ECMAScript 6 є оголошення класу, яке виглядає схожим на класи в інших мовах.
 
-### A Basic Class Declaration
+### Основне оголошення класу
 
-Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals, without requiring commas between them. For example, here's a simple class declaration:
+Оголошення класів починаються з ключового слова `class` за яким слідує ім'я класу. Інша частина синтаксису виглядає подібною до визначення методів в літералах об'єктів, не вимагаючи коми між ними. Наприклад, ось просте оголошення класу:
 
 ```js
 class PersonClass {
 
-    // equivalent of the PersonType constructor
+    // еквівалент конструктору PersonType
     constructor(name) {
         this.name = name;
     }
 
-    // equivalent of PersonType.prototype.sayName
+    // еквівалент PersonType.prototype.sayName
     sayName() {
         console.log(this.name);
     }
 }
 
 let person = new PersonClass("Nicholas");
-person.sayName();   // outputs "Nicholas"
+person.sayName();   // виводить "Nicholas"
 
 console.log(person instanceof PersonClass);     // true
 console.log(person instanceof Object);          // true
@@ -60,34 +60,34 @@ console.log(typeof PersonClass);                    // "function"
 console.log(typeof PersonClass.prototype.sayName);  // "function"
 ```
 
-The class declaration `PersonClass` behaves quite similarly to `PersonType` from the previous example. But instead of defining a function as the constructor, class declarations allow you to define the constructor directly inside the class with the special `constructor` method name. Since class methods use the concise syntax, there's no need to use the `function` keyword. All other method names have no special meaning, so you can add as many methods as you want.
+Оголошення класу `PersonClass` поводиться подібно до `PersonType` з попередньо прикладу. Але замість того, щоб визначати функцію як конструктор, оголошення класу дозволяє вам визначити конструктор безпосередньо в середині класу за допомогою спеціального методу з ім'ям `constructor`. Оскільки методи класу використовують лаконічний синтаксис, немає ніякої необхідності використовувати ключове слово `function`. Всі інші імена методів не мають особливого сенсу, так що ви можете додати стільки методів, скільки ви хочете.
 
-I> *Own properties*, properties that occur on the instance rather than the prototype, can only be created inside a class constructor or method. In this example, `name` is an own property. I recommend creating all possible own properties inside the constructor function so a single place in the class is responsible for all of them.
+I> *Власні властивості*, властивості які виконуються в екземплярі, а не в прототипі, можуть бути створені тільки в середині конструктора класу, або у методі. В цьому прикладі `name` є власною властивістю. Я рекомендую створювати всі можливі власні властивості всередині функції конструктора, щоб єдине місце в класі відповідало за них усіх.
 
-Interestingly, class declarations are just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` gives `"function"` as the result. The `sayName()` method also ends up as a method on `PersonClass.prototype` in this example, similar to the relationship between `sayName()` and `PersonType.prototype` in the previous example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
+Цікаво, що оголошення класів є лише синтаксичним цукром для існуючих оголошень кастомних типів. Оголошення `PersonClass` фактично створює функцію, яка має поведінку як у метода `constructor`, тому `typeof PersonClass` виведе `"function"` в якості результату. Метод `sayName()` також зводиться до того, що відповідає методу `PersonClass.prototype` в цьому прикладі, подібно відносинам між `sayName()` та `PersonType.prototype` у попередньому прикладі. Ці подібності дозволяють вам змішувати кастомні типи та класи, не турбуючись занадто багато про те, що саме ви використовуєте.
 
-### Why to Use the Class Syntax
+### Навіщо використовувати синтаксис класів
 
-Despite the similarities between classes and custom types, there are some important differences to keep in mind:
+Незважаючи на подібності між класами та кастомними типами, є деякі важливі відмінності, про які ви маєте пам'ятати:
 
-1. Class declarations, unlike function declarations, are not hoisted. Class declarations act like `let` declarations and so exist in the temporal dead zone until execution reaches the declaration.
-1. All code inside of class declarations runs in strict mode automatically. There's no way to opt-out of strict mode inside of classes.
-1. All methods are non-enumerable. This is a significant change from custom types, where you need to use `Object.defineProperty()` to make a method non-enumerable.
-1. All methods lack an internal `[[Construct]]` method and will throw an error if you try to call them with `new`.
-1. Calling the class constructor without `new` throws an error.
-1. Attempting to overwrite the class name within a class method throws an error.
+1. Оголошення класів, на відміну від оголошень функцій, не піднімаються. Оголошення класів поводяться подібно до оголошення `let`, і таким чином існують в тимчасовій мертвій зоні, поки виконання не досягне оголошення;
+1. Весь код в середині оголошення класу автоматично запускається в суворому режимі. Не має потреби оголошувати суворий режим в середині класу;
+1. Усі методи не є перераховуваними . Це є суттєвою відмінністю від кастомних типів, де ви маєте використовувати `Object.defineProperty()` щоб зробити метод не перераховуваними;
+1. Всі методи не мають внутрішньо методу `[[Construct]]` і будуть викликати помилку, якщо ви спробуєте викликати їх з `new`;
+1. Виклик конструктору класу без `new` провокує помилку;
+1. Спроба переписати ім'я класу всередині методу класу викличе помилку.
 
-With all of this in mind, the `PersonClass` declaration from the previous example is directly equivalent to the following code, which doesn't use the class syntax:
+Маючи все це на увазі, оголошення `PersonClass` з попереднього прикладу є прямо тотожнім до наступного коду, який не використовує синтаксис класу:
 
 ```js
-// direct equivalent of PersonClass
+// прямий еквівалент до PersonClass
 let PersonType2 = (function() {
 
     "use strict";
 
     const PersonType2 = function(name) {
 
-        // make sure the function was called with new
+        // переконуємося, що функція була викликана з new
         if (typeof new.target === "undefined") {
             throw new Error("Constructor must be called with new.");
         }
@@ -98,7 +98,7 @@ let PersonType2 = (function() {
     Object.defineProperty(PersonType2.prototype, "sayName", {
         value: function() {
 
-            // make sure the method wasn't called with new
+            // переконуємося, що метод не був викликаний з new
             if (typeof new.target !== "undefined") {
                 throw new Error("Method cannot be called with new.");
             }
@@ -114,51 +114,51 @@ let PersonType2 = (function() {
 }());
 ```
 
-First, notice that there are two `PersonType2` declarations: a `let` declaration in the outer scope and a `const` declaration inside the IIFE. This is how class methods are forbidden from overwriting the class name while code outside the class is allowed to do so. The constructor function checks `new.target` to ensure that it's being called with `new`; if not, an error is thrown. Next, the `sayName()` method is defined as nonenumerable, and the method checks `new.target` to ensure that it wasn't called with `new`. The final step returns the constructor function.
+По-перше, зауважте, що тут мі маємо два оголошення `PersonType2`: за допомогою `let` у зовнішній області бачення, та з `const` всередині [IIFE](https://developer.mozilla.org/ru/docs/%D0%A1%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/IIFE) (негайно виконуваного функціонального виразу). Ось як методи класу отримують заборону на перезапис ім'я класу, в той час, як код поза класом має можливість це роботи. Функція конструктор перевіряє `new.target`, щоб переконатися, що оголошення було виконане з `new`; якщо ні, то буду збуджено помилку. Далі, метод `sayName()` визначений як незчисленний, і метод перевіряє `new.target`, щоб переконатися, що його не було викликано з `new`. Фінальний крок повертає функцію конструктор.
 
-This example shows that while it's possible to do everything classes do without using the new syntax, the class syntax simplifies all of the functionality significantly.
+Цей приклад показує, що можливо зробити все, що роблять класи без використання нового синтаксису, та синтаксис класу значно спрощує всю функціональність.
 
-A> ### Constant Class Names
+A> ### Сталі імена класів
 A>
-A> The name of a class is only specified as if using `const` inside of the class itself. That means you can overwrite the class name outside of the class but not inside a class method. For example:
+A> Ім'я класу визначається тільки як при використанні `const` всередині самого класу. Це означає, що ви можете замінити ім'я класу поза класом, але не всередині методу класу. Наприклад:
 A>
 A> ```js
 A> class Foo {
 A>    constructor() {
-A>        Foo = "bar";    // throws an error when executed
+A>        Foo = "bar";    // викличе помилку при виконанні
 A>    }
 A> }
 A>
-A>// but this is okay after the class declaration
+A>// але буде добре після оголошення класу
 A> Foo = "baz";
 A> ```
 A>
-A> In this code, the `Foo` inside the class constructor is a separate binding from the `Foo` outside the class. The internal `Foo` is defined as if it's a `const` and cannot be overwritten. An error is thrown when the constructor attempts to overwrite `Foo` with any value. But since the external `Foo` is defined as if it's a `let` declaration, you can overwrite its value at any time.
+A> В цьому коді, `Foo` всередині конструктору класу представляє собою окреме зв'язування з `Foo` поза класом. Внутрішній `Foo` оголошено так, якби це було з `const`, і не може бути перезаписано. Помилка виникає коли конструктор намагається переписати `Foo` будь-яким значенням. Але, в той час як зовнішнє `Foo` визначене, якби це було з `let` оголошенням, ви можете переписати його значення будь-коли.
 
-## Class Expressions
+## Вирази класів
 
-Classes and functions are similar in that they have two forms: declarations and expressions. Function and class declarations begin with an appropriate keyword (`function` or `class`, respectively) followed by an identifier. Functions have an expression form that doesn't require an identifier after `function`, and similarly, classes have an expression form that doesn't require an identifier after `class`. These *class expressions* are designed to be used in variable declarations or passed into functions as arguments.
+Класи і функції схожі в тому, що мають дві форми: оголошення та вирази. Функції та класи оголошуються за допомогою певного ключового слова (`function` або `class`, відповдно), що йде за ідентифікатором. Функції мають форму виразу, якій не потребує ідентифікатора після `function`, та схожим чином, класи мають форму виразу, яка не потребує ідентифікатора після `class`. Ці *вирази класів* розроблені для того, щоб бути використаними в при оголошенні змінних, або передані в якості аргументів фукнкцій.
 
-### A Basic Class Expression
+### Базовий вираз класу
 
-Here's the class expression equivalent of the previous `PersonClass` examples, followed by some code that uses it:
+Ось вираз класу, який відповідає попередньому прикладу `PersonClass`, а далі слідує певний код, що його використовує:
 
 ```js
 let PersonClass = class {
 
-    // equivalent of the PersonType constructor
+    // еквівалент конструктору PersonType
     constructor(name) {
         this.name = name;
     }
 
-    // equivalent of PersonType.prototype.sayName
+    // еквівалент до PersonType.prototype.sayName
     sayName() {
         console.log(this.name);
     }
 };
 
 let person = new PersonClass("Nicholas");
-person.sayName();   // outputs "Nicholas"
+person.sayName();   // виведе "Nicholas"
 
 console.log(person instanceof PersonClass);     // true
 console.log(person instanceof Object);          // true
@@ -167,25 +167,25 @@ console.log(typeof PersonClass);                    // "function"
 console.log(typeof PersonClass.prototype.sayName);  // "function"
 ```
 
-As this example demonstrates, class expressions do not require identifiers after `class`. Aside from the syntax, class expressions are functionally equivalent to class declarations.
+Як показує цей приклад, вирази класу не вимагають ідентифікатору після `class`. Крім синтаксису, вирази класу функціонально еквівалентні оголошенням класу.
 
-In anonymous class expressions, as in the previous example, `PersonClass.name` is an empty string. When using a class declaration, `PersonClass.name` would be `"PersonClass"`.
+В анонімному виразу класу, як в попередньому прикладі, `PersonClass.name` є пустим рядком. Коли використовується оголошення класу, `PersonClass.name` буде `"PersonClass"`.
 
-I> Whether you use class declarations or class expressions is mostly a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code. The only significant difference is that anonymous class expressions have a `name` property that is an empty string while class declarations always have a `name` property equal to the class name (for instance, `PersonClass.name` is `"PersonClass"` when using a class declaration).
+I> Використовуєте ви оголошення класів або вирази класу, взагалі є питанням стилю. На відміну від оголошення функцій і функціональних виразів, обидва, оголошення класів і вирази класу, не підіймаються і тому вибір має невеликий вплив на поведінку під час виконання коду. Єдина істотна відмінність полягає в тому, що вирази анонімного класу мають `name` властивість, яка є пустим рядком, в той час як оголошення класів завжди мають властивість `name`, яка відповідає назві класу (наприклад,`PersonClass.name` є `"PersonClass"`, коли використовується оголошення класу).
 
-### Named Class Expressions
+### Найменовані вирази класів
 
-The previous section used an anonymous class expression in the example, but just like function expressions, you can also name class expressions. To do so, include an identifier after the `class` keyword like this:
+Попередній підрозділ використовував анонімний вираз класу в прикладі, але так само, як у функціональних виразах, ви також можете давати імена виразам класів. Щоб робити це, вставте ідентифікатор після ключового слова `class`, наприклад:
 
 ```js
 let PersonClass = class PersonClass2 {
 
-    // equivalent of the PersonType constructor
+    // еквівалент конструктору PersonType
     constructor(name) {
         this.name = name;
     }
 
-    // equivalent of PersonType.prototype.sayName
+    // еквівалент до PersonType.prototype.sayName
     sayName() {
         console.log(this.name);
     }
@@ -195,17 +195,17 @@ console.log(typeof PersonClass);        // "function"
 console.log(typeof PersonClass2);       // "undefined"
 ```
 
-In this example, the class expression is named `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside the class methods (such as the `sayName()` method in this example). Outside the class, `typeof PersonClass2` is `"undefined"` because no `PersonClass2` binding exists there. To understand why this is, look at an equivalent declaration that doesn't use classes:
+В цьому прикладі, вираз класу має ім'я `PersonClass2`. Ідентифікатор `PersonClass2` ідентифікатор існує тільки разом з оголошенням класу, таким чином він може буди використаний всередині методів класу (таких як метод `sayName()` в цьому прикладі). За межами класу, `typeof PersonClass2` є `"undefined"` тому, що тут не існує зв'язування з `PersonClass2`. Щоб зрозуміти чому так стається, погляньте на еквівалентне оголошення, яке не використовую класи:
 
 ```js
-// direct equivalent of PersonClass named class expression
+// прямий еквівалент до іменованого виразу класу PersonClass
 let PersonClass = (function() {
 
     "use strict";
 
     const PersonClass2 = function(name) {
 
-        // make sure the function was called with new
+        // переконуємося, що функцію було викликано з new
         if (typeof new.target === "undefined") {
             throw new Error("Constructor must be called with new.");
         }
@@ -226,15 +226,15 @@ let PersonClass = (function() {
 }());
 ```
 
-Creating a named class expression slightly changes what's happening in the JavaScript engine. For class declarations, the outer binding (defined with `let`) has the same name as the inner binding (defined with `const`). A named class expression uses its name in the `const` definition, so `PersonClass2` is defined for use only inside the class.
+Створення іменованого виразу класу не на багато відрізняється від того, що відбувається всередині рушія JavaScript. Для оголошень класу, зовнішнє зв'язування (оголошується з `let`) має те ж ім'я, що і внутрішнє зв'язування (оголошується з `const`). Іменований вираз класу використовує своє ім'я при оголошенні `const`, тому ` PersonClass2` визначається для використання тільки всередині класу.
 
-While named class expressions behave differently from named function expressions, there are still a lot of similarities between the two. Both can be used as values, and that opens up a lot of possibilities, which I'll cover next.
+У той час як іменовані вирази класу поводяться відмінно від найменованих функціональних виразів, є ще багато схожості між ними. Обидва вони можуть бути використані в якості значень, і це відкриває безліч можливостей, які я опишу далі.
 
-## Classes as First-Class Citizens
+## Класи як об'єкти першого класу
 
-In programming, something is said to be a *first-class citizen* when it can be used as a value, meaning it can be passed into a function, returned from a function, and assigned to a variable. JavaScript functions are first-class citizens (sometimes they're just called first class functions), and that's part of what makes JavaScript unique.
+В програмуванні, певна сутність може називатися *об'єктом першого класу* ([First-class citizen](https://uk.wikipedia.org/wiki/%D0%9E%D0%B1%27%D1%94%D0%BA%D1%82_%D0%BF%D0%B5%D1%80%D1%88%D0%BE%D0%B3%D0%BE_%D0%BA%D0%BB%D0%B0%D1%81%D1%83)), якщо вона може бути використана як значення, маючи на у вазы, що вана може бути передана функції, повернута функцією, та зв'язана зі змінною. Функції в JavaScript є об'єктами першого класу (іноді їх просто називають функціями першого класу), і це частина того, що робить JavaScript унікальним.
 
-ECMAScript 6 continues this tradition by making classes first-class citizens as well. That allows classes to be used in a lot of different ways. For example, they can be passed into functions as arguments:
+ECMAScript 6 продовжує цю традицію, роблячи класи також об'єктами першого класу. Це дозволяє використовувати класи багатьма різними шляхами. Наприклад, вони можуть буду передані функції в якості аргументу:
 
 ```js
 function createObject(classDef) {
@@ -251,9 +251,9 @@ let obj = createObject(class {
 obj.sayHi();        // "Hi!"
 ```
 
-In this example, the `createObject()` function is called with an anonymous class expression as an argument, creates an instance of that class with `new`, and returns the instance. The variable `obj` then stores the returned instance.
+В цьому прикладі, функція `createObject()` викликана з анонімнім виразом класу в якості аргументу, створю сутність класу за допомогою `new`, і повертає цю сутність. Змінна `obj` згодом зберігає повернуту сутніть.
 
-Another interesting use of class expressions is creating singletons by immediately invoking the class constructor. To do so, you must use `new` with a class expression and include parentheses at the end. For example:
+Іншим цікавим випадком застосування виразів класу є створення [одинаків](https://uk.wikipedia.org/wiki/%D0%9E%D0%B4%D0%B8%D0%BD%D0%B0%D0%BA_(%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F)) (singletons) при негайному виклику конструктору класу. Щоб це зробити, ви маєте використати `new` з виразом класу і додати круглі дужки в кінці. Наприклад:
 
 ```js
 let person = new class {
@@ -271,13 +271,13 @@ let person = new class {
 person.sayName();       // "Nicholas"
 ```
 
-Here, an anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection. (Remember that `PersonClass` only creates a binding inside of the class, not outside.) The parentheses at the end of the class expression are the indicator that you're calling a function while also allowing you to pass in an argument.
+Тут вираз анонімного класу створюється і потім виконується негайно. Ця модель дозволяє використовувати синтаксис класу для створення одинаків, не залишаючи посилання на клас доступні для перевірки. (Пам'ятайте, що `PersonClass` створює тільки прив'язку всередині класу, а не зовні.) Круглі дужки в кінці виразу класу є показником того, що ви викликаєте функцію, що в той самий час дозволяє вам передавати їй аргумент.
 
-The examples in this chapter so far have focused on classes with methods. But you can also create accessor properties on classes using a syntax similar to object literals.
+Приклади в цьому підрозділі сфокусовані на класах з методами. Але ви також можете створювати властивості аксессори класу, використовуючи синтаксис, схожий на літерали об'єкту.
 
-## Accessor Properties
+## Властивості аксессори
 
-While own properties should be created inside class constructors, classes allow you to define accessor properties on the prototype. To create a getter, use the keyword `get` followed by a space, followed by an identifier; to create a setter, do the same using the keyword `set`. For example:
+В той час, як власні властивості мають створюватися в середині конструктора, класи дозволяют вам створювати властивості аксессори в середині прототипу. Щоб створити «гетер» (метод зчитування властивості), використовуйте ключове слово `get` потім пробіл, а потім ідентифікатор; щоб створити «сетер» (метод для запису властивості), робіть те ж саме, використовуючи ключове слово `set`. Наприклад:
 
 ```js
 class CustomHTMLElement {
@@ -301,17 +301,17 @@ console.log("set" in descriptor);   // true
 console.log(descriptor.enumerable); // false
 ```
 
-In this code, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` method on the element itself. This accessor property is created on the `CustomHTMLElement.prototype` and, just like any other method would be, is created as non-enumerable. The equivalent non-class representation is:
+В цьому коді, клас `CustomHTMLElement` зроблений, як обгортка навколо існуючого елементу DOM. Він має і «гетер», і «сетер» для `html`, що делегує метод `innerHTML` на сам елемент. Властивість аксессор створюється через `CustomHTMLElement.prototype` і, так само як і інші методи, буде створено як не перераховувана. Ось еквівалент відтворення без класів:
 
 ```js
-// direct equivalent to previous example
+// повна відповідність до попереднього прикладу
 let CustomHTMLElement = (function() {
 
     "use strict";
 
     const CustomHTMLElement = function(element) {
 
-        // make sure the function was called with new
+        // переконуємося, що функція викликана з new
         if (typeof new.target === "undefined") {
             throw new Error("Constructor must be called with new.");
         }
@@ -334,11 +334,11 @@ let CustomHTMLElement = (function() {
 }());
 ```
 
-As with previous examples, this one shows just how much code you can save by using a class instead of the non-class equivalent. The `html` accessor property definition alone is almost the size of the equivalent class declaration.
+Як і в попередніх прикладах, цей показує, скільки коду ви можете заощадити, використовуючи клас замість еквіваленту без класу. Визначення властивості аксессору для `html` саме по собі має такий же розмір як еквівалентне оголошення класу.
 
-## Computed Member Names
+## Імена зчисленних членів
 
-The similarities between object literals and classes aren't quite over yet. Class methods and accessor properties can also have computed names. Instead of using an identifier, use square brackets around an expression, which is the same syntax used for object literal computed names. For example:
+Подібності між літералами об'єктів і класами ще не закінчилися. Методи класу і властивості аксессори можуть також мати зчисленні імена. Замість того щоб використовувати ідентифікатор, використовуйте квадратні дужки навколо виразу, що має той же синтаксис, який використовується для зчисленних імен літералів об'єкту. Наприклад:
 
 ```js
 let methodName = "sayName";
@@ -358,9 +358,9 @@ let me = new PersonClass("Nicholas");
 me.sayName();           // "Nicholas"
 ```
 
-This version of `PersonClass` uses a variable to assign a name to a method inside its definition. The string `"sayName"` is assigned to the `methodName` variable, and then `methodName` is used to declare the method. The `sayName()` method is later accessed directly.
+Ця версія `PersonClass` використовує змінну, щоб привласнити ім'я методу всередині його визначення. Рядок `"sayName"` присвоюється змінній `methodName`, а потім `methodName` використовується для оголошення методу. Метод `sayName()` пізніше є доступним безпосередньо.
 
-Accessor properties can use computed names in the same way, like this:
+Властивості аксессори можуть використовувати зчисленні імена схожим чином, ось так:
 
 ```js
 let propertyName = "html";
@@ -381,13 +381,13 @@ class CustomHTMLElement {
 }
 ```
 
-Here, the getter and setter for `html` are set using the `propertyName` variable. Accessing the property by using `.html` only affects the definition.
+Тут «гетер» і «сетер» для `html` встановлюються з використанням змінної `propertyName`. Доступ до властивості з використанням `.html` стосується тільки визначення.
 
-You've seen that there are a lot of similarities between classes and object literals, with methods, accessor properties, and computed names. There's just one more similarity to cover: generators.
+Ви побачили, що існує багато подібностей між літералами класів та об'єктів, між методами, властивостями аксессорами, та зчисленними іменами. Е ще одна подібність, яку слід розглянути: генератори.
 
-## Generator Methods
+## Методи-генератори
 
-When Chapter 8 introduced generators, you learned how to define a generator on an object literal by prepending a star (`*`) to the method name. The same syntax works for classes as well, allowing any method to be a generator. Here's an example:
+Коли розділ 8 представив генератори, ви навчилися визначати генератори в літералі об'єкту, додаючи зірочку (`*`) до ім'я методу. Такий самий синтаксис працює і для класів, дозволяючи будь-якому методу бути генератором. Ось приклад:
 
 ```js
 class MyClass {
@@ -404,9 +404,9 @@ let instance = new MyClass();
 let iterator = instance.createIterator();
 ```
 
-This code creates a class called `MyClass` with a `createIterator()` generator method. The method returns an iterator whose values are hardcoded into the generator. Generator methods are useful when you have an object that represents a collection of values and you'd like to iterate over those values easily. Arrays, sets, and maps all have multiple generator methods to account for the different ways developers need to interact with their items.
+Цей код створює клас з ім'ям `MyClass` з методом-генератором `createIterator()`. Метод повертає ітератор, значення якого жорстко закодовані в генераторі. Методи-генератори корисні, коли ви маєте об'єкт який представляє колекцію значень і ви хочете легко перебрати ці значення. Масиви, набори, та мапи, всі мають кілька методів-генераторів для обліку, щоб надати розробникам різні засоби для взаємодії з їх елементами.
 
-While generator methods are useful, defining a default iterator for your class is much more helpful if the class represents a collection of values. You can define the default iterator for a class by using `Symbol.iterator` to define a generator method, such as:
+Не зважаючи на те, що методи-генератори дуже корисні, визначення ітератору за замовчуванням для вашого класу є набагато потужним, якщо клас представляє колекції значень. Ви можете визначити ітератор за замовчуванням для класу, використовуючи `Symbol.iterator`, щоб визначите метод-генератор, як наприклад:
 
 ```js
 class Collection {
@@ -435,25 +435,25 @@ for (let x of collection) {
 // 3
 ```
 
-This example uses a computed name for a generator method that delegates to the `values()` iterator of the `this.items` array. Any class that manages a collection of values should include a default iterator because some collection-specific operations require collections they operate on to have an iterator. Now, any instance of `Collection` can be used directly in a `for-of` loop or with the spread operator.
+У цьому прикладі використовується зчисленне ім'я методу генератора, що делегується ітератору `values()` масиву `this.items`. Будь-який клас, який керує набором значень повинен включати ітератор за замовчуванням, тому що деякі операції специфічні для колекцій вимагають щоб колекції, якими вони оперують, мали ітератор. Тепер, будь-який екземпляр `Collection` може бути використаний безпосередньо в циклі `for-of` або з оператором розширення.
 
-Adding methods and accessor properties to a class prototype is useful when you want those to show up on object instances. If, on the other hand, you'd like methods or accessor properties on the class itself, then you'll need to use static members.
+Додавання методів і властивостей аксессорів до прототипу класу корисно, коли ви хочете показати їх в екземплярах об'єкту. Якщо ж, з іншого боку, ви хочете мати методи або властивості аксессори в самому класі, то ви маєте використовувати статичні члени.
 
-## Static Members
+## Статичні члени
 
-Adding additional methods directly onto constructors to simulate static members is another common pattern in ECMAScript 5 and earlier. For example:
+Визначення додаткових методів безпосередньо в конструкторах для імітації статичних членів є ще одним поширеним шаблоном в ECMAScript 5 і більш ранніх версіях. Наприклад:
 
 ```js
 function PersonType(name) {
     this.name = name;
 }
 
-// static method
+// статичний метод
 PersonType.create = function(name) {
     return new PersonType(name);
 };
 
-// instance method
+// метод екземпляру
 PersonType.prototype.sayName = function() {
     console.log(this.name);
 };
@@ -461,22 +461,22 @@ PersonType.prototype.sayName = function() {
 var person = PersonType.create("Nicholas");
 ```
 
-In other programming languages, the factory method called `PersonType.create()` would be considered a static method, as it doesn't depend on an instance of `PersonType` for its data. ECMAScript 6 classes simplify the creation of static members by using the formal `static` annotation before the method or accessor property name. For instance, here's the class equivalent of the last example:
+В інших мовах програмування, фабричний метод з ім'ям `PersonType.create()` буде вважатися статичним методом, тому що його данні не залежать від екземпляру `PersonType`. ECMAScript 6 спрощує створення статичних методів використовуючи формальну нотацію `static` перед ім'ям методу або властивості аксессора. Наприклад, ось еквівалент останнього прикладу у вигляді класу:
 
 ```js
 class PersonClass {
 
-    // equivalent of the PersonType constructor
+    // еквівалент конструктору PersonType
     constructor(name) {
         this.name = name;
     }
 
-    // equivalent of PersonType.prototype.sayName
+    // еквівалент PersonType.prototype.sayName
     sayName() {
         console.log(this.name);
     }
 
-    // equivalent of PersonType.create
+    // еквівалент PersonType.create
     static create(name) {
         return new PersonClass(name);
     }
@@ -485,14 +485,13 @@ class PersonClass {
 let person = PersonClass.create("Nicholas");
 ```
 
-The `PersonClass` definition has a single static method called `create()`. The method syntax is the same used for `sayName()` except for the `static` keyword. You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you can't use `static` with the `constructor` method definition.
+Визначення `PersonClass` має один статичний метод з ім'ям `сreate()`. Синтаксис методу такий самий, що й для `sayName()` за винятком ключового слова `static`. Ви можете використовувати ключове слово `static` з визначенням будь-якого методу або властивості аксессора всередині класу. Єдине обмеження полягає в тому, що ви не можете використовувати `static` з визначенням меотду `constructor`.
 
-W> Static members are not accessible from instances. You must always access static members from the class directly.
+W> Статичні члени не доступні з екземплярів. Ви завжди повинні отримати доступ до статичних членів безпосередньо з класу.
 
+## Успадкування з похідними класами
 
-## Inheritance with Derived Classes
-
-Prior to ECMAScript 6, implementing inheritance with custom types was an extensive process. Proper inheritance required multiple steps. For instance, consider this example:
+До появи ECMAScript 6, впровадження успадкування з кастомними типами було дуже коштовним процесом. Правильне успадкування потребувало багатьох кроків. Для прикладу, давайте розглянемо наступний код:
 
 ```js
 function Rectangle(length, width) {
@@ -524,9 +523,9 @@ console.log(square instanceof Square);      // true
 console.log(square instanceof Rectangle);   // true
 ```
 
-`Square` inherits from `Rectangle`, and to do so, it must overwrite `Square.prototype` with a new object created from `Rectangle.prototype` as well as call the `Rectangle.call()` method. These steps often confused JavaScript newcomers and were a source of errors for experienced developers.
+`Square` успадковується від `Rectangle`, і щоб зробити це, він має перезаписати `Square.prototype` з новим об'єктом створеним від ` Rectangle.prototype`, а також викликати метод `Rectangle.call)`. Ці кроки часто плутали новачків JavaScript і були джерелом помилок для досвідчених розробників.
 
-Classes make inheritance easier to implement by using the familiar `extends` keyword to specify the function from which the class should inherit. The prototypes are automatically adjusted, and you can access the base class constructor by calling the `super()` method. Here's the ECMAScript 6 equivalent of the previous example:
+Класи значно полегшують впровадження успадкування. Достатньо використати ключове слово `extends`, щоб вказати на функцію з якої клас має успадковувати щось. Прототипи підтягуються автоматично, а також ви маєте доступ до конструктору головного класу за допомогою метода `super()`. Ось еквівалент попереднього прикладу в ECMAScript 6 запису:
 
 ```js
 class Rectangle {
@@ -543,7 +542,7 @@ class Rectangle {
 class Square extends Rectangle {
     constructor(length) {
 
-        // same as Rectangle.call(this, length, length)
+        // те саме що й Rectangle.call(this, length, length)
         super(length, length);
     }
 }
@@ -555,16 +554,16 @@ console.log(square instanceof Square);      // true
 console.log(square instanceof Rectangle);   // true
 ```
 
-This time, the `Square` class inherits from `Rectangle` using the `extends` keyword. The `Square` constructor uses `super()` to call the `Rectangle` constructor with the specified arguments. Note that unlike the ECMAScript 5 version of the code, the identifier `Rectangle` is only used within the class declaration (after `extends`).
+Цього разу клас `Square` успадковується від `Rectangle` з використанням ключового слова `extends`. Конструктор класу `Square` використовує `super()` щоб викликати конструктор класу `Rectangle` з зазначеними аргументами. Зверніть увагу, що на відміну від версії коду в ECMAScript 5, ідентифікатор `Rectangle` використовується лише з оголошенням класу (після `extends`).
 
-Classes that inherit from other classes are referred to as *derived classes*. Derived classes require you to use `super()` if you specify a constructor; if you don't, an error will occur. If you choose not to use a constructor, then `super()` is automatically called for you with all arguments upon creating a new instance of the class. For instance, the following two classes are identical:
+Класи, які успадковуються від інших, відомі нам як *похідні класи*. Похідні класи вимагають обов'язкового використання `super()` при визначенні конструктору. Якщо ви не зробите цього, то буду збуджено помилку. Якщо ж ви не будете використовувати конструктор, то `super()` буде викликатися автоматично з усіма аргументами при створенні нового екземпляру класу. Наприклад, наступні два класі є ідентичними:
 
 ```js
 class Square extends Rectangle {
-    // no constructor
+    // без конструктору
 }
 
-// Is equivalent to
+// Те ж саме, що й:
 
 class Square extends Rectangle {
     constructor(...args) {
@@ -573,17 +572,17 @@ class Square extends Rectangle {
 }
 ```
 
-The second class in this example shows the equivalent of the default constructor for all derived classes. All of the arguments are passed, in order, to the base class constructor. In this case, the functionality isn't quite correct because the `Square` constructor needs only one argument, and so it's best to manually define the constructor.
+Другий клас в цьому прикладі показує еквівалент використання конструктору за замовчуванням для всіх похідних класів. Всі аргументи передаються в тому ж самому порядку, як і в конструкторі базового класу. Але в нашому конкретному випадку, функціональність буде не зовсім вірною, тому що конструктор класу `Square` потребує лише один аргумент. Ось чому тут краще вочевидь визначити конструктор.
 
-W> There are a few things to keep in mind when using `super()`:
+W> Є декілька речей, які треба мати на увазі, використовуючи `super()`:
 W>
-W> 1. You can only use `super()` in a derived class. If you try to use it in a non-derived class (a class that doesn't use `extends`) or a function, it will throw an error.
-W> 1. You must call `super()` before accessing `this` in the constructor. Since `super()` is responsible for initializing `this`, attempting to access `this` before calling `super()` results in an error.
-W> 1. The only way to avoid calling `super()` is to return an object from the class constructor.
+W> 1. Ви можете використовувати `super()` тільки з похідними класами. Якщо ви спробуєте використати його в непохідному класі (який не використовує `extends`), або в функції, то це викличе помилку.
+W> 1. Перед тим як намагатися використати `this` в конструкторі ви маєте викликати `super()`. Оскільки `super()` відповідає за ініціалізацію `this`, спроба використання `this` перед тим, як викликати `super()` призведи до помилки.
+W> 1. Використання `super()` можна позбутися тільки в тому випадку, якщо повертати об'єкт в конструкторі класу.
 
-### Shadowing Class Methods
+### Перекриття методів класу
 
-The methods on derived classes always shadow methods of the same name on the base class. For instance, you can add `getArea()` to `Square` to redefine that functionality:
+Методи похідних класів завжди перекривають методи базового класу з таким самим ім'ям. Наприклад, ви можете додати метод `getArea()` до `Square`, щоб перевизначити його функціонал:
 
 ```js
 class Square extends Rectangle {
@@ -591,14 +590,14 @@ class Square extends Rectangle {
         super(length, length);
     }
 
-    // override and shadow Rectangle.prototype.getArea()
+    // переписуємо й перекриваємо Rectangle.prototype.getArea()
     getArea() {
         return this.length * this.length;
     }
 }
 ```
 
-Since `getArea()` is defined as part of `Square`, the `Rectangle.prototype.getArea()` method will no longer be called by any instances of `Square`. Of course, you can always decide to call the base class version of the method by using the `super.getArea()` method, like this:
+Оскільки мі визначили `getArea()` в середині `Square`, метод `Rectangle.prototype.getArea()` не буде більше викликатися для нових екземплярів класу `Square`. Звичайно, ви завжди можете викликати метод базового класу з таким ім'ям, використовуючи `super.getArea()`. Наприклад, як тут:
 
 ```js
 class Square extends Rectangle {
@@ -606,18 +605,18 @@ class Square extends Rectangle {
         super(length, length);
     }
 
-    // override, shadow, and call Rectangle.prototype.getArea()
+    // переписуємо, перекриваємо, і викликаємо Rectangle.prototype.getArea()
     getArea() {
         return super.getArea();
     }
 }
 ```
 
-Using `super` in this way works the same as the the super references discussed in Chapter 4 (see "Easy Prototype Access With Super References"). The `this` value is automatically set correctly so you can make a simple method call.
+У цьому випадку використання `super` працює так само, як і посилання на `super`, яке було розкрите в розділі 4 (див. "Легкий доступ до прототипу через посилання super"). Значення `this` встановлюєте коректно автоматично, так що ви можете просто викликати метод.
 
-### Inherited Static Members
+### Успадковані статичні члени
 
-If a base class has static members, then those static members are also available on the derived class. Inheritance works like that in other languages, but this is a new concept for JavaScript. Here's an example:
+Якщо базовий клас має статичні члени, то вони будуть також доступними у похідному класі. Успадкування працює так само, ,як і в інших мовах, але це нова концепція для JavaScript. Ось приклад:
 
 ```js
 class Rectangle {
@@ -638,7 +637,7 @@ class Rectangle {
 class Square extends Rectangle {
     constructor(length) {
 
-        // same as Rectangle.call(this, length, length)
+        // те саме що й Rectangle.call(this, length, length)
         super(length, length);
     }
 }
@@ -650,11 +649,11 @@ console.log(rect.getArea());                // 12
 console.log(rect instanceof Square);        // false
 ```
 
-In this code, a new static `create()` method is added to the `Rectangle` class. Through inheritance, that method is available as `Square.create()` and behaves in the same manner as the `Rectangle.create()` method.
+В цьому коді до класу `Rectangle` додається новий статичний метод `create()`. Цей метод доступний як `Square.create()` через успадкування, та поводиться так само, як метод `Rectangle.create()`.
 
-### Derived Classes from Expressions
+### Похідні класи з виразів
 
-Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression as long as the expression resolves to a function with `[[Construct]]` and a prototype. For instance:
+Мабуть, найпотужнішим аспектом похідних класів в ECMAScript 6 є можливість визначити похідний клас з виразу. Ви можете використовувати `extends` з будь-яким виразом, якщо він вирішується функцією з `[[Construct]]` і прототипом. Наприклад:
 
 ```js
 function Rectangle(length, width) {
@@ -677,9 +676,9 @@ console.log(x.getArea());               // 9
 console.log(x instanceof Rectangle);    // true
 ```
 
-`Rectangle` is defined as an ECMAScript 5-style constructor while `Square` is a class. Since `Rectangle` has `[[Construct]]` and a prototype, the `Square` class can still inherit directly from it.
+`Rectangle` визначено в стилі ECMAScript 5 конструктору, в той час як `Square` є класом. Оскільки `Rectangle` має `[[Construct]]` та прототип, клас `Square` може успадковувати властивості безпосередньо звідти.
 
-Accepting any type of expression after `extends` offers powerful possibilities, such as dynamically determining what to inherit from. For example:
+Сприйняття любого типу виразу після `extends` дає такі могутні можливості, як динамічне визначення того, що успадковувати і звідки. Наприклад:
 
 ```js
 function Rectangle(length, width) {
@@ -706,7 +705,7 @@ console.log(x.getArea());               // 9
 console.log(x instanceof Rectangle);    // true
 ```
 
-The `getBase()` function is called directly as part of the class declaration. It returns `Rectangle`, making this example is functionally equivalent to the previous one. And since you can determine the base class dynamically, it's possible to create different inheritance approaches. For instance, you can effectively create mixins:
+Функція `getBase()` викликається безпосередньо при оголошенні класу. Вона повертає `Rectangle`, що робить цей приклад функціонально тотожнім до попереднього. Оскільки ви можете визначити базовій клас динамічно, це дає можливість створювати різні підходи успадкування. Наприклад, ви фактично можете створювати домішки:
 
 ```js
 let SerializableMixin = {
@@ -740,23 +739,23 @@ console.log(x.getArea());               // 9
 console.log(x.serialize());             // "{"length":3,"width":3}"
 ```
 
-In this example, mixins are used instead of classical inheritance. The `mixin()` function takes any number of arguments that represent mixin objects. It creates a function called `base` and assigns the properties of each mixin object to the prototype. The function is then returned so `Square` can use `extends`. Keep in mind that since `extends` is still used, you are required to call `super()` in the constructor.
+В цьому прикладі домішки використовуються замість класичного наслідування. Функція `mixin()` приймає будь-яку кількість аргументів, які репрезентують об'єкти домішок. Вона створює функцію з ім'ям `base` та прив'язує властивості кожного об'єкту домішок до прототипу. Функція `base` повертається функцією `mixin()`, таким чином `Square` може використовувати `extends`. Майте на увазі, що ви використовуєте `extends`, тому повинні викликати `super()` всередині конструктору.
 
-The instance of `Square` has both `getArea()` from `AreaMixin` and `serialize` from `SerializableMixin`. This is accomplished through prototypal inheritance. The `mixin()` function dynamically populates the prototype of a new function with all of the own properties of each mixin. (Keep in mind that if multiple mixins have the same property, only the last property added will remain.)
+Екземпляр `Square` має і `getArea()` від `AreaMixin`, і `serialize` від `SerializableMixin`. Це досягається за допомогою наслідування через прототипи. Функція `mixin()` динамічно наповнює прототип нової функції усіма власними властивостями кожної домішки. (Майте на увазі, що при наявності властивостей з однаковими назвами у кількох домішок, лише остання додана властивість буде записана.)
 
-W> Any expression can be used after `extends`, but not all expressions result in a valid class. Specifically, the following expression types cause errors:
+W> Після `extends` може бути використаний будь-який вираз, але не всі вирази будуть давати валідний клас. Особливо, зазначені нижче типи виразів будуть давати:
 W>
 W> * `null`
-W> * generator functions (covered in Chapter 8)
+W> * функції-генератори (описані в Розділі 8)
 W>
-W> In these cases, attempting to create a new instance of the class will throw an error because there is no `[[Construct]]` to call.
+W> В цих випадках спроба створити новий екземпляр класу буде давати помилку, оскільки ми не маємо можливості звернутися до `[[Construct]]`.
 
-### Inheriting from Built-ins
+### Успадкування через вбудовані об’єкти.
 
-For almost as long as JavaScript arrays have existed, developers have wanted to create their own special array types through inheritance. In ECMAScript 5 and earlier, this wasn't possible. Attempting to use classical inheritance didn't result in functioning code. For example:
+З самого початку існування масивів JavaScript, розробники бажали створювати свої власні спеціальні типи масивів через успадкування. В ECMAScript 5 та раніше це було неможливо. Спроби використовувати класичне наслідування не давали робочий код. Наприклад:
 
 ```js
-// built-in array behavior
+// поведінка вбудованого масиву
 var colors = [];
 colors[0] = "red";
 console.log(colors.length);         // 1
@@ -764,7 +763,7 @@ console.log(colors.length);         // 1
 colors.length = 0;
 console.log(colors[0]);             // undefined
 
-// trying to inherit from array in ES5
+// спроба успадкування з масиву в ES5
 
 function MyArray() {
     Array.apply(this, arguments);
@@ -787,18 +786,18 @@ colors.length = 0;
 console.log(colors[0]);             // "red"
 ```
 
-The `console.log()` output at the end of this code shows how using the classical form of JavaScript inheritance on an array results in unexpected behavior. The `length` and numeric properties on an instance of `MyArray` don't behave the same as they do for the built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
+Вивід `console.log()` в кінці цього коду показує як використання класичного наслідування JavaScript з масивами призводить до непередбачуваних результатів. Властивість `length` та числові властивості екземпляру `MyArray` не поводяться таким самим чином, як вони працюють для вбудованих масивів, тому що даний функціонал не поширюється на об’єкт через застосування `Array.apply()` або з посиланням на прототип.
 
-One goal of ECMAScript 6 classes is to allow inheritance from all built-ins. In order to accomplish this, the inheritance model of classes is slightly different than the classical inheritance model found in ECMAScript 5 and earlier, in two big ways:
+Однією з цілей класів ECMAScript 6 є зробити можливим успадкування для всіх вбудованих об’єктів. В рамках досягнення цього, у модель успадкування класів було додано дві значні зміни в порівнянні з класичною моделлю успадкування в ECMAScript 5 та старіших версіях:
 
-* In ECMAScript 5 classical inheritance, the value of `this` is first created by the derived type (for example, `MyArray`), and then the base type constructor (like the `Array.apply()` method) is called. That means `this` starts out as an instance of `MyArray` and then is decorated with additional properties from `Array`.
-* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` starts with all the built-in functionality of the base and correctly receives all functionality related to it.
+* В класичному успадкуванні моделі ECMAScript 5 значення `this` вперше створюється похідним типом (наприклад, `MyArray`), і згодом викликається конструктор базового типу (як метод `Array.apply()`). Це означає, що `this` створюється як екземпляр `MyArray` і потім декорується додатковими властивостями від `Array`.
+* В заснованому на класах успадкуванні ECMAScript 6 значення `this` вперше створюється від базового типу (`Array`) і потім змінюється конструктором похідного класу (`MyArray`). В результаті чого `this` починає працювати з усією вбудованою функціональністю базового типу та коректно отримує весь відповідний додатковий функціонал.
 
-The following example shows a class-based special array in action:
+Наступний приклад показує в дії створення спеціального масиву за допомогою заснованого на класах успадкування:
 
 ```js
 class MyArray extends Array {
-    // empty
+    // пустий
 }
 
 var colors = new MyArray();
@@ -809,15 +808,15 @@ colors.length = 0;
 console.log(colors[0]);             // undefined
 ```
 
-`MyArray` inherits directly from `Array` and therefore works like `Array`. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means you can both properly inherit from `Array` to create your own derived array classes and inherit from other built-ins as well. With all this added functionality, ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from built-ins, but that case is still worth exploring.
+Клас `MyArray` успадковується безпосередньо від `Array` та вподальшому поводиться як `Array`. Взаємодія з числовими властивостями змінює властивість `length`, та маніпуляції з властивістю `length` змінюють числові властивості. Це означає, що ви можете як правильно успадковувати властивості від `Array`, щоб створювати ваші власні похідні класи-масиви, так і успадковувати поведінку інших вбудованих об’єктів. З додаванням всієї цієї функціональності ECMAScript 6 та похідні класи ефективно вирішують питання наслідування від вбудованих об’єктів, але цей випадок все ще вартий досліджень.
 
-### The Symbol.species Property
+### Властивість Symbol.species
 
-An interesting aspect of inheriting from built-ins is that any method that returns an instance of the built-in will automatically return a derived class instance instead. So, if you have a derived class called `MyArray` that inherits from `Array`, methods such as `slice()` return an instance of `MyArray`. For example:
+Цікавим аспектом успадкування від вбудованих об’єктів є те, що метод, який має повертати екземпляр вбудованого об’єкту, натомість буде автоматично повертати екземпляр похідного класу. Таким чином, якщо ви маєте похідний клас з ім’ям `MyArray`, який успадковується від `Array`, то такий метод як `slice()` повертає екземпляр класу `MyArray`. Наприклад:
 
 ```js
 class MyArray extends Array {
-    // empty
+    // пустий
 }
 
 let items = new MyArray(1, 2, 3, 4),
@@ -827,22 +826,22 @@ console.log(items instanceof MyArray);      // true
 console.log(subitems instanceof MyArray);   // true
 ```
 
-In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `Symbol.species` property that is making this change.
+В цьому коді метод `slice()` повертає екземпляр класу `MyArray`. Зазвичай, метод `slice()`, при успадкуванні від `Array` мав би повертати екземпляр `Array`. Але поза сценою є властивість `Symbol.species`, яка робить описані вище зміни.
 
-The `Symbol.species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). The following builtin types have `Symbol.species` defined:
+`Symbol.species` добре відомий, як символ який використовується для того, щоб визначити статичну властивість-спадкоємця, яка повертає функцію. Ця функція виконує роль конструктору там, де має буди створено екземпляр класу всередині екземпляру методу (замість того, щоб використовувати конструктор). Наступні типи вбудованих об’єктів мають визначений `Symbol.species`:
 
 * `Array`
-* `ArrayBuffer` (discussed in Chapter 10)
+* `ArrayBuffer` (розглядається в розділі 10)
 * `Map`
 * `Promise`
 * `RegExp`
 * `Set`
-* Typed Arrays (discussed in Chapter 10)
+* Typed Arrays (розглядається в розділі 10)
 
-Each of these types has a default `Symbol.species` property that returns `this`, meaning the property will always return the constructor function. If you were to implement that functionality on a custom class, the code would look like this:
+Кожен з цих типів має визначену за замовчуванням властивість `Symbol.species` яка повертає `this`, маючи на увазі, що властивість буде завжди повертати функцію-конструктор. Якщо ви реалізуєте такий функціонал у власному класі, то код матиме наступний вигляд:
 
 ```js
-// several builtin types use species similar to this
+// кілька вбудованих типів використовують Symbol.species схожим чином
 class MyClass {
     static get [Symbol.species]() {
         return this;
@@ -858,7 +857,7 @@ class MyClass {
 }
 ```
 
-In this example, the `Symbol.species` well-known symbol is used to assign a static accessor property to `MyClass`. Note that there's only a getter without a setter, because changing the species of a class isn't possible. Any call to `this.constructor[Symbol.species]` returns `MyClass`. The `clone()` method uses that definition to return a new instance rather than directly using `MyClass`, which allows derived classes to override that value. For example:
+У цьому прикладі `Symbol.species` зазвичай використовується для того, щоб прив’язати статичну властивість-спадкоємця до `MyClass`. Зверніть увагу, що ми маємо тільки гетер, без сетеру, тому що ми не можемо змінити `Symbol.species` класу. Будь-яке звернення до `this.constructor[Symbol.species]` повертає `MyClass`. Метод `clone()` використовує це визначення, щоб повернути новий екземпляр класу, замість того, щоб повертати сам клас `MyClass`, що дозволяє похідному класу переписувати це значення. Наприклад:
 
 ```js
 class MyClass {
@@ -896,9 +895,9 @@ console.log(clone2 instanceof MyClass);             // true
 console.log(clone2 instanceof MyDerivedClass2);     // false
 ```
 
-Here, `MyDerivedClass1` inherits from `MyClass` and doesn't change the `Symbol.species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `MyDerivedClass2` class inherits from `MyClass` and overrides `Symbol.species` to return `MyClass`. When `clone()` is called on an instance of `MyDerivedClass2`, the return value is an instance of `MyClass`. Using `Symbol.species`, any derived class can determine what type of value should be returned when a method returns an instance.
+Тут `MyDerivedClass1` успадковується від `MyClass` і не змінює властивість `Symbol.species`. Коли викликаєтеся `clone()`, то він повертає екземпляр класу `MyDerivedClass1`, тому що `this.constructor[Symbol.species]` повертає `MyDerivedClass1`. Клас `MyDerivedClass2` успадковується від `MyClass` та переписує `Symbol.species`, щоб повернути `MyClass`. Коли викликається `clone()` для екземпляру класу `MyDerivedClass2`, то повернене значення буде екземпляром `MyClass`. Використовуючи `Symbol.species`, будь-який похідний клас може визначати який тип значення буде повернено, коли метод повертає екземпляр класу.
 
-For instance, `Array` uses `Symbol.species` to specify the class to use for methods that return an array. In a class derived from `Array`, you can determine the type of object returned from the inherited methods, such as:
+Наприклад, `Array` застосовує `Symbol.species` щоб визначити клас, який використовується для методів, які повертають масив. В класі, успадкованому від `Array`, ви можете визначити тип об’єкту, який повертається успадкованими методами, як тут:
 
 ```js
 class MyArray extends Array {
@@ -915,13 +914,13 @@ console.log(subitems instanceof Array);     // true
 console.log(subitems instanceof MyArray);   // false
 ```
 
-This code overrides `Symbol.species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
+Цей код переписує `Symbol.species` в `MyArray`, який успадковується від `Array`. Усі успадковані методи, які повертають масив будуть завжди повертати екземпляр `Array` замість `MyArray`.
 
-In general, you should use the `Symbol.species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `Symbol.species` defined, be sure to use that value instead of the constructor.
+Взагалі, ви маєте використовувати властивість `Symbol.species` кожного разу, коли ви захочете використати `this.constructor` в методі класу. Це дозволить похідним класам легко переписувати тип, який повертається. Більш того, якщо ви створюєте похідний клас від класу, який має визначений `Symbol.species`, переконайтеся, що ви використовуєте це значення замість конструктору.
 
-## Using new.target in Class Constructors
+## Використання new.target в конструкторах класів
 
-In Chapter 3, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:
+В розділі 3 ви дізналися про `new.target` і те, як змінюється його значення в залежності від того, як було викликано функцію. Ви також можете використати `new.target` в конструкторі класу, щоб визначити як було викликано клас. В простому випадку, `new.target` відповідає функції-конструктору для класу, як в цьому прикладі:
 
 ```js
 class Rectangle {
@@ -932,11 +931,11 @@ class Rectangle {
     }
 }
 
-// new.target is Rectangle
-var obj = new Rectangle(3, 4);      // outputs true
+// new.target є Rectangle
+var obj = new Rectangle(3, 4);      // виводить true
 ```
 
-This code shows that `new.target` is equivalent to `Rectangle` when `new Rectangle(3, 4)` is called. Class constructors can't be called without `new`, so the `new.target` property is always defined inside of class constructors. But the value may not always be the same. Consider this code:
+Цей код показує, що `new.target` відповідає `Rectangle`, коли викликається `new Rectangle(3, 4)`. Конструктори класу не можуть бути викликанні без `new`, тому властивість `new.target` завжди визначається в середині конструктору класу. Але її значення не завжди може буди однаковим. Погляньте на цей код:
 
 ```js
 class Rectangle {
@@ -953,18 +952,18 @@ class Square extends Rectangle {
     }
 }
 
-// new.target is Square
-var obj = new Square(3);      // outputs false
+// new.target є Square
+var obj = new Square(3);      // виводить false
 ```
 
-`Square` is calling the `Rectangle` constructor, so `new.target` is equal to `Square` when the `Rectangle` constructor is called. This is important because it gives each constructor the ability to alter its behavior based on how it's being called. For instance, you can create an abstract base class (one that can't be instantiated directly) by using `new.target` as follows:
+`Square` викликає конструктор класу `Rectangle`, тому `new.target` відповідає `Square`, коли викликається конструктор `Rectangle`. Це важливо, тому що це дає можливість кожному конструктору змінювати свою поведінку в залежності від того, як його було викликано. Наприклад, ви можете створити абстрактний базовий клас (якій не може бути реалізований безпосередньо), використовуючи `new.target` наступни чином:
 
 ```js
-// abstract base class
+// абстрактний базовий клас
 class Shape {
     constructor() {
         if (new.target === Shape) {
-            throw new Error("This class cannot be instantiated directly.")
+            throw new Error("Цей клас не може бути ініційований безпосередньо.")
         }
     }
 }
@@ -977,24 +976,24 @@ class Rectangle extends Shape {
     }
 }
 
-var x = new Shape();                // throws error
+var x = new Shape();                // викличе помилку
 
-var y = new Rectangle(3, 4);        // no error
+var y = new Rectangle(3, 4);        // немає помилки
 console.log(y instanceof Shape);    // true
 ```
 
-In this example, the `Shape` class constructor throws an error whenever `new.target` is `Shape`, meaning that `new Shape()` always throws an error. However, you can still use `Shape` as a base class, which is what `Rectangle` does. The `super()` call executes the `Shape` constructor and `new.target` is equal to `Rectangle` so the constructor continues without error.
+В цьому прикладі, конструктор класу `Shape` викличе помилку кожного разу, коли `new.target` є `Shape`, маючи на увазі, що `new Shape()` завжди буде викликати помилку. Але, ви все ще можете використовувати `Shape` як базовий клас, що й робить `Rectangle`. Виклик `super()` запускає конструктор `Shape` та `new.target` відповідає `Rectangle`, таким чином конструктор працює без помилок.
 
-I> Since classes can't be called without `new`, the `new.target` property is never `undefined` inside of a class constructor.
+I> Оскільки класи не можуть викликатися без `new`, значення `new.target` всередині конструктору ніколи не буде `undefined`.
 
-## Summary
+## Підсумок
 
-ECMAScript 6 classes make inheritance in JavaScript easier to use, so you don't need to throw away any existing understanding of inheritance you might have from other languages. ECMAScript 6 classes start out as syntactic sugar for the classical inheritance model of ECMAScript 5, but add a lot of features to reduce mistakes.
+Класи в ECMAScript 6 роблять легшим використання успадкування в JavaScript, тому вам стане у нагоді те, що ви знали з інших мов. Класи ECMAScript 6 додають синтаксичного цукру в класичну модель успадкування ECMAScript 5, але також вводять багато поліпшень, щоб зменшити кількість помилок.
 
-ECMAScript 6 classes work with prototypal inheritance by defining non-static methods on the class prototype, while static methods end up on the constructor itself. All methods are non-enumerable, a feature that better matches the behavior of built-in objects for which methods are typically non-enumerable by default. Additionally, class constructors can't be called without `new`, ensuring that you can't accidentally call a class as a function.
+Класи ECMAScript 6 працюють з прототипним успадкуванням, визначаючи нестатичні методи в прототипі класу, в той час, як статичні методи визначаються безпосередньо в конструкторі. Всі методи класу є незчисленними, особливість, яка найкращим чином відповідає поведінці вбудованих об’єктів, для яких методи, зазвичай, е незчисленними за замовчуванням. Більш того, класи-конструктори не можуть бути викликані без `new`, це дає змогу переконатися, що ви випадково не викликали клас як функцію.
 
-Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call a function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects like `Array` is now possible and works as expected.
+Засноване на класах успадкування дозволяє вам створити похідний клас від іншого класу, функції або виразу. Ця можливість дозволяє вам викликати функцію як базу для успадкування, що дає використовувати домішки й інші різні шаблони для створення нового класу. Успадкування працює таким чином, що наслідування від вбудованих об’єктів, таких як `Array`, тепер можливе і працює як треба.
 
-You can use `new.target` in class constructors to behave differently depending on how the class is called. The most common use is to create an abstract base class that throws an error when instantiated directly but still allows inheritance via other classes.
+Ви можете використовувати `new.target` в конструкторах класів, щоб вони поводилися залежно від того, як були викликані. Найбільш поширеним випадком використання є створення абстрактного базового класу, який буде викликати помилку, якщо буде викликаний безпосередньо, але все ще буде коректно успадковуватися іншими класами.
 
-Overall, classes are an important addition to JavaScript. They provide a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
+В цілому, класи є важливим доповненням до JavaScript. Вони забезпечують більш лаконічний синтаксис і кращі функціональні можливості для визначення власних типів об'єктів в безпечній і в манері.
