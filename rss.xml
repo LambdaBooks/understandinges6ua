@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 12 Jul 2016 12:23:57 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 12 Jul 2016 12:26:44 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -54,6 +54,13 @@ Stars]]></description>
             <description><![CDATA[Функції — важлива частина будь–якої мови програмування. До ECMAScript 6, функції в JavaScript з моменту створення мови, не зазнавали значних змін. Це накопичувало проблеми та нюанси поведінки, які призводили до помилкок та потребували більше коду для виконання базових завдань.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/03-Functions.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/03-Functions.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Розширення функціональності об’єктів]]></title>
+            <description><![CDATA[ECMAScript 6 значною мірою спрямований на поліпшення функціональності об’єктів, що має зміст, адже майже будь–яке значення в JavaScript є певною мірою об’єктами. Крім того, кількість об’єктів, що використовують в пересічних JavaScript–програмах продовжує зростати разом зі збільшенням складності JavaScript–додатків, а це означає, що програми постійно створюють все більше і більше об’єктів. Зі збільшенням кількості об’єктів з’являється і необхідність використовувати їх більш ефективно.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/04-Objects.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/04-Objects.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
