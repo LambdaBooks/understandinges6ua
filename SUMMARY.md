@@ -5,7 +5,7 @@
 * [Блочне зв’язування](/manuscript/01-Block-Bindings.md)
 * [Рядки та регулярні вирази](/manuscript/02-Strings-and-Regular-Expressions.md)
 * [Функції](/manuscript/03-Functions.md)
-* Об’єкти
+* [Об’єкти](/manuscript/04-Objects.md)
 * Деструктурування
 * Символи
 * Sets та Maps
