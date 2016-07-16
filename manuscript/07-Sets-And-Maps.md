@@ -1,49 +1,49 @@
-# Sets and Maps
+# Множини та мапи
 
-JavaScript only had one type of collection, represented by the `Array` type, for most of its history (though some may argue all non-array objects are just collections of key-value pairs, their intended use was, originally quite different from arrays). Arrays are used in JavaScript just like arrays in other languages, but the lack of other collection options meant arrays were often used as queues and stacks, as well. Since arrays only use numeric indices, developers used non-array objects whenever a non-numeric index was necessary. That technique led to custom implementations of sets and maps using non-array objects.
+Більшу частину своєї історії JavaScript мав лише один тип колекцій, тип `Array` (хоча дехто може стверджувати, що всі об’єкти–немасиви є просто колекціями пар “ключ–значення”, їх планували використовувати зовсім іншим чином). Масиви використовуються в JavaScript точно так само як і масиви в інших мовах, проте недоліком масивів порівняно з іншими колекціями була в тому, що вони часто використовувались в якості черг (queues) та стеків (stacks). Оскільки масиви мають лише числову індексацію, розробники використовували об’єкти–немасиви тоді, коли були необхідні нечислові індекси. Такий підхід породив власні реалізації множин (sets) та мап (maps) з допомогою об’єктів–немасивів.
 
-A *set* is a list of values that cannot contain duplicates. You typically don't access individual items in a set like you would items in an array; instead, it's much more common to just check a set to see if a value is present. A *map* is a collection of keys that correspond to specific values. As such, each item in a map stores two pieces of data, and values are retrieved by specifying the key to read from. Maps are frequently used as caches, for storing data to be quickly retrieved later. While ECMAScript 5 didn't formally have sets and maps, developers worked around this limitation using non-array objects, too.
+*Множина (set)* — це список значень, що не може містити повторень. На відміну від масивів, у множині зазвичай вам не потрібно отримувати доступ до окремих елементів. Замість цього, набагато частіше є потреба просто перевірити чи значення присутнє в множині, чи ні. *Мапа (map)* — це колекція ключів, що відповідають певним значенням. Таким чином, кожен елемент у мапі зберігає дві частинки даних, а значення отримуються через певний ключ, з якого потрібно читати. Мапи часто використовують в якості кешу, для збереження даних, як потрібно згодом швидко отримати. Формально ECMAScript 5 не має множин та мап, проте розробники обходять це обмеження використовуючи об’єкти–немасиви.
 
-ECMAScript 6 added sets and maps to JavaScript, and this chapter discusses everything you need to know about these two collection types.
+ECMAScript 6 додає множини та мапи у JavaScript і у цьому розділі про все, що вам потрібно знати про ці два типи колекцій.
 
-First, I will discuss the workarounds developers used to implement sets and maps before ECMAScript 6, and why those implementations were problematic. After that important background information, I will cover how sets and maps work in ECMAScript 6.
+Для початку, я розповім про обхідні шляхи, які розробники використовували для реалізації множин та мап до ECMAScript 6 і чому ці реалізації мали проблеми. Після цього, я покажу як множини та мапи працюють у ECMAScript 6.
 
-## Sets and Maps in ECMAScript 5
+## Множини та мапи у ECMAScript 5
 
-In ECMAScript 5, developers mimicked sets and maps by using object properties, like this:
+У ECMAScript 5 розробники імітували множини та мапи з використанням властивостей об’єктів, ось так:
 
 ```js
 let set = Object.create(null);
 
 set.foo = true;
 
-// checking for existence
+// перевірка на існування
 if (set.foo) {
 
-    // do something
+    // щось виконуємо
 }
 ```
 
-The `set` variable in this example is an object with a `null` prototype, ensuring that there are no inherited properties on the object. Using object properties as unique values to be checked is a common approach in ECMAScript 5. When a property is added to the `set` object, it is set to `true` so conditional statements (such as the `if` statement in this example) can easily check whether the value is present.
+Змінна `set`, у цьому прикладі, є об’єктом з прототипом `null`, для певності у тому, що об’єкт не має жодних успадкованих властивостей. Використання властивостей об’єктів в якості унікальних значення для перевірки є звичною практикою у ECMAScript 5. Якщо властивість додається у об’єкт `set`, їй встановлюється значення `true`, тому умовні оператори (як от оператор `if` у цьому випадку) можуть легко перевірити чи це значення вже є у множині.
 
-The only real difference between an object used as a set and an object used as a map is the value being stored. For instance, this example uses an object as a map:
+Єдина дійсна відмінність між об’єктом, що використовується як множина та об’єктом, що використовується як мапа у значенні яке зберігається. До прикладу, цей приклад використовує об’єкт як мапу:
 
 ```js
 let map = Object.create(null);
 
 map.foo = "bar";
 
-// retrieving a value
+// отримання значення
 let value = map.foo;
 
 console.log(value);         // "bar"
 ```
 
-This code stores a string value `"bar"` under the key `foo`. Unlike sets, maps are mostly used to retrieve information, rather than just checking for the key's existence.
+Цей код зберігає значення `"bar"` під ключем `foo`. На відміну від множин, мапи частіше використовуються для отримання інформації, ніж для перевірки існування ключів.
 
-## Problems with Workarounds
+## Проблеми з обхідними реалізаціями
 
-While using objects as sets and maps works okay in simple situations, the approach can get more complicated once you run into the limitations of object properties. For example, since all object properties must be strings, you must be certain no two keys evaluate to the same string. Consider the following:
+Використання об’єктів у якості множин та мап працює добре для простих випадків, проте такий підхід може стати більш складним як тільки ви заглибитесь у обмеження об’єктних властивостей. Наприклад, оскільки всі властивості об’єктів мають бути рядками, тому ви маєте бути певні, що два ключі не будуть одним і тим же рядком. Розгляньте наступне:
 
 ```js
 let map = Object.create(null);
@@ -53,7 +53,7 @@ map[5] = "foo";
 console.log(map["5"]);      // "foo"
 ```
 
-This example assigns the string value `"foo"` to a numeric key of `5`. Internally, that numeric value is converted to a string, so `map["5"]` and `map[5]` actually reference the same property. That internal conversion can cause problems when you want to use both numbers and strings as keys. Another problem arises when using objects as keys, like this:
+У цьому прикладі рядкове значення `"foo"` присвоюється числовому ключу `5`. Внутрішньо це числове значення конвертується у рядок, тому `map["5"]` та `map[5]` насправді посилатимуться на одну і ту ж властивість. Така внутрішня поведінка може спричинити помилку, якщо ви захочете використовувати і рядкові, і числові ключі водночас. Інша проблема виникає при використанні об’єктів у якості ключів:
 
 ```js
 let map = Object.create(null),
@@ -65,36 +65,36 @@ map[key1] = "foo";
 console.log(map[key2]);     // "foo"
 ```
 
-Here, `map[key2]` and `map[key1]` reference the same value. The objects `key1` and `key2` are converted to strings because object properties must be strings. Since `"[object Object]"` is the default string representation for objects, both `key1` and `key2` are converted to that string. This can cause errors that may not be obvious because it's logical to assume that different object keys would, in fact, be different.
+Тут `map[key2]` та `map[key1]` посилаються на те саме значення. Об’єкти `key1` та `key2` конвертуються у рядки, тому що властивості об’єктів мають бути рядками. Оскільки `"[object Object]"` є рядковим представленням за замовчуванням для об’єктів, як `key1`, так і `key2` конвертуються у цей рядок. Це може спричинити помилки через свою неочевидність, тому що логічно припустити, що різні об’єкти–ключі мали б бути різними.
 
-The conversion to the default string representation makes it difficult to use objects as keys. (The same problem exists when trying to use an object as a set.)
+Перетворення у рядкове представлення за замовчуванням ускладнює використання об’єктів у якості ключів. (Така ж проблема виникає, при спробі використовувати об’єкт у якості множини.)
 
-Maps with a key whose value is falsy present their own particular problem, too. A falsy value is automatically converted to false when used in situations where a boolean value is required, such as in the condition of an `if` statement. This conversion alone isn't a problem--so long as you're careful as to how you use values. For instance, look at this code:
+Мапи з ключами, значення яких є хибними мають свою власну проблему. Хибні значення зводяться до false у випадках, коли потрібне булеве значення, як от в умові оператора `if`. Таке приведення не є проблемою, проте вам слід бути обережними при використанні таких значень. Наприклад, подивіться на цей код:
 
 ```js
 let map = Object.create(null);
 
 map.count = 1;
 
-// checking for the existence of "count" or a nonzero value?
+// перевірка існування "count", чи ненульового значення?
 if (map.count) {
     // ...
 }
 ```
 
-This example has some ambiguity as to how `map.count` should be used. Is the `if` statement intended to check for the existence of `map.count` or that the value is nonzero? The code inside the `if` statement will execute because the value 1 is truthy. However, if `map.count` is 0, or if `map.count` doesn't exist, the code inside the `if` statement would not be executed.
+Цей приклад має деяку невизначеність стосовно того, як слід використовувати `map.count`. Оператор `if` призначений для перевірки існування `map.count`, чи перевірки того, що ця властивість має ненульове значення? Код всередині оператора `if` буде виконуватись тому, що значення 1 є істинним значенням. Однак, якщо б `map.count` дорівнює 0, або якщо б `map.count` не існувало, код всередині оператора `if` не виконався би.
 
-These are difficult problems to identify and debug when they occur in large applications, which is a prime reason that ECMAScript 6 adds both sets and maps to the language.
+Ці проблеми важко помітити та полагодити у великих додатках і це одна з основних причин чому ECMAScript 6 вводить у мову множини та мапи.
 
-I> JavaScript has the `in` operator that returns `true` if a property exists in an object without reading the value of the object. However, the `in` operator also searches the prototype of an object, which makes it only safe to use when an object has a `null` prototype. Even so, many developers still incorrectly use code as in the last example rather than using `in`.
+I> JavaScript має оператор `in`, що повертає `true`, якщо властивість існує у об’єкті без читання його значення з об’єкту. Однак, оператор `in` також шукає по прототипу об’єкта, що робить його небезпечним для використання, якщо прототипом об’єкту не є `null`. Хоча навіть так багато розробників продовжують використовувати помилковий код з попереднього прикладу частіше ніж оператор `in`.
 
-## Sets in ECMAScript 6
+## Множини (Sets) у ECMAScript 6
 
-ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets allow fast access to the data they contain, adding a more efficient manner of tracking discrete values.
+ECMAScript 6 додає тип `Set`, що впорядковує список значень без повторень. Множини дають швидкий доступ до даних, які вони містять, додаючи більш ефективний спосіб оперувати дискретними значеннями.
 
-### Creating Sets and Adding Items
+### Створення множин та додавання елементів
 
-Sets are created using `new Set()` and items are added to a set by calling the `add()` method. You can see how many items are in a set by checking the `size` property:
+Sets створюються через `new Set()`, а метод `add()` додає у множину елементи. Ми можете подивитись скільки значень містить множина у властивості `size`:
 
 ```js
 let set = new Set();
@@ -104,7 +104,7 @@ set.add("5");
 console.log(set.size);    // 2
 ```
 
-Sets do not coerce values to determine whether they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4 to determine if two values are the same.) You can also add multiple objects to the set, and those objects will remain distinct:
+Множини не приводять значення для визначення того чи вони однакові. Це означає, що множина може містити як і число `5`, так і рядок `"5"` як два різних елементи. (Внутрішньо, для порівняння двох значень на ідентичність  використовується метод `Object.is()`, який ми обговорювали у Главі 4) Ви також можете додати кілька об’єктів у множину і вони будуть окремими елементами:
 
 ```js
 let set = new Set(),
@@ -117,31 +117,31 @@ set.add(key2);
 console.log(set.size);    // 2
 ```
 
-Because `key1` and `key2` are not converted to strings, they count as two unique items in the set. (Remember, if they were converted to strings, they would both be equal to `"[Object object]"`.)
+Оскільки `key1` та `key2` не конвертуються у рядки, вони вважаються двома унікальними елементами множини. (Пам’ятайте, якщо б вони конвертувались у рядки, вони були би рівні `"[Object object]"`.)
 
-If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
+Якщо метод `add()` викликається з одним і тим самим значенням, всі виклики після першого будуть проігноровані:
 
 ```js
 let set = new Set();
 set.add(5);
 set.add("5");
-set.add(5);     // duplicate - this is ignored
+set.add(5);     // повторення - воно ігнорується
 
 console.log(set.size);    // 2
 ```
 
-You can initialize a set using an array, and the `Set` constructor will ensure that only unique values are used. For instance:
+Ви можете ініціалізувати множину через масив і конструктор `Set` перевірить щоб використовувались лише унікальні значення. Наприклад:
 
 ```js
 let set = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
 console.log(set.size);    // 5
 ```
 
-In this example, an array with duplicate values is used to initialize the set. The number `5` only appears once in the set even though it appears four times in the array. This functionality makes converting existing code or JSON structures to use sets easy.
+У цьому прикладі, масив зі значеннями, що повторюються використовується для ініціалізації множини. Число `5` з’являється у множині лише один раз, хоча у масивів воно зустрічається чотири рази. Такий функціонал робить простішим перетворення існуючого коду, або JSON–структур у множини.
 
-I> The `Set` constructor actually accepts any iterable object as an argument. Arrays work because they are iterable by default, as are sets and maps. The `Set` constructor uses an iterator to extract values from the argument. (Iterables and iterators are discussed in detail in Chapter 8.)
+I> Конструктор `Set` насправді приймає в якості аргументу ітерабельний об’єкт. Масиви працюють тому, що вони є ітерабельними об’єктами за замовчуваннями, як і множини та мапи. Конструктор `Set` використовує ітератор, щоб отримати значення з аргументу. (Про ітерабельні об’єкти та ітератори піде мова у Главі 8.)
 
-You can test which values are in a set using the `has()` method, like this:
+Ми можете перевірити чи значення є у множині через метод `has()`, ось так:
 
 ```js
 let set = new Set();
@@ -152,11 +152,11 @@ console.log(set.has(5));    // true
 console.log(set.has(6));    // false
 ```
 
-Here, `set.has(6)` would return false because the set doesn't have that value.
+Тут `set.has(6)` поверне false, оскільки множина не має такого значення.
 
-### Removing Values
+### Видалення значень
 
-It's also possible to remove values from a set. You can remove single value by using the `delete()` method, or you can remove all values from the set by calling the `clear()` method. This code shows both in action:
+Також можливо видаляти значення з множини. Ви можете видалити одне значення використовуючи метод `delete()`, або видалити всі значення з множини викликом методу `clear()`. Ось як вони працюють:
 
 ```js
 let set = new Set();
@@ -176,27 +176,27 @@ console.log(set.has("5"));  // false
 console.log(set.size);      // 0
 ```
 
-After the `delete()` call, only `5` is gone; after the `clear()` method executes, `set` is empty.
+Після виклику `delete()`, видаляється `5`; після виклику методу `clear()` множина`set` стає порожньою.
 
-All of this amounts to a very easy mechanism for tracking unique ordered values. However, what if you want to add items to a set and then perform some operation on each item? That's where the `forEach()` method comes in.
+Кожен з них дає нам простий механізм для операцій над унікальними впорядкованими значеннями. Однак, що якщо нам потрібно додати елементи у множину, а тоді виконати якусь операцію над кожним з них? Саме для такого випадку нам потрібен метод `forEach()`.
 
-### The forEach() Method for Sets
+### Метод forEach() для множин
 
-If you're used to working with arrays, then you may already be familiar with the `forEach()` method. ECMAScript 5 added `forEach()` to arrays to make working on each item in an array without setting up a `for` loop easier. The method proved popular among developers, and so the same method is available on sets and works the same way.
+Якщо ви часто працюєте з масивами, скоріш за все ви вже знайомі з методом `forEach()`. ECMAScript 5 додав `forEach()` до масивів, щоб простіше виконувати операції над кожними елементом масиву без використання циклу `for`. Метод став популярним серед розробників і тому такий самий метод доступний для множин та працює таким же чином.
 
-The `forEach()` method is passed a callback function that accepts three arguments:
+Метод `forEach()` приймає функцію зворотнього виклику, що приймає три аргументи:
 
-1. The value from the next position in the set
-1. The same value as the first argument
-1. The set from which the value is read
+1. значення наступної позиції у множині;
+1. те саме значення, що і у першому аргументі;
+1. множину з якої читаються значення.
 
-The strange difference between the set version of `forEach()` and the array version is that the first and second arguments to the callback function are the same. While this might look like a mistake, there's a good reason for the behavior.
+Дивна відмінність між версією `forEach()` для множини та версією для масиву полягає в тому, що перший та другий елемент функції зворотнього виклику є однаковими. Це може виглядати як помилка, проте є хороше пояснення такої поведінки.
 
-The other objects that have `forEach()` methods (arrays and maps) pass three arguments to their callback functions. The first two arguments for arrays and maps are the value and the key (the numeric index for arrays).
+Інші об’єкти, що мають метод `forEach()` (масиви та мапи) передають по три аргументи у свої функції зворотнього виклику. Першим два аргументи для множин та для мап є значенням та ключем (числовим індексом у масивах).
 
-Sets do not have keys, however. The people behind the ECMAScript 6 standard could have made the callback function in the set version of `forEach()` accept two arguments, but that would have made it different from the other two. Instead, they found a way to keep the callback function the same and accept three arguments: each value in a set is considered to be both the key and the value. As such, the first and second argument are always the same in `forEach()` on sets to keep this functionality consistent with the other `forEach()` methods on arrays and maps.
+Однак, множини не мають ключів. Люди, що розробляли стандарт ECMAScript 6 могли зробити функцію зворотнього виклику в `forEach()` для множин, що приймала б два аргументи, проте це вона відрізнялася б від двох інших. Замість цього, вони знайшли спосіб зберегти функцію зворотнього виклику однаковою для всіх і щоб вона приймала три аргументи: кожне значення у множині розглядається як ключ і значення одночасно. Таким чином, перший та другий аргументи у `forEach()` для множин завжди однакові, щоб зберегти їхню функціональність цілісною з методами `forEach()` для масивів та мап.
 
-Other than the difference in arguments, using `forEach()` is basically the same for a set as it is for an array. Here's some code that shows the method at work:
+Крім аргументів, все інше працює у `forEach()` для множин так само як і для масивів. Ось трошки коду, що демонструє цей метод у дії:
 
 ```js
 let set = new Set([1, 2]);
@@ -207,7 +207,7 @@ set.forEach(function(value, key, ownerSet) {
 });
 ```
 
-This code iterates over each item in the set and outputs the values passed to the `forEach()` callback function. Each time the callback function executes, `key` and `value` are the same, and `ownerSet` is always equal to `set`. This code outputs:
+Цей код ітерується по кожному елементі множини та виводить значення, що передаються у функцію зворотнього виклику методу `forEach()`. Щоразу, коли функція зворотнього виклику виконується, `key` та `value` є однакові, а `ownerSet` завжди дорівнює `set`. Цей код виводить:
 
 ```
 1 1
@@ -216,7 +216,7 @@ true
 true
 ```
 
-Also the same as arrays, you can pass a `this` value as the second argument to `forEach()` if you need to use `this` in your callback function:
+Так само як і для масивів ви можете передати значення `this` в якості другого аргументу в `forEach()`, якщо потрібно використовувати `this` всередині функції зворотнього виклику:
 
 ```js
 let set = new Set([1, 2]);
@@ -235,7 +235,7 @@ let processor = {
 processor.process(set);
 ```
 
-In this example, the `processor.process()` method calls `forEach()` on the set and passes `this` as the `this` value for the callback. That's necessary so `this.output()` will correctly resolve to the `processor.output()` method. The `forEach()` callback function only makes use of the first argument, `value`, so the others are omitted. You can also use an arrow function to get the same effect without passing the second argument, like this:
+У цьому прикладі, метод `processor.process()` викликає `forEach()` для множини та передає `this` в якості значення `this` всередині функції зворотнього виклику. Це необхідно, щоб `this.output()` правильно визначився у метод `processor.output()`. Функція зворотнього виклику `forEach()` використовує лише перший аргумент, `value`, тому інші упускаються. Ви також можете використовувати arrow–функції щоб отримати той же результат без передачі другого аргументу, ось так:
 
 ```js
 let set = new Set([1, 2]);
@@ -252,13 +252,13 @@ let processor = {
 processor.process(set);
 ```
 
-The arrow function in this example reads `this` from the containing `process()` function, and so it should correctly resolve `this.output()` to a `processor.output()` call.
+Аrrow—функція у цьому прикладі читає `this` з функції `process()` у якій вона міститься, тому `this.output()` має коректно визначатись у виклик `processor.output()`.
 
-Keep in mind that while sets are great for tracking values and `forEach()` lets you work on each value sequentially, you can't directly access a value by index like you can with an array. If you need to do so, then the best option is to convert the set into an array.
+Запам’ятайте, що множини зручні для відслідковування значення, а `forEach()` дає вам можливість працювати з кожними значенням почергово, але ви не маєте безпосереднього доступу до значень за індексом так, як у випадку з масивами. Якщо це потрібно, тоді найкраще буде конвертувати множину у масив.
 
-### Converting a Set to an Array
+### Перетворення множини у масив
 
-It's easy to convert an array into a set because you can pass the array to the `Set` constructor. It's also easy to convert a set back into an array using the spread operator. Chapter 3 introduced the spread operator (`...`) as a way to split items in an array into separate function parameters. You can also use the spread operator to work on iterable objects, such as sets, to convert them into arrays. For example:
+Просто конвертувати масив у множину, оскільки ви можете передати масив у конструктор `Set`. Також просто конвертувати множину назад у масив з використанням оператора розкладу (spread operator). Глава 3 розповідала про оператор розкладу (`...`) як спосіб розбити елементи масиву в окремі параметри функції. Ви також можете використовувати оператор розкладу для роботи з ітерабельними об’єктами, як от множинами, для перетворення їх у масиви. Наприклад:
 
 ```js
 let set = new Set([1, 2, 3, 3, 3, 4, 5]),
@@ -267,9 +267,9 @@ let set = new Set([1, 2, 3, 3, 3, 4, 5]),
 console.log(array);             // [1,2,3,4,5]
 ```
 
-Here, a set is initially loaded with an array that contains duplicates. The set removes the duplicates, and then the items are placed into a new array using the spread operator. The set itself still contains the same items (`1`, `2`, `3`, `4`, and `5`) it received when it was created. They've just been copied to a new array.
+У цьому прикладі, з масиву, що містить повторення, створюється множина. Множина видаляє повторення, а потім вона перетворюється у новий масив з допомогою оператора розкладу. Множина, сама по собі, продовжує зберігати ті самі елементи, які вона отримала при створенні (`1`, `2`, `3`, `4` та `5`). Вони просто копіюються у новий масив.
 
-This approach is useful when you already have an array and want to create an array without duplicates. For example:
+Такий підхід корисний якщо ви вже маєте масив і хочете створити масив, що не містить повторень. Наприклад:
 
 ```js
 function eliminateDuplicates(items) {
@@ -282,11 +282,11 @@ let numbers = [1, 2, 3, 3, 3, 4, 5],
 console.log(noDuplicates);      // [1,2,3,4,5]
 ```
 
-In the `eliminateDuplicates()` function, the set is just a temporary intermediary used to filter out duplicate values before creating a new array that has no duplicates.
+У функції `eliminateDuplicates()`, множина тимчасово використовується для фільтрації повторень перед створенням нового масиву, що не містить повторень.
 
-### Weak Sets
+### Слабкі множини (Weak Sets)
 
-The `Set` type could alternately be called a strong set, because of the way it stores object references. An object stored in an instance of `Set` is effectively the same as storing that object inside a variable. As long as a reference to that `Set` instance exists, the object cannot be garbage collected to free memory. For example:
+Тип `Set` також можна ще назвати сильною множиною (strong set), через те, як вона зберігає посилання на об’єкти. Об’єкт зберігається в екземплярі `Set` і це те саме, що зберігати об’єкт у змінній. Допоки посилання до цього екземпляру `Set` існує, збирач сміття не чіпатиме цей об’єкт щоб звільнити пам’ять. Наприклад:
 
 ```js
 let set = new Set(),
@@ -295,28 +295,28 @@ let set = new Set(),
 set.add(key);
 console.log(set.size);      // 1
 
-// eliminate original reference
+// видаляємо початкове посилання
 key = null;
 
 console.log(set.size);      // 1
 
-// get the original reference back
+// отримуємо початкове посилання
 key = [...set][0];
 ```
 
-In this example, setting `key` to `null` clears one reference of the `key` object, but another remains inside `set`. You can still retrieve `key` by converting the set to an array with the spread operator and accessing the first item. That result is fine for most programs, but sometimes, it's better for references in a set to disappear when all other references disappear. For instance, if your JavaScript code is running in a web page and wants to keep track of DOM elements that might be removed by another script, you don't want your code holding onto the last reference to a DOM element. (That situation is called a *memory leak*.)
+У цьому прикладі, присвоєння `key` значення `null` очищує одне посилання на об’єкт `key`, проте інше залишається всередині `set`. Ви досі можете отримати `key` шляхом конвертації множини у масив з допомогою оператора розкладу та отримання першого елемента. Такий результат є підходить для більшості програм, але часом краще щоб посилання у множині зникали, якщо зникають всі інші посилання. Для прикладу, якщо ваш JavaScript–код виконується на веб–сторінці і має слідкувати за елементами в DOM, що можуть бути видалені іншим скриптом, вам не потрібно щоб ваш код зберігав останнє посилання на DOM–елемент. (Така ситуація називається *витоком пам'яті (memory leak)*.)
 
-To alleviate such issues, ECMAScript 6 also includes *weak sets*, which only store weak object references and cannot store primitive values. A *weak reference* to an object does not prevent garbage collection if it is the only remaining reference.
+Для вирішення таких проблем ECMAScript 6 також включає *слабкі множини (weak sets)*, що можуть містити лише слабкі посилання на об’єкти і не можуть містити примітивних значень. *Слабке посилання (weak reference)* на об’єкт не зупиняє збір сміття, якщо воно є єдиним посиланням на об’єкт, що залишилось.
 
-#### Creating a Weak Set
+#### Створення слабких множин
 
-Weak sets are created using the `WeakSet` constructor and have an `add()` method, a `has()` method, and a `delete()` method. Here's an example that uses all three:
+Слабкі множини створюються з допомогою конструктора `WeakSet` і мають методи `add()`, `has()` та `delete()`. Ось приклад того як вони використовуються:
 
 ```js
 let set = new WeakSet(),
     key = {};
 
-// add the object to the set
+// додаємо об’єкт у множину
 set.add(key);
 
 console.log(set.has(key));      // true
@@ -326,7 +326,7 @@ set.delete(key);
 console.log(set.has(key));      // false
 ```
 
-Using a weak set is a lot like using a regular set. You can add, remove, and check for references in the weak set. You can also seed a weak set with values by passing an iterable to the constructor:
+Використання слабкої множини дуже схоже на використання звичайної. Ви можете додавати, видаляти та перевіряти чи є посилання у слабкій множині. Також можливо ініціалізувати слабку множину зі значеннями передавши ітерабельний об’єкт у її конструктор:
 
 ```js
 let key1 = {},
@@ -337,44 +337,44 @@ console.log(set.has(key1));     // true
 console.log(set.has(key2));     // true
 ```
 
-In this example, an array is passed to the `WeakSet` constructor. Since this array contains two objects, those objects are added into the weak set. Keep in mind that an error will be thrown if the array contains any non-object values, since `WeakSet` can't accept primitive values.
+У цьому прикладі, у конструктор `WeakSet` передається масив. Оскільки цей масив містить два об’єкти, ці об’єкти додаються у слабку множину. Запам'ятайте, що якщо масив міститиме значення–необ’єкти, буде кинута помилка, тому що `WeakSet` не може містити примітивних значень.
 
-#### Key Differences Between Set Types
+#### Ключові відмінності між типами множин
 
-The biggest difference between weak sets and regular sets is the weak reference held to the object value. Here's an example that demonstrates that difference:
+Найбільша відмінність між слабкими та звичайними множинами це слабкі посилання, що прив’язані до значення об’єкту. Ось приклад, що демонструє цю відмінність:
 
 ```js
 let set = new WeakSet(),
     key = {};
 
-// add the object to the set
+// додаємо об’єкт у множину
 set.add(key);
 
 console.log(set.has(key));      // true
 
-// remove the last strong reference to key, also removes from weak set
+// видалення останнього сильного посилання на key також видаляє його з слабкої множини
 key = null;
 ```
 
-After this code executes, the reference to `key` in the weak set is no longer accessible. It is not possible to verify its removal because you would need one reference to that object to pass to the `has()` method. This can make testing weak sets a little confusing, but you can trust that the reference has been properly removed by the JavaScript engine.
+Після виконання цього коду, посилання на `key` у слабкій множині більше не буде доступним. Неможливо перевірити це видалення, тому що вам би знадобилось хоча б одне посилання на цей об’єкт, яке ви мали би передати у метод `has()`. Це може зробити тестування слабких множин дещо заплутаним, проте ви можете бути певні, що посилання точно було видалено рушієм JavaScript .
 
-These examples show that weak sets share some characteristics with regular sets, but there are some key differences. Those are:
+Ці приклади показують, що слабкі множини мають кілька спільних характеристик зі звичайними множинами, проте є кілька ключових відмінностей. Ось вони:
 
-1. In a `WeakSet` instance, the `add()` method, `has()` method, and `delete()` method all throw an error when passed a non-object.
-1. Weak sets are not iterables and therefore cannot be used in a `for-of` loop.
-1. Weak sets do not expose any iterators (such as the `keys()` and `values()` methods), so there is no way to programmatically determine the contents of a weak set.
-1. Weak sets do not have a `forEach()` method.
-1. Weak sets do not have a `size` property.
+1. У екземплярі `WeakSet`, методи `add()`, `has()` та `delete()` кинуть помилку, якщо їм передати необ’єкт.
+1. Слабкі множини не ітерабельні і тому не можуть використовуватись у циклі `for-of`.
+1. Слабкі множини не видають ніяких ітераторів (як от методи `keys()` та `values()`) і тому немає способу програмно визначити вміст слабкої множини.
+1. Слабкі множини не мають методу `forEach()`.
+1. Слабкі множини не мають властивості `size`.
 
-The seemingly limited functionality of weak sets is necessary in order to properly handle memory. In general, if you only need to track object references, then you should use a weak set instead of a regular set.
+Здавалося б обмежена функціональність слабких множин необхідна для того, щоб правильно керувати пам’яттю. Загалом, якщо вам потрібно лише слідкувати за посиланнями на об’єкти, вам слід використовувати слабкі множини замість звичайних.
 
-Sets give you a new way to handle lists of values, but they aren't useful when you need to associate additional information with those values. That's why ECMAScript 6 also adds maps.
+Множини дають вам новий спосіб керування списками значень, проте вони не дуже корисні, якщо вам потрібно асоціювати додаткову інформацію з цими значеннями. Ось для чого ECMAScript 6 також додає мапи.
 
-## Maps in ECMAScript 6
+## Мапи в ECMAScript 6
 
-The ECMAScript 6 `Map` type is an ordered list of key-value pairs, where both the key and the value can have any type. Keys equivalence is determined by using `Object.is()`, so you can have both a key of `5` and a key of `"5"` because they are different types. This is quite different from using object properties as keys, as object properties always coerce values into strings.
+Тип `Map` в ECMAScript 6 є впорядкованим списком пар “ключ–значення” в яких як ключ, так і значення можуть мати будь–який тип. Еквівалентність ключів визначається через `Object.is()`, тому ви можете мати одночасно ключ `5` та ключ `"5"` тому, що це різні типи. Це дещо відрізняється від використання властивостей об’єктів у якості ключів, оскільки властивості об’єктів завжди приводять значення у рядки.
 
-You can add items to maps by calling the `set()` method and passing it a key and the value to associate with the key. You can later retrieve a value by passing the key to the `get()` method. For example:
+Ви можете додавати елементи у мапи викликом методу `set()` та передачею йому ключа та значення, що асоціюється з цим ключем. Потім ви можете дістати значення передавши ключ у метод `get()`. Наприклад:
 
 ```js
 let map = new Map();
@@ -385,9 +385,9 @@ console.log(map.get("title"));      // "Understanding ES6"
 console.log(map.get("year"));       // 2016
 ```
 
-In this example, two key-value pairs are stored. The `"title"` key stores a string while the `"year"` key stores a number. The `get()` method is called later to retrieve the values for both keys. If either key didn't exist in the map, then `get()` would have returned the special value `undefined` instead of a value.
+У цьому прикладі відбувається збереження двох пар “ключ–значення”. Ключ `"title"` зберігає рядок, тоді як ключ `"year"` зберігає число. Потім для отримання значень для обох ключів викликається метод `get()`. Якщо б ключа не існувало у цій мапі, тоді метод `get()` повернув би спеціальне значення `undefined` замість значення.
 
-You can also use objects as keys, which isn't possible when using object properties to create a map in the old workaround approach. Here's an example:
+Ви також можете використовувати об’єкти у якості ключів, що неможливо при використанні властивостей об’єктів для створення мап обхідним шляхом. Ось приклад:
 
 ```js
 let map = new Map(),
@@ -401,17 +401,17 @@ console.log(map.get(key1));         // 5
 console.log(map.get(key2));         // 42
 ```
 
-This code uses the objects `key1` and `key2` as keys in the map to store two different values. Because these keys are not coerced into another form, each object is considered unique. This allows you to associate additional data with an object without modifying the object itself.
+Цей код використовує об’єкти `key1` та `key2` в якості ключів у мапі для збереження різних значень. Оскільки ці ключі не приводяться у інші типи, кожен об’єкт розглядається як унікальний. Це дозволяє асоціювати з об’єктом додаткові данні без зміни самого об’єкту.
 
-### Map Methods
+### Методи мап
 
-Maps share several methods with sets. That is intentional, and it allows you to interact with maps and sets in similar ways. These three methods are available on both maps and sets:
+Мапи мають з множинами кілька спільних методів. Це зроблено для того, щоб взаємодіяти з мапами та множинами схожим чином. Ці три методи доступні як для мап, так і для множин:
 
-* `has(key)` - Determines if the given key exists in the map
-* `delete(key)` - Removes the key and its associated value from the map
-* `clear()` - Removes all keys and values from the map
+* `has(key)` - визначає чи даний ключ існує в мапі;
+* `delete(key)` - видаляє з мапи ключ та асоційоване з ним значення;
+* `clear()` - видаляє всі ключі та значення з мапи.
 
-Maps also have a `size` property that indicates how many key-value pairs it contains. This code uses all three methods and `size` in different ways:
+Мапи також мають властивість `size`, що вказує скільки пар “ключ–значення” містить мапа. Приклад нижче демонструє різні способи використання цих трьох методів та властивості `size`:
 
 ```js
 let map = new Map();
@@ -440,13 +440,13 @@ console.log(map.size);          // 0
 
 ```
 
-As with sets, the `size` property always contains the number of key-value pairs in the map. The `Map` instance in this example starts with the `"name"` and `"age"` keys, so `has()` returns `true` when passed either key. After the `"name"` key is removed by the `delete()` method, the `has()` method returns `false` when passed `"name"` and the `size` property indicates one less item. The `clear()` method then removes the remaining key, as indicated by `has()` returning `false` for both keys and `size` being 0.
+Як і для множин, властивість `size` завжди містить кількість пар “ключ–значення” у мапі. Екземпляр `Map`, у цьому прикладі, спочатку має ключі `"name"` та `"age"`, тому `has()` повертає `true`, якщо передати йому ці ключі. Після видалення ключа `"name"` через метод `delete()`, метод `has()` повертає `false` при передачі `"name"`, а властивість `size` показує на один елемент менше. Потім метод `clear()` видаляє решту ключів, тому `has()` повертає `false` для обох ключів, а властивість `size` дорівнює 0.
 
-The `clear()` method is a fast way to remove a lot of data from a map, but there's also a way to add a lot of data to a map at one time.
+Метод `clear()` є швидким способом видалити багато даних з мапи, проте є також спосіб додати багато даних у мапу за один раз.
 
-### Map Initialization
+### Ініціалізація мап
 
-Also similar to sets, you can initialize a map with data by passing an array to the `Map` constructor. Each item in the array must itself be an array where the first item is the key and the second is that key's corresponding value. The entire map, therefore, is an array of these two-item arrays, for example:
+Так само як і для множин, ви можете ініціалізувати мапу з даними передавши масив у конструктор `Map`. Кожен елемент у цьому масиві повинен бути масивом в якому перший елемент буде ключем, а другий значенням, що відповідає цьому ключеві. Сама мапа, таким чином, є масивом цих двоелементних масивів, наприклад:
 
 ```js
 let map = new Map([["name", "Nicholas"], ["age", 25]]);
@@ -458,17 +458,17 @@ console.log(map.get("age"));    // 25
 console.log(map.size);          // 2
 ```
 
-The keys `"name"` and `"age"` are added into `map` through initialization in the constructor. While the array of arrays may look a bit strange, it's necessary to accurately represent keys, as keys can be any data type. Storing the keys in an array is the only way to ensure they aren't coerced into another data type before being stored in the map.
+Ключі `"name"` та `"age"` додаються у `map` через ініціалізацію у конструкторі. Масив з масивів може здаватись дещо дивним, проте це необхідно для правильного представлення ключів, через те, що ключі можуть бути будь–якого типу даних. Збереження ключів у масиві — єдиний спосіб збереження, який дає певність у тому, що вони не будуть приведені у інший тип даних перед збереження у мапі.
 
-### The forEach Method on Maps
+### Метод forEach для мап
 
-The `forEach()` method for maps is similar to `forEach()` for sets and arrays, in that it accepts a callback function that receives three arguments:
+Метод `forEach()` для мап схожий на `forEach()` для множин та масивів у тому, що він приймає функцію зворотнього виклику, що приймає три аргументи:
 
-1. The value from the next position in the map
-1. The key for that value
-1. The map from which the value is read
+1. значення наступної позиції у множині;
+1. ключ цього значення;
+1. множину з якої читаються значення.
 
-These callback arguments more closely match the `forEach()` behavior in arrays, where the first argument is the value and the second is the key (corresponding to a numeric index in arrays). Here's an example:
+Ці три аргументи у функції зворотнього виклику більш точно відповідають поведінці `forEach()` для масивів, коли перший аргумент є значенням, а другий ключем (відповідно до числової індексації у масивах). Ось приклад:
 
 ```js
 let map = new Map([ ["name", "Nicholas"], ["age", 25]]);
@@ -479,7 +479,7 @@ map.forEach(function(value, key, ownerMap) {
 });
 ```
 
-The `forEach()` callback function outputs the information that is passed to it. The `value` and `key` are output directly, and `ownerMap` is compared to `map` to show that the values are equivalent. This outputs:
+Функція зворотнього виклику у `forEach()` виводить інформацію, що у неї передається. `value` та `key` виводяться безпосередньо, а `ownerMap` порівнюється з `map`, щоб показати, що їх значення є еквівалентними. Ось вивід:
 
 ```
 name Nicholas
@@ -488,23 +488,23 @@ age 25
 true
 ```
 
-The callback passed to `forEach()` receives each key-value pair in the order in which the pairs were inserted into the map. This behavior differs slightly from calling `forEach()` on arrays, where the callback receives each item in order of numeric index.
+Функція зворотнього виклику, яку було передано у `forEach()` отримує кожну пару “ключ–значення” у тому порядку, в якому вони були додані у мапу. Така поведінка дещо відрізняється від виклику `forEach()` для масивів, при якому зворотній виклик отримує кожен елемент у порядку числової індексації.
 
-I> You can also provide a second argument to `forEach()` to specify the `this` value inside the callback function. A call like that behaves the same as the set version of the `forEach()` method.
+I> Ви також можете передати другий аргумент у `forEach()`, щоб задати значення `this` всередині функції зворотнього виклику. Такий виклик поводитиметься так само, як і відповідна версія виклику методу `forEach()` для множин.
 
-### Weak Maps
+### Слабкі мапи (Weak Maps)
 
-Weak maps are to maps what weak sets are to sets: they're a way to store weak object references. In *weak maps*, every key must be an object (an error is thrown if you try to use a non-object key), and those object references are held weakly so they don't interfere with garbage collection. When there are no references to a weak map key outside a weak map, the key-value pair is removed from the weak map.
+Слабкі мапи для мап є тим самим, що і слабкі множини для множин: це спосіб збереження слабких посилань на об’єкти. У *слабких мапах (weak maps)*, кожен ключ має бути об’єктом (при спробі використання ключа–необ’єкта буде кинуто помилку), і ці посилання на об’єкти утримуються слабко, тому вони не перешкоджають збору сміття. Якщо немає посилань на ключ слабкої мапи поза цією слабкою мапою, тоді пара “ключ–значення” видаляється зі слабкої мапи.
 
-The most useful place to employ weak maps is when creating an object related to a particular DOM element in a web page. For example, some JavaScript libraries for web pages maintain one custom object for every DOM element referenced in the library, and that mapping is stored in a cache of objects internally.
+Найбільш корисним місцем застосування слабких мап є створення об’єктів, що відповідають певному DOM–елементу на веб–сторінці. Наприклад, деяка JavaScript—бібліотека для веб–сторінок підтримує один спеціальний об’єкт для кожного DOM–елементу на який посилається бібліотека, і це відображення зберігається внутрішньо у кеші об’єктів.
 
-The difficult part of this approach is determining when a DOM element no longer exists in the web page, so that the library can remove its associated object. Otherwise, the library would hold onto the DOM element reference past the reference's usefulness and cause a memory leak. Tracking the DOM elements with a weak map would still allow the library to associate a custom object with every DOM element, and it could automatically destroy any object in the map when that object's DOM element no longer exists.
+Складність цього підходу у визначенні коли DOM–елементу більше немає на веб–сторінці, щоб бібліотека змогла видалити цей асоційований об’єкт. У протилежному випадку, бібліотека зберігатиме посилання непотрібні посилання на DOM–елементи і цим спричинить витік пам’яті. Відслідковування DOM–елементів через слабкі мапи дозволило би бібліотеці асоціювати спеціальні об’єкти з кожним DOM–елементом і при цьому автоматично видаляти будь–які об’єкти у мапі, відповідних DOM–елементів яких більше не існує.
 
-I> It's important to note that only weak map keys, and not weak map values, are weak references. An object stored as a weak map value will prevent garbage collection if all other references are removed.
+I> Важливо зрозуміти, що лише ключі, а не значення, у слабких мапах є слабкими посиланнями. Об’єкти, що зберігаються як значення у слабких мапах не підбираються збирачем сміття, якщо всі інші посилання на них видалені.
 
-#### Using Weak Maps
+#### Використання слабких мап
 
-The ECMAScript 6 `WeakMap` type is an unordered list of key-value pairs, where a key must be a non-null object and a value can be of any type. The interface for `WeakMap` is very similar to that of `Map` in that `set()` and `get()` are used to add and retrieve data, respectively:
+Тип `WeakMap` у  ECMAScript 6 є невпорядкованим списком пар “ключ–значення”, в яких ключ має бути ненульовим об’єктом, а значення може мати будь–який тип. Інтерфейс у `WeakMap` є дуже схожим до інтерфейсу `Map` у тому, що `set()` та `get()` використовуються для додавання та витягнення даних, відповідно:
 
 ```js
 let map = new WeakMap(),
@@ -515,20 +515,20 @@ map.set(element, "Original");
 let value = map.get(element);
 console.log(value);             // "Original"
 
-// remove the element
+// видаляємо елемент
 element.parentNode.removeChild(element);
 element = null;
 
-// the weak map is empty at this point
+// тут слабка множина стає порожньою
 ```
 
-In this example, one key-value pair is stored. The `element` key is a DOM element used to store a corresponding string value. That value is then retrieved by passing in the DOM element to the `get()` method. When the DOM element is later removed from the document and the variable referencing it is set to `null`, the data is also removed from the weak map.
+У цьому приклад, зберігається одна пара “ключ–значення”. Ключ `element` є DOM–елементом, що використовується для збереження відповідного рядкового значення. Це значення отримується шляхом передачі DOM–елементу у метод `get()`. Потім DOM–елемент видаляється з документу, а змінній, що посилається на нього, присвоюється значення `null` і дані також видаляються зі слабкої мапи.
 
-Similar to weak sets, there is no way to verify that a weak map is empty, because it doesn't have a `size` property. Because there are no remaining references to the key, you can't retrieve the value by calling the `get()` method, either. The weak map has cut off access to the value for that key, and when the garbage collector runs, the memory occupied by the value will be freed.
+Так само як і для слабких множин, немає можливості перевірити, що слабка мапа порожня тому, що вона не має властивості `size`. Оскільки не залишається жодного посилання на ключі, ви більше не можете отримати його значення через виклик метода `get()`. Слабка мапа видаляє доступ до значення для цього ключа і тоді запускається збирач сміття, пам’ять, яку займало це значення, звільняється.
 
-#### Weak Map Initialization
+#### Ініціалізація слабких мап
 
-To initialize a weak map, pass an array of arrays to the `WeakMap` constructor. Just like initializing a regular map, each array inside the containing array should have two items, where the first item is the non-null object key and the second item is the value (any data type). For example:
+Щоб ініціалізувати слабку мапу, передайте масив масивів у конструктор `WeakMap`. Точно як і при ініціалізації звичайної мапи, кожен масив всередині загального масиву має два елементи, при чому перший елемент є ненульовим об’єктом, а другий елемент є значенням (будь–якого типу даних). Наприклад:
 
 ```js
 let key1 = {},
@@ -541,11 +541,11 @@ console.log(map.has(key2));     // true
 console.log(map.get(key2));     // 42
 ```
 
-The objects `key1` and `key2` are used as keys in the weak map, and the `get()` and `has()` methods can access them. An error is thrown if the `WeakMap` constructor receives a non-object key in any of the key-value pairs.
+Об’єкти `key1` та `key2` використовуються у якості ключів у слабкій мапі, а тоді метод `get()` та `has()` можуть отримати значення через них. Якщо конструктор отримає ключ необ’єкт у будь–якій парі “ключ–значення”, то кинеться помилка.
 
-#### Weak Map Methods
+#### Методи слабких мап
 
-Weak maps have only two additional methods available to interact with key-value pairs. There is a `has()` method to determine if a given key exists in the map and a `delete()` method to remove a specific key-value pair. There is no `clear()` method because that would require enumerating keys, and like weak sets, that isn't possible with weak maps. This example uses both the `has()` and `delete()` methods:
+Слабкі мапи мають лише два додаткові методи, доступні для взаємодії з парами “ключ значення”. Є метод `has()` для визначення чи даний ключ існує у мапі та метод `delete()` для видалення певної пари. Методу `clear()` немає через те, що він вимагає перелічуваних ключів, що є неможливим для слабких мап. Цей приклад використовує методи `has()` та `delete()`:
 
 ```js
 let map = new WeakMap(),
@@ -561,11 +561,11 @@ console.log(map.has(element));   // false
 console.log(map.get(element));   // undefined
 ```
 
-Here, a DOM element is once again used as the key in a weak map. The `has()` method is useful for checking to see if a reference is currently being used as a key in the weak map. Keep in mind that this only works when you have a non-null reference to a key. The key is forcibly removed from the weak map by the `delete()` method, at which point `has()` returns `false` and `get()` returns `undefined`.
+Тут DOM–елемент знову використовується у якості ключа слабкої мапи. Метод `has()` корисний для перевірки того, чи посилання використовується у якості ключа у слабкій мапі. Запам'ятайте, що це працює лише тоді, коли ви маєте ненульові посилання на ключ. Ключ примусово видаляється з слабкої мапи з допомогою методу `delete()`, після цього `has()` повертає `false` а `get()` повертає `undefined`.
 
-#### Private Object Data
+#### Приватні дані у об’єктах
 
-While most developers consider the main use case of weak maps to be associated data with DOM elements, there are many other possible uses (and no doubt, some that have yet to be discovered). One practical use of weak maps is to store data that is private to object instances. All object properties are public in ECMAScript 6, and so you need to use some creativity to make data accessible to objects, but not accessible to everything. Consider the following example:
+Тоді як більшість розробників вбачають у асоціюванні даних DOM–елементами основний спосіб використання слабких мап, є багато інших можливих використань (і без сумніву, деякі з них ще не достатньо вивчені). Одним з практичних застосувань слабких мап є збереження приватних даних у екземплярах об’єктів. Всі властивості об’єктів є публічними у ECMAScript 6 і тому вам слід проявити трохи винахідливості для того, щоб зробити дані доступними для об’єктів, але недоступними для всього іншого. Розгляньте такий приклад:
 
 ```js
 function Person(name) {
@@ -577,9 +577,9 @@ Person.prototype.getName = function() {
 };
 ```
 
-This code uses the common convention of a leading underscore to indicate that a property is considered private and should not be modified outside the object instance. The intent is to use `getName()` to read `this._name` and not allow the `_name` value to change. However, there is nothing standing in the way of someone writing to the `_name` property, so it can be overwritten either intentionally or accidentally.
+Такий код використовує поширений запис, що починається з нижнього підкреслення і вказує на те, що значення вважається приватним і його не слід змінювати поза екземпляром об’єкта. Передбачається, що для читання `this._name` буде використовуватись `getName()`, змінювати `_name` не можна. Однак, нічого не перешкоджає комусь записати щось у властивість `_name`, тому вона може бути випадково, або навмисно, перезаписана.
 
-In ECMAScript 5, it's possible to get close to having truly private data, by creating an object using a pattern such as this:
+У ECMAScript 5 можливо отримати щось дуже схоже на приватні дані через створення об’єкта за таким шаблоном:
 
 ```js
 var Person = (function() {
@@ -603,11 +603,11 @@ var Person = (function() {
 }());
 ```
 
-This example wraps the definition of `Person` in an IIFE that contains two private variables, `privateData` and `privateId`. The `privateData` object stores private information for each instance while `privateId` is used to generate a unique ID for each instance. When the `Person` constructor is called, a nonenumerable, nonconfigurable, and nonwritable `_id` property is added.
+Цей приклад огортає визначення `Person` у НВФВ, що містить приватні змінні, `privateData` та `privateId`. Об’єкт `privateData` зберігає приватну інформацію для кожного екземпляру, тоді як `privateId` використовується щоб генерувати унікальний ID для кожного екземпляру. Коли викликається конструктор `Person`, створюється неперелічувана, незмінна і недоступна на запис властивість `_id`.
 
-Then, an entry is made into the `privateData` object that corresponds to the ID for the object instance; that's where the `name` is stored. Later, in the `getName()` function, the name can be retrieved by using `this._id` as the key into `privateData`. Because `privateData` is not accessible outside of the IIFE, the actual data is safe, even though `this._id` is exposed publicly.
+Потім, створюється поле у об’єкті `privateData`, що відповідає ID екземпляра об’єкта: ось де де зберігається `name`. Пізніше, у функції `getName()`, можна дістати `name` через використання `this._id` в якості ключа для `privateData`. Оскільки `privateData` недоступний поза НВФВ, справжні дані в безпеці, навіть хоча й `this._id` відкривається публічно.
 
-The big problem with this approach is that the data in `privateData` never disappears because there is no way to know when an object instance is destroyed; the `privateData` object will always contain extra data. This problem can be solved by using a weak map instead, as follows:
+Великою проблемою цього підходу є те, що дані у `privateData` ніколи не зникають, тому що немає способу дізнатись чи екземпляр об’єкту був знищений. Об’єкт `privateData` завжди буде зберігати додаткові дані. Цю проблему можна вирішити використанням слабких мап, таки чином:
 
 ```js
 let Person = (function() {
@@ -626,24 +626,24 @@ let Person = (function() {
 }());
 ```
 
-This version of the `Person` example uses a weak map for the private data instead of an object. Because the `Person` object instance itself can be used as a key, there's no need to keep track of a separate ID. When the `Person` constructor is called, a new entry is made into the weak map with a key of `this` and a value of an object containing private information. In this case, that value is an object containing only `name`. The `getName()` function retrieves that private information by passing `this` to the `privateData.get()` method, which fetches the value object and accesses the `name` property. This technique keeps the private information private, and destroys that information whenever an object instance associated with it is destroyed.
+Така версія прикладу з `Person` використовує для приховування даних слабку мапу замість об’єкта. Оскільки екземпляр об’єкту `Person` може сам використовуватись у якості ключа, немає проблему зберігати окремий ID. Коли конструктор `Person` викликається, у слабкій мапі створюється нова одиниця з ключем `this` та об’єктом, що містить приватну інформацію, у якості значення. У цьому випадку, це об’єкт, що містить лише поле `name`. Функція `getName()` дістає цю приватну інформацію передавши `this` у метод `privateData.get()`, який зчитує значення, що є об’єктом, і дістає з нього властивість `name`. Така техніка зберігає приватну інформацію приватною та видаляє цю інформацію, як тільки екземпляр об’єкту, що асоціюється з нею, буде видалений.
 
-#### Weak Map Uses and Limitations
+#### Використання слабких мап та їх обмеження
 
-When deciding whether to use a weak map or a regular map, the primary decision to consider is whether you want to use only object keys. Anytime you're going to use only object keys, then the best choice is a weak map. That will allow you to optimize memory usage and avoid memory leaks by ensuring that extra data isn't kept around after it's no longer accessible.
+Вирішуючи коли використовувати слабкі мапи, а коли звичайні, рішення має ґрунтуватись на тому, чи ви хочете використовувати лише об’єкти у якості ключів. Щоразу, коли ви збираєтесь використовувати лише об’єкти у якості ключів — слабка мапа буде найкращим рішенням. Це дозволить вам оптимізувати використання пам'яті та уникнути витоків пам'яті шляхом видалення даних, що більше недоступні.
 
-Keep in mind that weak maps give you very little visibility into their contents, so you can't use the `forEach()` method, the `size` property, or the `clear()` method to manage the items. If you need some inspection capabilities, then regular maps are a better choice. Just be sure to keep an eye on memory usage.
+Запам’ятайте, що слабкі мапи дають вам лише часткову видимість свого вмісту, ви не можете використовувати метод `forEach()`, властивість `size` або метод `clear()` для керування елементами. Якщо вам необхідні можливості для інспектування, тоді звичайні мапи підійдуть краще. Вам просто варто буде слідкувати за використанням пам’яті.
 
-Of course, if you only want to use non-object keys, then regular maps are your only choice.
+Звісно, якщо ви хочете використовувати необ’єктні ключі, тоді звичайні мапи будуть єдиним варіантом.
 
-## Summary
+## Підсумок
 
-ECMAScript 6 formally introduces sets and maps into JavaScript. Prior to this, developers frequently used objects to mimic both sets and maps, often running into problems due to the limitations associated with object properties.
+ECMAScript 6 формально вводить множини та мапи в JavaScript. До цього розробники часто використовували об’єкти для імітації множин та мап, часто отримуючи проблеми, пов’язані з обмеженнями, що стосуються властивостей у об’єктах.
 
-Sets are unordered lists of unique values. Values are considered unique if they are not equivalent according to the  `Object.is()` method. Sets automatically remove duplicate values, so you can use a set to filter an array for duplicates and return the result. Sets aren't subclasses of arrays, so you cannot randomly access a set's values. Instead, you can use the `has()` method to determine if a value is contained in the set and the `size` property to inspect the number of values in the set. The `Set` type also has a `forEach()` method to process each set value.
+Множини — це невпорядковані списки унікальних значень. Значення розглядаються як унікальні, якщо вони не еквівалентні відповідно до методу `Object.is()`. Множини автоматично видаляють значення, що повторюються, тому ви можете використовувати множини для фільтрації масивів на повторення. Множини не є підкласом масивів, ви не можете випадково отримати значення множини. Замість цього, ви можете використати метод `has()` для визначення того, чи значення міститься у множині, а властивість `size` показує число значень у множині. Тип `Set` також має метод `forEach()` для обробки кожного значення у множині.
 
-Weak sets are special sets that can contain only objects. The objects are stored with weak references, meaning that an item in a weak set will not block garbage collection if that item is the only remaining reference to an object. Weak set contents can't be inspected due to the complexities of memory management, so it's best to use weak sets only for tracking objects that need to be grouped together.
+Слабкі множини — це спеціальний тим, що може містити виключно об’єкти. Об’єкти зберігаються зі слабкими посиланнями, а це означає, що якщо елемент у слабкій множині не має жодного посилання на себе, він буде прибраний збирачем сміття. Слабкі множини не можна інспектувати через складності з управлінням пам'яті, тому найкраще використовувати слабкі множини для відслідковування об’єктів, що мають бути згруповані разом.
 
-Maps are unordered key-value pairs where the key can be any data type. Similar to sets, duplicate keys are determined by a call to the `Object.is()` method, which means you can have a numeric key `5` and a string `"5"` as two separate keys. A value of any data type can be associated with a key using the `set()` method, and that value can later be retrieved by using the `get()` method. Maps also have a `size` property and a `forEach()` method to allow for easier item access.
+Мапи — невпорядковані пари “ключ–значення” у який і ключ, і значення можуть бути будь–якого типу. Як і для множин, ідентичність ключів визначається викликом методу `Object.is()`, а це означає, що ви можете мати як числовий ключ `5`, так і рядковий `"5"`, в якості двох різних ключів. Значення можна асоціювати з ключем з допомогою методу `set()`, і це значення згодом можна отримати з допомогою методу `get()`. Мапи також мають властивість `size` та метод `forEach()` для легшого доступу до елементів.
 
-Weak maps are a special type of map that can only have object keys. As with weak sets, an object key reference is weak and doesn't prevent garbage collection when it's the only remaining reference to an object. When a key is garbage collected, the value associated with the key is also removed from the weak map. This memory management aspect makes weak maps uniquely suited for correlating additional information with objects whose lifecycles are managed outside of the code accessing them.
+Слабкі мапи — спеціальний тип мап, що може містити лише об’єктні ключі. Як і з слабкими множинами, посилання об’єкт, що є ключем, є слабким і видаляється збирачем сміття, якщо воно залишиться єдиним посиланням на цей об’єкт. Коли ключ видаляється збирачем сміття, значення, що асоційоване з цим ключем також видаляється зі слабкої множини. Цей аспект, що стосується управлінням пам’яттю, робить слабкі мапи прекрасними для кореляції додаткової інформації з об’єктами, чий життєвий цикл керований поза кодом, з якого вони доступні.
