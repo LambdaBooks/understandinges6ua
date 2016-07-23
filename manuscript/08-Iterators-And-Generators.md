@@ -1,12 +1,12 @@
-# Iterators and Generators
+# Ітератори та генератори
 
-Many programming languages have shifted from iterating over data with `for` loops, which require initializing variables to track position in a collection, to using iterator objects that programmatically return the next item in a collection. Iterators make working with collections of data easier, and ECMAScript 6 adds iterators to JavaScript. When coupled with new array methods and new types of collections (such as sets and maps), iterators are key for efficient data processing, and you will find them in many parts of the language. There's a new `for-of` loop that works with iterators, the spread (`...`) operator uses iterators, and iterators even make asynchronous programming easier.
+Багато мов програмування відмовились від ітерування по даних з допомогою циклу `for`, який потребує ініціалізації змінної для відслідковуватись позиції у колекції, на користь об’єктів–ітераторів, котрі програмно повертають наступний елемент у колекції. Ітератори роблять роботу з колекціями даних легшою, а ECMAScript 6 додає ітератори у JavaScript. Разом з новими методами масивів та новими типами колекцій (як от множини та мапи), ітератори є ключем до ефективної обробки даних і саме тому ви знайдете їх у багатьох частинах мови. Новий цикл `for-of` працює з ітераторами, оператор розкладу (`...`) використовує ітератори, ітератори навіть роблять асинхронне програмування простішим.
 
-This chapter covers the many uses of iterators, but first, it's important to understand the history behind why iterators were added to JavaScript.
+Ця глава розповідає про способи використання ітераторів, але, для початку, дуже важливо зрозуміти історію того, чому ітератори були додані у JavaScript.
 
-## The Loop Problem
+## Проблема з циклами
 
-If you've ever programmed in JavaScript, you've probably written code that looks like this:
+Якщо ви до цього програмували на JavaScript, ви напевно писали колись такий код:
 
 ```js
 var colors = ["red", "green", "blue"];
@@ -16,17 +16,17 @@ for (var i = 0, len = colors.length; i < len; i++) {
 }
 ```
 
-This standard `for` loop tracks the index into the `colors` array with the `i` variable. The value of `i` increments each time the loop executes if `i` isn't larger than the length of the array (stored in `len`).
+Тут стандартний цикл `for` відслідковує індекс у масиві `colors` через змінну `i`. Значення `i` збільшується щоразу, коли виконується ітерація, якщо значення `i` є меншим за довжину масиву (що зберігається у `len`).
 
-While this loop is fairly straightforward, loops grow in complexity when you nest them and need to keep track of multiple variables. Additional complexity can lead to errors, and the boilerplate nature of the `for` loop lends itself to more errors as similar code is written in multiple places. Iterators are meant to solve that problem.
+Цей цикл виглядає доволі просто, але якщо ви захочете використовувати кілька змінних, вам доведеться вкладати цикл один в один, а складність при цьому буде збільшуватись. Додаткова складність є джерелом помилок, а шаблонна природа циклу `for` призводить до ще більшої кількості помилок, ніж схожий код, що написаний у кількох місцях. Ітератори мають вирішити цю проблему.
 
-## What are Iterators?
+## Що таке ітератори?
 
-Iterators are just objects with a specific interface designed for iteration. All iterator objects have a `next()` method that returns a result object. The result object has two properties: `value`, which is the next value, and `done`, which is a boolean that's `true` when there are no more values to return. The iterator keeps an internal pointer to a location within a collection of values and with each call to the `next()` method, it returns the next appropriate value.
+Ітератори є простими об’єктами з певним інтерфейсом для ітерування. Всі об’єкти–ітератори мають метод `next()`, що повертає об’єкт–результат. Об’єкт–результат має дві властивості: `value`, яка є наступним значенням, та `done`, яка є булевим значенням, котре рівне `true`, якщо більше не залишилось значень, які потрібно повернути. Ітератор зберігає внутрішній вказівник на розташування у колекції і з кожним викликом методу `next()` він повертає потрібне значення.
 
-If you call `next()` after the last value has been returned, the method returns `done` as `true` and `value` contains the *return value* for the iterator. That return value is not part of the data set, but rather a final piece of related data, or `undefined` if no such data exists. An iterator's return value is similar to a function's return value in that it's a final way to pass information to the caller.
+Якщо ви викличете `next()` після останнього значення, що було повернуте, метод поверне `done` рівне `true` та `value`, що містить *повернене значення (return value)* для ітератора. Це повернене значення не є частиною множини даних, але є останньою частинкою цих даних або `undefined`, якщо даних немає. повернене Значення в ітераторів дуже схоже на повернене значення у функцій у тому, що це остання можливість передати інформацію у місце, звідки їх викликали.
 
-With that in mind, creating an iterator using ECMAScript 5 is fairly straightforward:
+Знаючи це, створити генератор з використанням ECMAScript 5 дуже просто:
 
 ```js
 function createIterator(items) {
@@ -55,29 +55,29 @@ console.log(iterator.next());           // "{ value: 2, done: false }"
 console.log(iterator.next());           // "{ value: 3, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 
-// for all further calls
+// для всіх наступних викликів
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-The `createIterator()` function returns an object with a `next()` method. Each time the method is called, the next value in the `items` array is returned as `value`. When `i` is 3, `done` becomes `true` and the ternary conditional operator that sets `value` evaluates to `undefined`. These two results fulfill the special last case for iterators in ECMAScript 6, where `next()` is called on an iterator after the last piece of data has been used.
+Функція `createIterator()` повертає об’єкт з методом `next()`. Щоразу, коли метод викликається, в якості `value` повертається наступне значення з масиву `items`. Коли `i` дорівнює 3, `done` стає `true` а тернарний оператор, що встановлює `value` обчислюється в `undefined`. Ці два результати відповідають за останній випадок для ітераторів у ECMAScript 6, коли `next()` викликається для ітератора після того, як було використано останню частину даних.
 
-As this example shows, writing iterators that behave according to the rules laid out in ECMAScript 6 is a bit complex.
+Як показує приклад, написання ітераторів, що поводяться відповідно до правил, які покладені в ECMAScript 6 є дещо складним.
 
-Fortunately, ECMAScript 6 also provides generators, which make creating iterator objects much simpler.
+На щастя, ECMAScript 6 також надає нам генератори, які роблять створення об’єктів–ітераторів набагато простішим.
 
-## What Are Generators?
+## Що таке генератори?
 
-A *generator* is a function that returns an iterator. Generator functions are indicated by a star character (`*`) after the `function` keyword and use the new `yield` keyword. It doesn't matter if the star is directly next to `function` or if there's some whitespace between it and the `*` character, as in this example:
+*Генератор* — це функція, що повертає ітератор. Функція–генератори позначаються символом зірочки (`*`) після ключового слова `function` та використовує ключове слово `yield`. Неважливо чи зірочка стоїть відразу після `function` чи між ним та символом `*` є пробіли, ось приклад:
 
 ```js
-// generator
+// генератор
 function *createIterator() {
     yield 1;
     yield 2;
     yield 3;
 }
 
-// generators are called like regular functions but return an iterator
+// генератори викликаються як звичайні функції, але повертають ітератор
 let iterator = createIterator();
 
 console.log(iterator.next().value);     // 1
@@ -85,11 +85,11 @@ console.log(iterator.next().value);     // 2
 console.log(iterator.next().value);     // 3
 ```
 
-The `*` before `createIterator()` makes this function a generator. The `yield` keyword, also new to ECMAScript 6, specifies values the resulting iterator should return when `next()` is called, in the order they should be returned. The iterator generated in this example has three different values to return on successive calls to the `next()` method: first `1`, then `2`, and finally `3`. A generator gets called like any other function, as shown when `iterator` is created.
+Символ `*` перед `createIterator()` робить цю функцію генератором. Ключове слово `yield` є також новим у ECMAScript 6 і визначає значення, які кінцевому ітератору слід буде повертати при виклику `next()` у тому порядку, в якому вони мають повертатись. Ітератор, що був згенерований у цьому прикладі, має три різних значення, що повертаються при послідовних викликах методу `next()`: перше `1`, друге `2` та третє `3`. Генератор викликається як і будь–яка інша функція, що і показано при створенні `iterator`.
 
-Perhaps the most interesting aspect of generator functions is that they stop execution after each `yield` statement. For instance, after `yield 1` executes in this code, the function doesn't execute anything else until the iterator's `next()` method is called. At that point, `yield 2` executes. This ability to stop execution in the middle of a function is extremely powerful and leads to some interesting uses of generator functions (discussed in the "Advanced Iterator Functionality" section).
+Можливо найцікавішим аспектом функцій–генераторів є те, що вони зупиняють виконання після кожного оператора `yield`. Наприклад, після виконання `yield 1` у цьому коді, функція не виконує нічого іншого доки не буде викликано метод `next()`. Лише тоді виконається `yield 2`. Така можливість зупинки виконання всередині функції є надзвичайно потужною і має декілька цікавих застосувань у функціях–генераторах (про це піде мова у розділі «Розширена функціональність ітераторів»).
 
-The `yield` keyword can be used with any value or expression, so you can write generator functions that add items to iterators without just listing the items one by one. For example, here's one way you could use `yield` inside a `for` loop:
+Ключове слово `yield` можна використовувати з будь–яким значення або виразом, тому ви можете написати функцію–генератор, що додає елементи у ітератор без відслідковування елементів один за одним. Наприклад, ось один зі способів використання `yield` всередині циклу `for`:
 
 ```js
 function *createIterator(items) {
@@ -105,32 +105,32 @@ console.log(iterator.next());           // "{ value: 2, done: false }"
 console.log(iterator.next());           // "{ value: 3, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 
-// for all further calls
+// для всіх наступних викликів
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-This example passes an array called `items` to the `createIterator()` generator function. Inside the function, a `for` loop yields the elements from the array into the iterator as the loop progresses. Each time `yield` is encountered, the loop stops, and each time `next()` is called on `iterator`, the loop picks up with the next `yield` statement.
+Цей приклад у функцію–генератор `createIterator()` передається масив `items`. Всередині функції, цикл `for` віддає елементи з масиву в ітератор по мірі виконання циклу. Щоразу, коли зустрічається `yield`, цикл зупиняється, і щоразу, коли для `iterator` викликається `next()`, цикл продовжується до наступного оператора `yield`.
 
-Generator functions are an important feature of ECMAScript 6, and since they are just functions, they can be used in all the same places. The rest of this section focuses on other useful ways to write generators.
+Функції–генератори є важливим нововведенням ECMAScript 6 і оскільки це всього лише функції, вони можуть використовуватись у тому ж місці, де і функції. Решта цього розділу фокусується на інших способах написання генераторів.
 
-W> The `yield` keyword can only be used inside of generators. Use of `yield` anywhere else is a syntax error, including functions that are inside of generators, such as:
-W>
-W> ```js
-W> function *createIterator(items) {
-W>
-W>     items.forEach(function(item) {
-W>
-W>         // syntax error
-W>         yield item + 1;
-W>     });
-W> }
-W> ```
-W>
-W> Even though `yield` is technically inside of `createIterator()`, this code is a syntax error because `yield` cannot cross function boundaries. In this way, `yield` is similar to `return`, in that a nested function cannot return a value for its containing function.
+W> Ключове слово `yield` може використовуватись лише всередині генераторів. Використання `yield` будь–де, включаючи функції всередині генераторів, призведе до синтаксичної помилки:
 
-### Generator Function Expressions
+```js
+function *createIterator(items) {
 
-You can use function expressions to create generators by just including a star (`*`) character between the `function` keyword and the opening parenthesis. For example:
+    items.forEach(function(item) {
+
+        // синтаксична помилка
+        yield item + 1;
+    });
+}
+```
+
+W> Навіть хоча й `yield` технічно в середині `createIterator()`, цей код матиме синтаксичну помилку тому, що `yield` не може перетинати функціональні межі. У цьому випадку, `yield` схожий на `return` у тому, що вкладена функція не може повернути значення з функції у якій вона міститься.
+
+### Вираз функції–генератора
+
+Ви можете використовувати функціональний вираз для створення генераторів просто додавши символ зірочки (`*`) між ключовим слово `function` та відкриваючою круглою дужкою. Наприклад:
 
 ```js
 let createIterator = function *(items) {
@@ -146,17 +146,17 @@ console.log(iterator.next());           // "{ value: 2, done: false }"
 console.log(iterator.next());           // "{ value: 3, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 
-// for all further calls
+// для всіх наступних викликів
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this code, `createIterator()` is a generator function expression instead of a function declaration. The asterisk goes between the `function` keyword and the opening parentheses because the function expression is anonymous. Otherwise, this example is the same as the previous version of the `createIterator()` function, which also used a `for` loop.
+У цьому коді, `createIterator()` є виразом функції–генератора замість оголошення функції. Зірочка розташована між ключовим словом `function` та відкриваючою круглою дужкою, тому що функціональний вираз є анонімним. Все інше у цьому прикладі є таким же, як і в попередній версії функції `createIterator()`, яка використовує цикл `for`.
 
-I> Creating an arrow function that is also a generator is not possible.
+I> Створити arrow–функцію яка буде генератором неможливо.
 
-### Generator Object Methods
+### Методи–генератори в об’єктах
 
-Because generators are just functions, they can be added to objects, too. For example, you can make a generator in an ECMAScript 5-style object literal with a function expression:
+Оскільки генератори є простими функціями, їх також можна додавати в об’єкти. Наприклад, ви можете зробити генератор у об’єктному літералі в стилі ECMAScript 5 через функціональний вираз:
 
 ```js
 var o = {
@@ -171,7 +171,7 @@ var o = {
 let iterator = o.createIterator([1, 2, 3]);
 ```
 
-You can also use the ECMAScript 6 method shorthand by prepending the method name with a star (`*`):
+Ви можете також використати лаконічні методи з ECMAScript 6 додавши перед ім’ям методу зірочку (`*`):
 
 ```js
 var o = {
@@ -186,17 +186,17 @@ var o = {
 let iterator = o.createIterator([1, 2, 3]);
 ```
 
-These examples are functionally equivalent to the example in the "Generator Function Expressions" section; they just use different syntax. In the shorthand version, because the `createIterator()` method is defined with no `function` keyword, the star is placed immediately before the method name, though you can leave whitespace between the star and the method name.
+Ці приклади функціонально еквіваленті до прикладу у розділі «Вираз функції–генератора», вони просто використовують різний синтаксис. У прикладі з лаконічним методом, оскільки метод `createIterator()` заданий без ключового слова `function`, зірочка розташована відразу перед ім’ям методу, але ви можете залишити пробіл між ними.
 
-## Iterables and for-of
+## Ітерабельні об’єкти та for-of
 
-Closely related to iterators, an *iterable* is an object with a `Symbol.iterator` property. The well-known `Symbol.iterator` symbol specifies a function that returns an iterator for the given object. All collection objects (arrays, sets, and maps) and strings are iterables in ECMAScript 6 and so they have a default iterator specified. Iterables are designed to be used with a new addition to ECMAScript: the `for-of` loop.
+Дуже близькими до ітераторів є *ітерабельні об’єкти (iterable)* — це об’єкти з властивістю `Symbol.iterator`. Добревідомий символ `Symbol.iterator` задає функцію, що повертає ітератор для даного об’єкту. Всі об’єкти колекцій (масиви, множини та мапи) та рядки є ітерательними в ECMAScript 6, тобто вони мають визначений за замовчуванням ітератор. Ітерабельні об’єкти спроектовані для використання з новим доповненням у ECMAScript: циклом `for-of`.
 
-I> All iterators created by generators are also iterables, as generators assign the `Symbol.iterator` property by default.
+I> Всі ітератори, які створені з допомогою генераторів, також є ітерабельними, бо генератори за замовчуванням присвоюють властивість `Symbol.iterator`.
 
-At the beginning of this chapter, I mentioned the problem of tracking an index inside a `for` loop. Iterators are the first part of the solution to that problem. The `for-of` loop is the second part: it removes the need to track an index into a collection entirely, leaving you free to focus on working with the contents of the collection.
+На початку цієї глави я згадав про проблему відслідковування індексу всередині циклу `for`. Ітератори є першою частиною вирішення цієї проблеми. Цикл `for-of` є іншою частиною: з ним не потрібно слідкувати за індексом всередині колекції і це дозволяє вам сконцентруватись на роботі з її вмістом.
 
-A `for-of` loop calls `next()` on an iterable each time the loop executes and stores the `value` from the result object in a variable. The loop continues this process until the returned object's `done` property is `true`. Here's an example:
+Цикл `for-of` викликає `next()` в ітерабельного об’єкта під час кожного виконання циклу та зберігає `value` з отриманого об’єкта у змінну. Цикл продовжує виконання допоки властивість `done` у об’єкта, що повертається не буде дорівнювати `true`. Ось приклад:
 
 ```js
 let values = [1, 2, 3];
@@ -206,7 +206,7 @@ for (let num of values) {
 }
 ```
 
-This code outputs the following:
+Цей код виводить наступне:
 
 ```
 1
@@ -214,15 +214,15 @@ This code outputs the following:
 3
 ```
 
-This `for-of` loop first calls the `Symbol.iterator` method on the `values` array to retrieve an iterator. (The call to `Symbol.iterator` happens behind the scenes in the JavaScript engine itself.) Then `iterator.next()` is called, and the `value` property on the iterator's result object is read into `num`. The `num` variable is first 1, then 2, and finally 3. When `done` on the result object is `true`, the loop exits, so `num` is never assigned the value of `undefined`.
+Цей цикл `for-of` спершу викликає метод `Symbol.iterator` для масиву `values`, що отримати ітератор. (Виклик `Symbol.iterator` відбувається за кулісами всередині самого рушія JavaScript.) Тоді викликається `iterator.next()`, а властивість `value` об’єкті, який повертається з ітератора читається в `num`. Змінна `num` приймає значення 1, потім 2 і нарешті 3. Коли `done` в об’єкті, що повертається, буде `true`, цикл закінчує виконання, тому `num` ніколи не присвоюється значення `undefined`.
 
-If you are simply iterating over values in an array or collection, then it's a good idea to use a `for-of` loop instead of a `for` loop. The `for-of` loop is generally less error-prone because there are fewer conditions to keep track of. Save the traditional `for` loop for more complex control conditions.
+Якщо ви просто ітеруєтесь по значеннях у масиві, або колекції, тоді використання циклу `for-of` замість циклу `for` буде хорошою ідеєю. Цикл `for-of` спричиняє загалом менше помилок завдяки тому, що вам потрібно слідкувати за меншою кількістю умов. Залиште традиційний цикл `for` для більш складних керуючих умов.
 
-W> The `for-of` statement will throw an error when used on, a non-iterable object, `null`, or `undefined`.
+W> Оператор `for-of` кине помилку при спробі використати його з неітерабельним об’єктом, `null` або `undefined`.
 
-### Accessing the Default Iterator
+### Доступ до ітератора за замовчуванням
 
-You can use `Symbol.iterator` to access the default iterator for an object, like this:
+Ви можете скористатись `Symbol.iterator` для доступу до ітератора об’єкта за замовчуванням, ось так:
 
 ```js
 let values = [1, 2, 3];
@@ -234,9 +234,9 @@ console.log(iterator.next());           // "{ value: 3, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-This code gets the default iterator for `values` and uses that to iterate over the items in the array. This is the same process that happens behind-the-scenes when using a `for-of` loop.
+Цей код повертає ітератор за замовчування для `values` та використовує його для ітерації по елементах масиву. Це той же процес, що відбувається за кулісами при використанні циклу `for-of`.
 
-Since `Symbol.iterator` specifies the default iterator, you can use it to detect whether an object is iterable as follows:
+Оскільки `Symbol.iterator` задає ітератор за замовчуванням, ви можете використовувати його щоб визначати чи об’єкт є ітерабельним:
 
 ```js
 function isIterable(object) {
@@ -251,13 +251,13 @@ console.log(isIterable(new WeakMap())); // false
 console.log(isIterable(new WeakSet())); // false
 ```
 
-The `isIterable()` function simply checks to see if a default iterator exists on the object and is a function. The `for-of` loop does a similar check before executing.
+Функцію `isIterable()` просто перевіряє чи ітератор за замовчуванням існує і є функцією. Цикл `for-of` робить таку ж перевірку перед виконанням.
 
-So far, the examples in this section have shown ways to use `Symbol.iterator` with built-in iterable types, but you can also use the `Symbol.iterator` property to create your own iterables.
+Раніше у цьому розділі було показано способи використання `Symbol.iterator` з вбудованими ітерабельними типами, проте ви також можете використовувати властивість `Symbol.iterator` для створення власних ітерабельних об’єктів.
 
-### Creating Iterables
+### Створення ітерабельних об’єктів
 
-Developer-defined objects are not iterable by default, but you can make them iterable by creating a `Symbol.iterator` property containing a generator. For example:
+Об’єкти, що були задані розробниками, є не є ітерабельними за замовчуванням, але ви можете зробити їх такими через створення властивості `Symbol.iterator`, що містить генератор. Наприклад:
 
 ```js
 let collection = {
@@ -279,7 +279,7 @@ for (let x of collection) {
 }
 ```
 
-This code outputs the following:
+Цей код виводить наступне:
 
 ```
 1
@@ -287,31 +287,31 @@ This code outputs the following:
 3
 ```
 
-First, the example defines a default iterator for an object called `collection`. The default iterator is created by the `Symbol.iterator` method, which is a generator (note the star still comes before the name). The generator then uses a `for-of` loop to iterate over the values in `this.items` and uses `yield` to return each one. Instead of manually iterating to define values for the default iterator of `collection` to return, the `collection` object relies on the default iterator of `this.items` to do the work.
+Спочатку приклад визначає ітератор за замовчуванням для об’єкта `collection`. Ітератор за замовчуванням створюється через метод `Symbol.iterator`, який є генератором (зверніть увагу, що перед ім’ям стоїть зірочка). Генератор використовує цикл `for-of` для ітерації по значеннях та `yield` для повернення кожного. Замість простого ітерування для визначення значень, які ітератор за замовчуванням для `collection` має повернути, об’єкт `collection` покладається на ітератор за замовчуванням в `this.items`, що виконає цю роботу.
 
-I> "Delegating Generators" later in this chapter describes a different approach to using the iterator of another object.
+I> Далі у цій главі розділ «Делегування генераторів» описує різні підходи використання ітераторів інших об’єктів.
 
-Now you've seen some uses for the default array iterator, but there are many more iterators built in to ECMAScript 6 to make working with collections of data easy.
+Тепер ви побачили декілька способів використання ітератора за замовчуванням для масивів, але є набагато більше вбудованих у ECMAScript 6 ітераторів, щоб зробити роботу з колекціями даних простішою.
 
-## Built-in Iterators
+## Вбудовані ітератори
 
-Iterators are an important part of ECMAScript 6, and as such, you don't need to create your own iterators for many built-in types; the language includes them by default. You only need to create iterators when the built-in iterators don't serve your purpose, which will most frequently be when defining your own objects or classes. Otherwise, you can rely on built-in iterators to do your work. Perhaps the most common iterators to use are those that work on collections.
+Ітератори є важливою частиною ECMAScript 6, і, як слід здогадатись, немає потреби створювати власні ітератори для більшості вбудованих типів, мова включає їх за замовчуванням. Вам може знадобитись створення власних ітераторів лише тоді, коли вбудовані ітератори не відповідатимуть вашим потребам, що найчастіше стається тоді, коли ви визначаєте власні об’єкти або класи. В іншому випадку, у виконанні своєї роботи ви можете покластись на вбудовані ітератори. Можливо найбільш поширеними є ітератори для роботи з колекціями.
 
-### Collection Iterators
+### Ітератори колекцій
 
-ECMAScript 6 has three types of collection objects: arrays, maps, and sets. All three have the following built-in iterators to help you navigate their content:
+ECMAScript 6 має три типи об’єктів–колекцій: масиви, мапи та множини. Для роботи з їхнім вмістом всі три мають такі вбудовані ітератори:
 
-* `entries()` - Returns an iterator whose values are a key-value pair
-* `values()` - Returns an iterator whose values are the values of the collection
-* `keys()` - Returns an iterator whose values are the keys contained in the collection
+* `entries()` - повертає ітератор, значеннями якого будуть пари “ключ–значення”;
+* `values()` - повертає ітератор, значення якого будуть значеннями колекції;
+* `keys()` - повертає ітератор, значення якого будуть ключами, що містяться у колекції;
 
-You can retrieve an iterator for a collection by calling one of these methods.
+Ви можете отримати ітератор для колекції через виклик одного з цих трьох методів.
 
-#### The entries() Iterator
+#### Ітератор entries()
 
-The `entries()` iterator returns a two-item array each time `next()` is called. The two-item array represents the key and value for each item in the collection. For arrays, the first item is the numeric index; for sets, the first item is also the value (since values double as keys in sets); for maps, the first item is the key.
+Ітератор `entries()` при кожному виклику `next()` повертає двохелементний масив. Двоелементний масив відображає ключ та значення кожного елементу колекції. Для масивів першим елементом буде числовий індекс; для множин першим елементом також буде значення (оскільки у множинах значення дублюють ключі); для мап, перший елемент буде ключем.
 
-Here are some examples that use this iterator:
+Ось кілька прикладів використання цього ітератора:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -334,7 +334,7 @@ for (let entry of data.entries()) {
 }
 ```
 
-The `console.log()` calls give the following output:
+Виклики `console.log()` дають такий вивід:
 
 ```
 [0, "red"]
@@ -347,11 +347,11 @@ The `console.log()` calls give the following output:
 ["format", "ebook"]
 ```
 
-This code uses the `entries()` method on each type of collection to retrieve an iterator, and it uses `for-of` loops to iterate the items. The console output shows how the keys and values are returned in pairs for each object.
+Цей код отримує ітератор кожного типу колекцій з допомогою метода `entries()` та використовує цикл `for-of` для ітерації по елементах. Вивід у консоль демонструє які пари ключів та значень повертаються для кожного об’єкта.
 
-#### The values() Iterator
+#### Ітератор values()
 
-The `values()` iterator simply returns values as they are stored in the collection. For example:
+Ітератор `values()` просто повертає значення так, як вони були збережені у колекцію. Наприклад:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -374,7 +374,7 @@ for (let value of data.values()) {
 }
 ```
 
-This code outputs the following:
+Цей код виведе таке:
 
 ```
 "red"
@@ -387,11 +387,11 @@ This code outputs the following:
 "ebook"
 ```
 
-Calling the `values()` iterator, as in this example, returns the exact data contained in each collection without any information about that data's location in the collection.
+Виклик ітератора `values()`, як у цьому прикладі, повертає повертає саме ті дані, що містяться у кожній з колекцій, без будь–якої інформації про те, де ці дані знаходяться у колекції.
 
-#### The keys() Iterator
+#### Ітератор keys()
 
-The `keys()` iterator returns each key present in a collection. For arrays, it only returns numeric keys, never other own properties of the array. For sets, the keys are the same as the values, and so `keys()` and `values()` return the same iterator. For maps, the `keys()` iterator returns each unique key. Here's an example that demonstrates all three:
+Ітератор `keys()` повертає всі ключі, що присутні у колекції. Для масивів це лише числові ключі, а не власні властивості масиву. Для множин це ключі, які є одночасно значеннями, і тому `keys()` та `values()` повертають один і той же ітератор. Для мап ітератор `keys()` поверне кожен унікальний ключ. Ось приклад, що демонструє всі три випадки:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -414,7 +414,7 @@ for (let key of data.keys()) {
 }
 ```
 
-This example outputs the following:
+Цей приклад дає такий вивід:
 
 ```
 0
@@ -427,11 +427,11 @@ This example outputs the following:
 "format"
 ```
 
-The `keys()` iterator fetches each key in `colors`, `tracking`, and `data`, and those keys are printed from inside the three `for-of` loops. For the array object, only numeric indices are printed, which would still happen even if you added named properties to the array. This is different from the way the `for-in` loop works with arrays, because the `for-in` loop iterates over properties rather than just the numeric indices.
+Ітератор `keys()` зчитує кожен ключ у `colors`, `tracking` та `data`, і ці ключі виводяться у трьох циклах `for-of`. Для об’єктів–масивів лише числові ключі, навіть якщо ви додасте іменовані властивості у масив. Це відрізняється від того як працює цикл `for-in`, тому що цикл `for-in` ітерується лише по властивостях, що є числовими індексами.
 
-#### Default Iterators for Collection Types
+#### Ітератори за замовчуванням для типів колекцій
 
-Each collection type also has a default iterator that is used by `for-of` whenever an iterator isn't explicitly specified. The `values()` method is the default iterator for arrays and sets, while the `entries()` method is the default iterator for maps. These defaults make using collection objects in `for-of` loops a little easier. For instance, consider this example:
+Кожен тип колекцій також має свій власний ітератор за замовчування, що використовується `for-of` тоді, коли ітератор не вказаний безпосередньо. Метод `values()` є ітератором за замовчуванням для масивів та множин, тоді як метод `entries()` є ітератором за замовчування для мап. Це робить використання об’єктів–колекцій у циклах `for-of` трішки простішим. Для прикладу, розгляньте такий приклад:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -441,23 +441,23 @@ let data = new Map();
 data.set("title", "Understanding ECMAScript 6");
 data.set("format", "print");
 
-// same as using colors.values()
+// те саме, що й при використанні colors.values()
 for (let value of colors) {
     console.log(value);
 }
 
-// same as using tracking.values()
+// те саме, що й при використанні tracking.values()
 for (let num of tracking) {
     console.log(num);
 }
 
-// same as using data.entries()
+// те саме, що й при використанні data.entries()
 for (let entry of data) {
     console.log(entry);
 }
 ```
 
-No iterator is specified, so the default iterator functions will be used. The default iterators for arrays, sets, and maps are designed to reflect how these objects are initialized, so this code outputs the following:
+Ітератор не вказаний, тому використовується функцій–ітератор за замовчуванням. Ітератор за замовчування для масивів, множин та мап розроблений, щоб відображати те, як ці об’єкти ініціалізуються, тому такий код виводить ось це:
 
 ```
 "red"
@@ -470,29 +470,29 @@ No iterator is specified, so the default iterator functions will be used. The de
 ["format", "print"]
 ```
 
-Arrays and sets return their values by default, while maps return the same array format that can be passed into the `Map` constructor. Weak sets and weak maps, on the other hand, do not have built-in iterators. Managing weak references means there's no way to know exactly how many values are in these collections, which also means there's no way to iterate over them.
+Масиви та множини повертають свої значення за замовчуванням, тоді як мапи повертають масиви у тому форматі, в якому їх можна передавати у конструктор `Map`. З іншого боку, слабкі множини та слабкі мапи не мають вбудованих ітераторів. Обробка слабких посилань не дає способу дізнатись скільки значень є у цих колекціях, що також означає, що немає способу ітерації по них.
 
-A> ### Destructuring and for-of Loops
-A>
-A> The behavior of the default constructor for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
-A>
-A> ```js
-A> let data = new Map();
-A>
-A> data.set("title", "Understanding ECMAScript 6");
-A> data.set("format", "ebook");
-A>
-A> // same as using data.entries()
-A> for (let [key, value] of data) {
-A>     console.log(key + "=" + value);
-A> }
-A> ```
-A>
-A> The `for-of` loop in this code uses a destructured array to assign `key` and `value` for each entry in the map. In this way, you can easily work with keys and values at the same time without needing to access a two-item array or going back to the map to fetch either the key or the value. Using a destructured array for maps makes the `for-of` loop equally useful for maps as it is for sets and arrays.
+### A> Деструктурування та цикли for-of
 
-### String Iterators
+A> Поведінка конструктора за замовчуванням для мап є дуже зручною при використанні циклу `for-of` з деструктуруванням, як у цьому прикладі:
 
-JavaScript strings have slowly become more like arrays since ECMAScript 5 was released. For example, ECMAScript 5 formalized bracket notation for accessing characters in strings (that is, using `text[0]` to get the first character, and so on). But bracket notation works on code units rather than characters, so it cannot be used to access double-byte characters correctly, as this example demonstrates:
+```js
+let data = new Map();
+
+data.set("title", "Understanding ECMAScript 6");
+data.set("format", "ebook");
+
+// те саме, що й при використанні data.entries()
+for (let [key, value] of data) {
+    console.log(key + "=" + value);
+}
+```
+
+A> Цикл `for-of` у цьому коді використовує деструктурування масиву, щоб присвоювати значення `key` та `value` для кожного елементу у мапі. Таким чином, ви можете легко працювати з ключами та значеннями одночасно без потреби витягувати значення з двохелементного масиву або діставати з мапи ключ чи значення. Використання деструктивного масиву для мап робить використання циклу `for-of` для мап таким же зручним, як і для множин та масивів.
+
+### Рядкові ітератори
+
+Починаючи з релізу ECMAScript 5, рядки у JavaScript поступово ставали схожими на масиви. Наприклад, ECMAScript 5 формалізував запис з квадратними дужками для отримання символу у рядках (як от використання `text[0]` щоб отримати перший символ і т.д.). Але запис з квадратними дужками частіше працює з кодовими словами (code units) ніж з символами, тому він не може використовуватись для правильного отримання двохбайтних символів, що і демонструє цей приклад:
 
 ```js
 var message = "A 𠮷 B";
@@ -502,20 +502,20 @@ for (let i=0; i < message.length; i++) {
 }
 ```
 
-This code uses bracket notation and the `length` property to iterate over and print a string containing a Unicode character. The output is a bit unexpected:
+Цей код використовує запис з квадратними дужками та властивість `length` для ітерації та виводу Unicode–символів, що містяться у рядку. Вивід буде дещо неочікуваний:
 
 ```
 A
-(blank)
-(blank)
-(blank)
-(blank)
+(порожній рядок)
+(порожній рядок)
+(порожній рядок)
+(порожній рядок)
 B
 ```
 
-Since the double-byte character is treated as two separate code units, there are four empty lines between `A` and `B` in the output.
+Оскільки двохбайтні символи трактуються як два окремих кодових слова, між `A` та `B` виводяться чотири порожні рядки.
 
-Fortunately, ECMAScript 6 aims to fully support Unicode (see Chapter 2), and the default string iterator is an attempt to solve the string iteration problem. As such, the default iterator for strings works on characters rather than code units. Changing this example to use the default string iterator with a `for-of` loop results in more appropriate output. Here's the tweaked code:
+На щастя, ECMAScript 6 націлений на повну підтримку Unicode (дивіться Главу 2), тому ітератор за замовчування для рядків пробує вирішити проблему з ітерацією по рядках. Можна здогадатись, що ітератор за замовчуванням для рядків працює з символами замість кодових слів. Якщо використати у цьому прикладі ітератор за замовчуванням за рядків та цикл `for-of`, ми отримаємо більш прийнятний вивід. Ось виправлений код:
 
 
 ```js
@@ -526,23 +526,23 @@ for (let c of message) {
 }
 ```
 
-This outputs the following:
+Він виведе ось це:
 
 ```
 A
-(blank)
+(порожній рядок)
 𠮷
-(blank)
+(порожній рядок)
 B
 ```
 
-This result is more in line with what you'd expect when working with characters: the loop successfully prints the Unicode character, as well as all the rest.
+Такий результат більше відповідає тому, що ви могли б очікувати при роботі з символами: цикл успішно вивів Unicode–символ так само добре, як і решту інших.
 
-### NodeList Iterators
+### Ітератори NodeList
 
-The Document Object Model (DOM) has a `NodeList` type that represents a collection of elements in a document. For those who write JavaScript to run in web browsers, understanding the difference between `NodeList` objects and arrays has always been a bit difficult. Both `NodeList` objects and arrays use the `length` property to indicate the number of items, and both use bracket notation to access individual items. Internally, however, a `NodeList` and an array behave quite differently, which has led to a lot of confusion.
+Об’єктна модуль документа (Document Object Model (DOM)) має тип `NodeList`, що відповідає колекції елементів у документі. Для тих, хто пише JavaScript для запуску у веб–браузерах, розуміння відмінності між об’єктами `NodeList` та масивами завжди було складним. Як об’єкти `NodeList`, так масиви використовують властивість `length` для відображення кількості елементів, вони також обоє використовують запис з квадратними дужками для доступу до окремих елементів. Внутрішньо, однак, `NodeList` та масив поводяться по різному і це призводить до плутанини.
 
-With the addition of default iterators in ECMAScript 6, the DOM definition of `NodeList` (included in the HTML specification rather than ECMAScript 6 itself) includes a default iterator that behaves in the same manner as the array default iterator. That means you can use `NodeList` in a `for-of` loop or any other place that uses an object's default iterator. For example:
+З введенням ітераторів за замовчуванням у ECMAScript 6, DOM визначення `NodeList` (більшою мірою це стосується специфікації HTML, ніж самого ECMAScript 6) включає ітератор за замовчуванням, що поводиться так само, як і ітератор за замовчуванням для масивів. Це означає, що ви можете використовувати `NodeList` у циклі `for-of` або в іншому місці, що використовує ітератор об’єкту за замовчуванням. Наприклад:
 
 ```js
 var divs = document.getElementsByTagName("div");
@@ -552,11 +552,11 @@ for (let div of divs) {
 }
 ```
 
-This code calls `getElementsByTagName()` to retrieve a `NodeList` that represents all of the `<div>` elements in the `document` object. The `for-of` loop then iterates over each element and outputs the element IDs, effectively making the code the same as it would be for a standard array.
+Цей код викликає `getElementsByTagName()` для отримання `NodeList`, що представляє всі елементи `<div>` у об’єкті `document`. Потім цикл `for-of` ітерується по всіх елементах та виводить ID елемента, фактично роблячи код таким, наче він написаний для звичайного масиву.
 
-## The Spread Operator and Non-Array Iterables
+## Оператор розкладу та ітерабельні немасиви
 
-Recall from Chapter 7 that the spread operator (`...`) can be used to convert a set into an array. For example:
+Пригадаємо з Глави 7, що оператор розкладу (`...`) може використовуватись для перетворення множини у масив. Наприклад:
 
 ```js
 let set = new Set([1, 2, 3, 3, 3, 4, 5]),
@@ -565,7 +565,7 @@ let set = new Set([1, 2, 3, 3, 3, 4, 5]),
 console.log(array);             // [1,2,3,4,5]
 ```
 
-This code uses the spread operator inside an array literal to fill in that array with the values from `set`. The spread operator works on all iterables and uses the default iterator to determine which values to include. All values are read from the iterator and inserted into the array in the order in which values where returned from the iterator. This example works because sets are iterables, but it can work equally well on any iterable. Here's another example:
+Цей код використовує оператор розкладу всередині літералу масиву для заповнення цього масиву значеннями з `set`. Оператор розкладу працює з усіма ітерабельними об’єктами та використовує ітератор за замовчуванням для визначення значень, які потрібно включати. Всі значення читаються з ітератора та вставляються у масив у тому порядку, в якому вони були повернуті з ітератора. Цей приклад працює тому, що множин є ітерабельними, але він може працювати так само добре з будь–яким ітерабельним об’єктом. Ось інший приклад:
 
 ```js
 let map = new Map([ ["name", "Nicholas"], ["age", 25]]),
@@ -574,9 +574,9 @@ let map = new Map([ ["name", "Nicholas"], ["age", 25]]),
 console.log(array);         // [ ["name", "Nicholas"], ["age", 25]]
 ```
 
-Here, the spread operator converts `map` into an array of arrays. Since the default iterator for maps returns key-value pairs, the resulting array looks like the array that was passed during the `new Map()` call.
+Тут оператор розкладу перетворює `map` у масив масивів. Оскільки ітератор за замовчування для мап повертає пари “ключ–значення”, отриманий масив виглядає так, як масив, який було передавали при виклику `new Map()`.
 
-You can use the spread operator in an array literal as many times as you want, and you can use it wherever you want to insert multiple items from an iterable. Those items will just appear in order in the new array at the location of the spread operator. For example:
+Ви можете використовувати оператор розкладу у масивних літералах стільки разів, скільки потрібно і ви можете використовувати його будь–де, де ви хочете вставити кілька елементів з ітерабельного об’єкта. Ці елементи просто з’являться у новому масиві у тому порядку, в якому вони знаходились у операторі розкладу. Наприклад:
 
 ```js
 let smallNumbers = [1, 2, 3],
@@ -587,19 +587,19 @@ console.log(allNumbers.length);     // 7
 console.log(allNumbers);    // [0, 1, 2, 3, 100, 101, 102]
 ```
 
-The spread operator is used to create `allNumbers` from the values in `smallNumbers` and `bigNumbers`. The values are placed in `allNumbers` in the same order the arrays are added when `allNumbers` is created: `0` is first, followed by the values from `smallNumbers`, followed by the values from `bigNumbers`. The original arrays are unchanged, though, as their values have just been copied into `allNumbers`.
+Оператор розкладу використовується щоб створити `allNumbers` зі значень у `smallNumbers` та `bigNumbers`. Значення вставляються у `allNumbers` у тій послідовності, в якій масиви були передані при створенні `allNumbers`: `0` — перший, за ним значення зі `smallNumbers`, а за ними значення з `bigNumbers`. Оригінальні масиви залишаються незміненими тому, що їхні значення просто скопіювались у `allNumbers`.
 
-Since the spread operator can be used on any iterable, it's the easiest way to convert an iterable into an array. You can convert strings into arrays of characters (not code units) and `NodeList` objects in the browser into arrays of nodes.
+Оскільки оператор розкладу може використовуватись з будь–яким ітерабельним об’єктом, це найлегший спосіб конвертації ітерабельного об’єкту в масив. Ви можете сконвертувати рядки у масив з символів (не кодових слів) та об’єкти `NodeList` з браузеру у масив вузлів.
 
-Now that you understand the basics of how iterators work, including `for-of` and the spread operator, it's time to look at some more complex uses of iterators.
+Тепер, коли ви зрозуміли основи роботи ітераторів, включаючи `for-of` та оператор розкладу, час подивитись на більш складні способи використання ітераторів.
 
-## Advanced Iterator Functionality
+## Розширена функціональність ітераторів
 
-You can accomplish a lot with the basic functionality of iterators and the convenience of creating them using generators. However, iterators are much more powerful when used for tasks other than simply iterating over a collection of values. During the development of ECMAScript 6, a lot of unique ideas and patterns emerged that encouraged the creators to add more functionality. Some of those additions are subtle, but when used together, can accomplish some interesting interactions.
+Ми можете багато зробити знаючи про основну функціональність ітераторів та можливість створювати їх з допомогою генераторів. Однак ітератори є набагато потужнішими якщо використовувати їх для виконання завдань, замість просто ітерування по значенням у колекціях. Під час розробки ECMAScript, з’являлось багато унікальних ідей та шаблонів, які заохочували розробників додати більше функціональності. Деякі з цих нововведень є специфічними, проте якщо використовувати їх разом, можна отримати дуже цікаві можливості.
 
-### Passing Arguments to Iterators
+### Передача аргументів у інтератори
 
-Throughout this chapter, examples have shown iterators passing values out via the `next()` method or by using `yield` in a generator. But you can also pass arguments to the iterator through the `next()` method. When an argument is passed to the `next()` method, that argument becomes the value of the `yield` statement inside a generator. This capability is important for more advanced functionality such as asynchronous programming. Here's a basic example:
+Протягом цієї глави, у прикладах, ітератори видавали значення з допомогою методу `next()` або з використанням `yield` у генераторі. Проте ви також можете передавати аргументи в ітератор через метод `next()`. Якщо передавати аргумент у метод `next()`, цей аргумент стане значенням оператора `yield` всередині генератора. Ця можливість дуже важлива такого розширеного функціоналу, як асинхронне програмування. Ось простий приклад:
 
 ```js
 function *createIterator() {
@@ -616,45 +616,45 @@ console.log(iterator.next(5));          // "{ value: 8, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-The first call to `next()` is a special case where any argument passed to it is lost. Since arguments passed to `next()` become the values returned by `yield`, an argument from the first call to `next()` could only replace the first yield statement in the generator function if it could be accessed before that `yield` statement. That's not possible, so there's no reason to pass an argument the first time `next()` is called.
+Перший виклик `next()` є спеціальними випадком: якщо передати у нього будь–який аргумент, він буде втрачений. Оскільки аргументи, що передаються у `next()` стають значеннями, які повертає `yield`, аргумент для першого виклику `next()` міг би лише замінити перший оператор `yield` у функції–генераторі, якщо би він був доступний перед оператором `yield`. Це неможливо і тому немає змісту передавати аргумент при першому виклику `next()`.
 
-On the second call to `next()`, the value `4` is passed as the argument. The `4` ends up assigned to the variable `first` inside the generator function. In a `yield` statement including an assignment, the right side of the expression is evaluated on the first call to `next()` and the left side is evaluated on the second call to `next()` before the function continues executing. Since the second call to `next()` passes in `4`, that value is assigned to `first` and then execution continues.
+При другому виклику `next()`, в якості аргументу передається значення `4`. Змінній `first` всередині функції–генератора присвоюється `4`. У операторі `yield`, включаючи присвоєння, права частина виразу обчислюється при першому виклику `next()`, а ліва чистина обчислюється при другому виклику `next()`, перед тим, як функція продовжить виконання. Оскільки другий виклик `next()` приймає `4`, це значення присвоюється `first` і тоді виконання продовжується.
 
-The second `yield` uses the result of the first `yield` and adds two, which means it returns a value of six. When `next()` is called a third time, the value `5` is passed as an argument. That value is assigned to the variable `second` and then used in the third `yield` statement to return `8`.
+Другий `yield` використовує результат першого `yield` і додає два, і тому повертає значення шість. Коли у третє викликається `next()`, в якості аргументу передається значення `5`.  Це значення присвоюється змінній `second`, а тоді використовується у третьому операторі `yield`, щоб повернути `8`.
 
-It's a bit easier to think about what's happening by considering which code is executing each time execution continues inside the generator function. Figure 8-1 uses colors to show the code being executed before yielding.
+Легше думати про те, що відбувається, якщо розглядати код, який виконується тоді, коли функція–генератор продовжує виконання. Зображення 8-1 показує який код виконується перед зупинками з допомогою кольорів.
 
-![Figure 8-1: Code execution inside a generator](images/fg0601.png)
+![Зображення 8-1: Виконання коду всередині генератора](images/fg0601.png)
 
-The color yellow represents the first call to `next()` and all the code executed inside of the generator as a result. The color aqua represents the call to `next(4)` and the code that is executed with that call. The color purple represents the call to `next(5)` and the code that is executed as a result. The tricky part is how the code on the right side of each expression executes and stops before the left side is executed. This makes debugging complicated generators a bit more involved than debugging regular functions.
+Жовтий колір відображає перший виклик `next()` та весь код, що виконується в результаті. Блакитний колір відображає виклик `next(4)` і весь код, що виконується при цьому виклику. Рожевий колір відповідає виклику `next(5)` та коду, що виконується в результаті. Складним для розуміння є те, як код у правій частині кожного з виразів виконується і зупиняється перед тим, як виконується код у лівій частині. Це робить налагоження складних генераторів дещо складнішим ніж налагодження звичайних функцій.
 
-So far, you've seen that `yield` can act like `return` when a value is passed to the `next()` method. However, that's not the only execution trick you can do inside a generator. You can also cause iterators throw an error.
+Ви вже побачили, що `yield` може поводитись як `return`, якщо передати у метод `next()` якесь значення. Однак, це не єдиний прийом, який ви можете використовувати всередині генератора. Ви також можете спровокувати ітератор кинути помилку.
 
-### Throwing Errors in Iterators
+### Кидання помилок в ітераторах
 
-It's possible to pass not just data into iterators but also error conditions. Iterators can choose to implement a `throw()` method that instructs the iterator to throw an error when it resumes. This is an important capability for asynchronous programming, but also for flexibility inside generators, where you want to be able to mimic both return values and thrown errors (the two ways of exiting a function). You can pass an error object to `throw()` that should be thrown when the iterator continues processing. For example:
+В ітератор можливо передавати не лише дані, але й помилки. Для ітераторів можна імплементувати метод `throw()`, що буде вказувати ітератору чи кидати помилку, коли він продовжить виконання. Це також важлива можливість для асинхронного програмування, коли вам потрібно як повернення значень, так і кидання помилок (два способи виходу з функції). Ви можете передати об’єкт помилки у `throw()`, що буде кинутий коли ітератор продовжить виконання. Наприклад:
 
 ```js
 function *createIterator() {
     let first = yield 1;
-    let second = yield first + 2;       // yield 4 + 2, then throw
-    yield second + 3;                   // never is executed
+    let second = yield first + 2;       // yield 4 + 2, тоді кинути
+    yield second + 3;                   // не виконається ніколи
 }
 
 let iterator = createIterator();
 
 console.log(iterator.next());                   // "{ value: 1, done: false }"
 console.log(iterator.next(4));                  // "{ value: 6, done: false }"
-console.log(iterator.throw(new Error("Boom"))); // error thrown from generator
+console.log(iterator.throw(new Error("Boom"))); // помилка кидається в ітераторі
 ```
 
-In this example, the first two `yield` expressions are evaluated as normal, but when `throw()` is called, an error is thrown before `let second` is evaluated. This effectively halts code execution similar to directly throwing an error. The only difference is the location in which the error is thrown. Figure 8-2 shows which code is executed at each step.
+У цьому прикладі, перші два вирази з `yield` виконуються нормально, але коли викликається `throw()`, помилка кидається до того, як виконається `let second`. Це просто зупиняє виконання коду, так само як це би сталось, якщо кинути помилку безпосередньо. Єдина відмінність — це місце, де було кинуто помилку. Зображення 8-2 який код виконується на кожному кроці.
 
-![Figure 8-2: Throwing an error inside a generator](images/fg0602.png)
+![Зображення 8-2: Кидання помилок всередині ітератора](images/fg0602.png)
 
-In this figure, the color red represents the code executed when `throw()` is called, and the red star shows approximately when the error is thrown inside the generator. The first two `yield` statements are executed, and when `throw()` is called, an error is thrown before any other code executes.
+На цьому зображення, червоний колір відповідає коду, що виконається, коли викличеться `throw()`, а червона зірка показує де, приблизно, кинеться помилка всередині генератора. Перші два оператора `yield` виконуються, але коли викликається `throw()`, помилка кидається до того, як виконається будь–який інший код.
 
-Knowing this, you can catch such errors inside the generator using a `try-catch` block:
+Знаючи це, ви можете ловити такі помилки всередині генератора з допомогою блоку `try-catch`:
 
 ```js
 function *createIterator() {
@@ -662,9 +662,9 @@ function *createIterator() {
     let second;
 
     try {
-        second = yield first + 2;       // yield 4 + 2, then throw
+        second = yield first + 2;       // yield 4 + 2, тоді кинути
     } catch (ex) {
-        second = 6;                     // on error, assign a different value
+        second = 6;                     // якщо помилка, присвоїти інше значення
     }
     yield second + 3;
 }
@@ -677,17 +677,17 @@ console.log(iterator.throw(new Error("Boom"))); // "{ value: 9, done: false }"
 console.log(iterator.next());                   // "{ value: undefined, done: true }"
 ```
 
-In this example, a `try-catch` block is wrapped around the second `yield` statement. While this `yield` executes without error, the error is thrown before any value can be assigned to `second`, so the `catch` block assigns it a value of six. Execution then flows to the next `yield` and returns nine.
+У цьому прикладі, блок `try-catch` огорнутий довкола другого оператора `yield`. Коли цей `yield` виконується без помилок, до того як `second` присвоїться будь–яке значення кидається, тому блок `catch` присвоює йому значення шість. Тоді виконання продовжується до наступного `yield` і повертає дев'ять.
 
-Notice that something interesting happened: the `throw()` method returned a result object just like the `next()` method. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the next value, `9`.
+Зверніть у вагу на те, що відбулось дещо цікаве: метод `throw()` повернув об’єкт–результат так само як і метод `next()`. Оскільки помилка була впіймана всередині генератора, виконання коду продовжилось до наступного `yield` та повернуло наступне значення, `9`.
 
-It helps to think of `next()` and `throw()` as both being instructions to the iterator. The `next()` method instructs the iterator to continue executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
+Краще думати про `next()` та `throw()` як про інструкції для ітератора. Метод `next()` вказує ітератору продовжити виконання (можливо з вказаним значенням), а метод `throw()` наказує ітератору продовжити виконання киданням помилки. Що станеться після цього залежить від коду всередині генератора.
 
-The `next()` and `throw()` methods control execution inside an iterator when using `yield`, but you can also use the `return` statement. But `return` works a bit differently than it does in regular functions, as you will see in the next section.
+Методи `next()` та `throw()` керуються ходом виконання всередині ітератора при використанні `yield`, проте ви також можете використовувати оператор `return`. Але `return` працює по іншому, на відміну від того, як він працює у звичайних функціях. Як саме ви побачите у наступному розділі.
 
-### Generator Return Statements
+### Оператор return у генераторах
 
-Since generators are functions, you can use the `return` statement both to exit early and  specify a return value for the last call to the `next()` method. In most examples in this chapter, the last call to `next()` on an iterator returns `undefined`, but you can specify an alternate value by using `return` as you would in any other function. In a generator, `return` indicates that all processing is done, so the `done` property is set to `true` and the value, if provided, becomes the `value` field. Here's an example that simply exits early using `return`:
+Оскільки генератори є функціями, ви можете використовувати оператор `return` для завчасного виходу та задання результату для останнього виклику методу  `next()`. У більшості прикладів у цій главі, останній виклик `next()` для ітератора повертав `undefined`, проте ви можете задати інше значення з допомогою `return` так само, як ви могли б це зробити з будь–якою іншою функцією. У генераторі `return` вказує на те, що всі операції закінчено, тому властивості `done` встановлюється `true`, а значення, якщо воно вказане, стає полем `value`. Ось приклад, що просто закінчує виконання раніше з допомогою  `return`:
 
 ```js
 function *createIterator() {
@@ -703,9 +703,9 @@ console.log(iterator.next());           // "{ value: 1, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this code, the generator has a `yield` statement followed by a `return` statement. The `return` indicates that there are no more values to come, and so the rest of the `yield` statements will not execute (they are unreachable).
+У цьому коді, генератор має оператор `yield`, за яким слідує операто `return`. `return` вказує, що більше значення більше не надходитимуть і тому решту інструкцій `yield` не виконуються (їх не можливо досягнути).
 
-You can also specify a return value that will end up in the `value` field of the returned object. For example:
+Ви також можете вказати значення, яке треба повернути і яке стане полем `value` об’єкту–результату. Наприклад:
 
 ```js
 function *createIterator() {
@@ -720,13 +720,13 @@ console.log(iterator.next());           // "{ value: 42, done: true }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-Here, the value `42` is returned in the `value` field on the second call to the `next()` method (which is the first time that `done` is `true`). The third call to `next()` returns an object whose `value` property is once again `undefined`. Any value you specify with `return` is only available on the returned object one time before the `value` field is reset to `undefined`.
+Тут значення `42` повертається у полі `value` після другого виклику методу `next()` (перший у якого поле `done` дорівнює `true`). Третій виклик `next()` повертає об’єкт, у якого властивість `value` знову дорівнює `undefined`. Будь–яке значення, яке ви вказали через `return` доступне у об’єкті–результаті лише раз, перед тим, як поле `value` буде скинуто до значення `undefined`.
 
-I> The spread operator and `for-of` ignore any value specified by a `return` statement. As soon as they see `done` is `true`, they stop without reading the `value`. Iterator return values are helpful, however, when delegating generators.
+I> Оператор розкладу та `for-of` ігнорують будь–яке значення, що вказується з допомогою інструкції `return`. Як тільки вони бачать, що `done` дорівнює `true`, вони зупиняються без читання `value`. Однак, значення повернення у ітераторах корисні при делегуванні генераторів.
 
-### Delegating Generators
+### Делегування генераторів
 
-In some cases, combining the values from two iterators into one is useful. Generators can delegate to other generators using a special form of `yield` with a star (`*`) character. As with generator definitions, where the star appears doesn't matter, as long as the star falls between the `yield` keyword and the generator function name. Here's an example:
+У деяких випадках зручно скомбінувати значення з двох ітераторів у один. Генератори можна делегувати до інших генераторів з допомогою спеціальної форми `yield` з символом зірочки (`*`). Як і з визначенням генератора, не має значення де стоїть зірочка, поки вона знаходиться між ключовим слово `yield` та ім’ям функції–генератора. Ось приклад:
 
 ```js
 function *createNumberIterator() {
@@ -755,9 +755,9 @@ console.log(iterator.next());           // "{ value: true, done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this example, the `createCombinedIterator()` generator delegates first to `createNumberIterator()` and then to `createColorIterator()`. The returned iterator appears, from the outside, to be one consistent iterator that has produced all of the values. Each call to `next()` is delegated to the appropriate iterator until the iterators created by `createNumberIterator()` and `createColorIterator()` are empty. Then the final `yield` is executed to return `true`.
+У цьому прикладі, генератор `createCombinedIterator()` генератор делегує спершу до `createNumberIterator()`, а тоді до `createColorIterator()`. Спільний ітератор ззовні виглядає так, наче це один спільний, що повертає всі ці значення. Кожен виклик `next()` делегується до потрібного ітератора, поки ітератори, що створені через `createNumberIterator()` та `createColorIterator()` не стануть порожніми. Тоді останнє `yield` виконується, щоб повернути `true`.
 
-Generator delegation also lets you make further use of generator return values. This is the easiest way to access such returned values and can be quite useful in performing complex tasks. For example:
+Делегування ітераторів також дозволяє вам поглиблено використовувати значення, що повертаються з генератора. Це є найлегшим способом отримати доступ до таких значень виходу і може бути дуже корисним при виконанні складних завдань. Наприклад:
 
 ```js
 function *createNumberIterator() {
@@ -787,9 +787,9 @@ console.log(iterator.next());           // "{ value: "repeat", done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-Here, the `createCombinedIterator()` generator delegates to `createNumberIterator()` and assigns the return value to `result`. Since `createNumberIterator()` contains `return 3`, the returned value is `3`. The `result` variable is then passed to `createRepeatingIterator()` as an argument indicating how many times to yield the same string (in this case, three times).
+Тут генератор `createCombinedIterator()` делегується до `createNumberIterator()` та присвоює повернуте значення у `result`. Оскільки `createNumberIterator()` містить `return 3`, повернутим значенням є `3`. Тоді змінна `result` передається у `createRepeatingIterator()` в якості аргументу, що вказує скільки разів треба повернути однаковий рядок (у цьому випадку, тричі).
 
-Notice that the value `3` was never output from any call to the `next()` method. Right now, it exists solely inside the `createCombinedIterator()` generator. But you can output that value as well by adding another `yield` statement, such as:
+Зауважте, що значення `3` ніколи не виводиться при будь–якому виклику методу `next()`. Просто зараз, воно існує виключно всередині генератора `createCombinedIterator()`. Проте ви можете так само вивести це значення, просто додавши ще одну інструкцію `yield`, ось так:
 
 ```js
 function *createNumberIterator() {
@@ -821,17 +821,17 @@ console.log(iterator.next());           // "{ value: "repeat", done: false }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this code, the extra `yield` statement explicitly outputs the returned value from the `createNumberIterator()` generator.
+У цьому коді, додатковий оператор `yield` безпосередньо виводить повернене з генератора `createNumberIterator()` значення.
 
-Generator delegation using the return value is a very powerful paradigm that allows for some very interesting possibilities, especially when used in conjunction with asynchronous operations.
+Делегування генераторів з використанням повернених значень є дуже потужною парадигмою, що відкриває декілька дуже цікавих можливостей, особливо при використанні кон’юнкції з асинхронними операціями.
 
-I> You can use `yield *` directly on strings (such as `yield * "hello"`) and the string's default iterator will be used.
+I> Ви можете використовувати `yield *` відразу над рядками (як от `yield * "hello"`) і тоді буде використаний ітератор за замовчуванням для рядків.
 
-## Asynchronous Task Running
+## Асинхронний запуск завдань
 
-A lot of the excitement around generators is directly related to asynchronous programming. Asynchronous programming in JavaScript is a double-edged sword: simple tasks are easy to do asynchronously, while complex tasks become an errand in code organization. Since generators allow you to effectively pause code in the middle of execution, they open up a lot of possibilities related to asynchronous processing.
+Багато уваги довкола генераторів стосується асинхронного програмування. Асинхронне програмування у JavaScript — це палиця з двома кінцями: легко виконувати прості завдання асинхронно, але складні завдання змушують заглибитись в організацію коду. Оскільки генератори дозволяють вам зручно зупиняти код під час виконання, вони відкриваються широкі можливості, пов’язані з асинхронною обробкою.
 
-The traditional way to perform asynchronous operations is to call a function that has a callback. For example, consider reading a file from the disk in Node.js:
+Звичним способом виконати асинхронну операцію є виклик функції, що має зворотній виклик. Наприклад, розгляньте приклад читання файлу з диску у Node.js:
 
 ```js
 let fs = require("fs");
@@ -846,40 +846,40 @@ fs.readFile("config.json", function(err, contents) {
 });
 ```
 
-The `fs.readFile()` method is called with the filename to read and a callback function. When the operation is finished, the callback function is called. The callback checks to see if there's an error, and if not, processes the returned `contents`. This works well when you have a small, finite number of asynchronous tasks to complete, but gets complicated when you need to nest callbacks or otherwise sequence a series of asynchronous tasks. This is where generators and `yield` are helpful.
+Метод `fs.readFile()` викликається з іменем файлу, який треба прочитати, та з функцією зворотнього виклику. Коли операція закінчиться, викличеться функція зворотнього виклику. Зворотній виклик перевіряє чи сталась помилка, і якщо не сталась, то обробляє повернений `contents`. Це працює добре, коли ви маєте обмежену кількість асинхронних завдань, які потрібно виконати, проте зі зростанням складності, вам потрібно вкладати зворотні виклики один в одного, або послідовно виконувати серію асинхронних завдань. Саме тут генератори та  `yield` стають в нагоді.
 
-### A Simple Task Runner
+### Простий обробник завдань
 
-Because `yield` stops execution and waits for the `next()` method to be called before starting again, you can implement asynchronous calls without managing callbacks. To start, you need a function that can call a generator and start the iterator, such as this:
+Оскільки `yield` зупиняє виконання і, щоб почати роботу, чекає на виклик методу `next()`, ви можете реалізувати асинхронні виклики без обробки зворотніх викликів. Для початку, вам потрібна функція, що викликає генератор і стартує ітератор, наприклад ось така:
 
 ```js
 function run(taskDef) {
 
-    // create the iterator, make available elsewhere
+    // створюємо ітератор, що буде доступний усюди
     let task = taskDef();
 
-    // start the task
+    // починаємо виконувати завдання
     let result = task.next();
 
-    // recursive function to keep calling next()
+    // рекурсивна функція для постійного виклику next()
     function step() {
 
-        // if there's more to do
+        // якщо є що виконувати
         if (!result.done) {
             result = task.next();
             step();
         }
     }
 
-    // start the process
+    // починаємо процес
     step();
 
 }
 ```
 
-The `run()` function accepts a task definition (a generator function) as an argument. It calls the generator to create an iterator and stores the iterator in `task`. The `task` variable is outside the function so it can be accessed by other functions; I will explain why later in this section. The first call to `next()` begins the iterator and the result is stored for later use. The `step()` function checks to see if `result.done` is false and, if so, calls `next()` before recursively calling itself. Each call to `next()` stores the return value in `result`, which is always overwritten to contain the latest information. The initial call to `step()` starts the process of looking at the `result.done` variable to see whether there's more to do.
+Функція `run()` приймає в якості аргументу означення завдання (функцію–генератор). Вона викликає генератор, щоб створити ітератор та зберігає цей ітератор у `task`. Змінна `task` знаходиться поза функцією, тому вона доступна іншим функціям (я поясню чому пізніше у цьому розділі). Перший виклик `next()` починає ітерування і результат зберігається для подальшого використання. Функція `step()` перевіряє чи `result.done` рівне `false` і якщо так, то викликає `next()` перед рекурсивним викликом самої себе. Кожен виклик `next()` зберігає повернуте значення у `result`, який щоразу перезаписується, щоб містити актуальну інформацію. Перший виклик `step()` починає процес перевірки змінної `result.done`, щоб бачити чи є робота, яку потрібно виконати.
 
-With this implementation of `run()`, you can run a generator containing multiple `yield` statements, such as:
+З такою імплементацією `run()`, ви можете запускати генератор з кількома інструкціями `yield`, ось так:
 
 ```js
 run(function*() {
@@ -891,38 +891,38 @@ run(function*() {
 });
 ```
 
-This example just outputs three numbers to the console, which simply shows that all calls to `next()` are being made. However, just yielding a couple of times isn't very useful. The next step is to pass values into and out of the iterator.
+Цей приклад виводить три числа у консоль, що просто показує, що відбулись всі виклики `next()`. Однак, просто почергове виконання не є дуже корисним. Наступним кроком буде передача значень всередину та з ітератора.
 
-### Task Running With Data
+### Обробка завдань з даними
 
-The easiest way to pass data through the task runner is to pass the value specified by `yield` into the next call to the `next()` method. To do so, you need only pass `result.value`, as in this code:
+Найпростішим способом передати дані через обробник завдань є передача значення визначеного через  `yield` у наступний виклик методу `next()`. Щоб зробити це, вам потрібно просто передавати `result.value`, як у цьому коді:
 
 ```js
 function run(taskDef) {
 
-    // create the iterator, make available elsewhere
+    // створюємо ітератор, що буде доступний усюди
     let task = taskDef();
 
-    // start the task
+    // починаємо виконувати завдання
     let result = task.next();
 
-    // recursive function to keep calling next()
+    // рекурсивна функція для постійного виклику next()
     function step() {
 
-        // if there's more to do
+        // якщо є що виконувати
         if (!result.done) {
             result = task.next(result.value);
             step();
         }
     }
 
-    // start the process
+    // починаємо процес
     step();
 
 }
 ```
 
-Now that `result.value` is passed to `next()` as an argument, it's possible to pass data between `yield` calls, like this:
+Тепер `result.value` передається у `next()` як аргумент і тому можливо передавати дані між викликами `yield`, як ось тут:
 
 ```js
 run(function*() {
@@ -934,13 +934,13 @@ run(function*() {
 });
 ```
 
-This example outputs two values to the console: 1 and 4. The value 1 comes from `yield 1`, as the 1 is passed right back into the `value` variable. The 4 is calculated by adding 3 to `value` and passing that result back to `value`. Now that data is flowing between calls to `yield`, you just need one small change to allow asynchronous calls.
+Цей приклад виводить два значення у консоль: 1 та 4. Значення 1 приходить з `yield 1`, тому що 1 передається назад у змінну `value`. 4 обчислюється в результаті додавання 3 до `value` та передачі цього результату назад у `value`. Тепер дані передаються між викликами `yield`, вам потрібно зробити лише одну маленьку зміну для того, щоб обробляти асинхронні виклики.
 
-### Asynchronous Task Runner
+### Асинхронний обробник завдань
 
-The previous example passed static data back and forth between `yield` calls, but waiting for an asynchronous process is slightly different. The task runner needs to know about callbacks and how to use them. And since `yield` expressions pass their values into the task runner, that means any function call must return a value that somehow indicates the call is an asynchronous operation that the task runner should wait for.
+Попередній приклад передавав статичні дані між викликами `yield`, проте очікування на асинхронний процес є дещо іншим. Обробник завдань повинен знати про зворотні виклики та те, як їх обробляти. Оскільки вирази з `yield` передають свої значення у обробник завдань, це означає, що будь–який виклик функції мусить повернути значення, що якось вказує на те, що виклик є асинхронною операцією на яку обробник завдань має зачекати.
 
-Here's one way you might signal that a value is an asynchronous operation:
+Ось один спосіб, яким ви можете просигналізувати, що значення є асинхронною операцією:
 
 ```js
 function fetchData() {
@@ -950,7 +950,7 @@ function fetchData() {
 }
 ```
 
-For the purposes of this example, any function meant to be called by the task runner will return a function that executes a callback. The `fetchData()` function returns a function that accepts a callback function as an argument. When the returned function is called, it executes the callback function with a single piece of data (the `"Hi!"` string). The `callback` argument needs to come from the task runner to ensure executing the callback correctly interacts with the underlying iterator. While the `fetchData()` function is synchronous, you can easily extend it to be asynchronous by calling the callback with a slight delay, such as:
+З цього прикладу слід розуміти, що будь–яка функція, яка має викликатись обробником завдань має повернути функцію, що виконує зворотній виклик. Функція `fetchData()` повертає функцію, що приймає функцію зворотнього виклику в якості аргументу. Коли повернена функція викликається, вона виконує фунцію зворотнього виклику з одним шматком даних (рядком `"Hi!"`). Аргумент `callback` повинен прийти з обробника завдань для впевненості у тому, що зворотній виклик, який виконується, правильно взаємодіє з відповідним ітератором. Функція `fetchData()` є синхронною, але ви легко можете зробити її асинхронною зробивши зворотній виклик з невеликою затримкою, ось так:
 
 ```js
 function fetchData() {
@@ -962,23 +962,23 @@ function fetchData() {
 }
 ```
 
-This version of `fetchData()` introduces a 50ms delay before calling the callback, demonstrating that this pattern works equally well for synchronous and asynchronous code. You just have to make sure each function that wants to be called using `yield` follows the same pattern.
+Така версія `fetchData()` вносить затримку на 50 мс перед зворотним викликом, демонструючи тим самим, що такий шаблон працює однаково добре як для синхронного, так і для асинхронного коду. Ви просто маєте бути певні, що кожна функція, що має викликатись з `yield` відповідає цьому шаблону.
 
-With a good understanding of how a function can signal that it's an asynchronous process, you can modify the task runner to take that fact into account. Anytime `result.value` is a function, the task runner will execute it instead of just passing that value to the `next()` method. Here's the updated code:
+З хорошим розумінням того, як функція може сигналізувати про те, що вона є асинхронною, ви можете змінити обробник завдань так, щоб він враховував таку поведінку. Щоразу, коли `result.value` є фунцією, обробник завдань виконуватиме її, замість того, щоб просто передати значення у метод `next()`. Ось оновлений код:
 
 ```js
 function run(taskDef) {
 
-    // create the iterator, make available elsewhere
+    // створюємо ітератор, що буде доступний усюди
     let task = taskDef();
 
-    // start the task
+    // починаємо виконувати завдання
     let result = task.next();
 
-    // recursive function to keep calling next()
+    // рекурсивна функція для постійного виклику next()
     function step() {
 
-        // if there's more to do
+        // якщо є що виконувати
         if (!result.done) {
             if (typeof result.value === "function") {
                 result.value(function(err, data) {
@@ -998,15 +998,15 @@ function run(taskDef) {
         }
     }
 
-    // start the process
+    // починаємо процес
     step();
 
 }
 ```
 
-When `result.value` is a function (checked with the `===` operator), it is called with a callback function. That callback function follows the Node.js convention of passing any possible error as the first argument (`err`) and the result as the second argument. If `err` is present, then that means an error occurred and `task.throw()` is called with the error object instead of `task.next()` so an error is thrown at the correct location. If there is no error, then `data` is passed into `task.next()` and the result is stored. Then, `step()` is called to continue the process. When `result.value` is not a function, it is directly passed to the `next()` method.
+Якщо `result.value` є функцією (перевіряється оператором `===`), тоді вона викликається з функцією зворотнього виклику. Ця функція зворотнього виклику відповідає запису прийнятому в Node.js: коли будь–яка можлива помилка передається в якості першого аргументу (`err`), а результат у якості другого. Якщо присутня змінна `err`, це означає, що з'явилась помилка і тоді, замість `task.next()`, викликається `task.throw()` з об’єктом помилки, тому помилка видається у правильному місці. Якщо помилки немає, тоді `data` передається у `task.next()`, а результат зберігається. Тоді, для продовження процесу, викликається `step()`. Якщо `result.value` не є функцією, тоді воно відразу передається у метод `next()`.
 
-This new version of the task runner is ready for all asynchronous tasks. To read data from a file in Node.js, you need to create a wrapper around `fs.readFile()` that returns a function similar to the `fetchData()` function from the beginning of this section. For example:
+Ця нова версія обробника завдань готова для обробки всіх асинхронних завдань. Для читання даних з файлу у Node.js, вам потрібно зробити обгортку довкола `fs.readFile()`, що поверне функцію схожу на функцію `fetchData()` на початку цього розділу. Наприклад:
 
 ```js
 let fs = require("fs");
@@ -1018,7 +1018,7 @@ function readFile(filename) {
 }
 ```
 
-The `readFile()` method accepts a single argument, the filename, and returns a function that calls a callback. The callback is passed directly to the `fs.readFile()` method, which will execute the callback upon completion. You can then run this task using `yield` as follows:
+Метод `readFile()` приймає єдиний аргумент, ім’я файлу, та повертає функцію, що викликає функцію зворотнього виклику. Функція зворотнього виклику передається у метод `fs.readFile()`, який виконає її після закінчення операції. Ви можете виконати це завдання з допомогою `yield` ось так:
 
 ```js
 run(function*() {
@@ -1028,24 +1028,24 @@ run(function*() {
 });
 ```
 
-This example is performing the asynchronous `readFile()` operation without making any callbacks visible in the main code. Aside from `yield`, the code looks the same as synchronous code. As long as the functions performing asynchronous operations all conform to the same interface, you can write logic that reads like synchronous code.
+Цей приклад виконує асинхронну операцію `readFile()` без видимих функцій зворотнього виклику у основному коді. Біля `yield` код виглядає так само, як і синхронний код. Поки функції виконують асинхронні операції з усім відповідним інтерфейсом, ви можете писати логіку, що читається як синхронний код.
 
-Of course, there are downsides to the pattern used in these examples--namely that you can't always be sure a function that returns a function is asynchronous. For now, though, it's only important that you understand the theory behind the task running. Using promises offers more powerful ways of scheduling asynchronous tasks, and Chapter 11 covers this topic further.
+Звісно є недоліки підходу, що використовувався у цих прикладах, зокрема, ви не завжди можете бути певні, що функція, що повертає функцію є асинхронною. Однак, зараз найважливіше те, що ви зрозуміли теорію на якій базується такий обробник завдань. Використання промісів надає більш потужний спосіб планування асинхронних завдань і Глава 11 розповість про це детальніше.
 
-## Summary
+## Підсумок
 
-Iterators are an important part of ECMAScript 6 and are at the root of several key language elements. On the surface, iterators provide a simple way to return a sequence of values using a simple API. However, there are far more complex ways to use iterators in ECMAScript 6.
+Ітератори є важливою частиною ECMAScript 6 і є коренем для кількох ключових елементів мови. У простих випадках ітератори надають просту можливість повертати послідовності значень використовуючи простий API. Однак, є набагато більше складніших способів використання ітераторів у ECMAScript 6.
 
-The `Symbol.iterator` symbol is used to define default iterators for objects. Both built-in objects and developer-defined objects can use this symbol to provide a method that returns an iterator. When `Symbol.iterator` is provided on an object, the object is considered an iterable.
+Символ `Symbol.iterator` використовується для визначення ітератора за замовчуванням для об’єктів. Як вбудовані, так і створені розробниками об’єкти можуть використовувати цей символ, щоб передати метод, що повертатиме ітератор. Якщо `Symbol.iterator` переданий об’єкту, тоді цей об’єкт вважається ітерабельним.
 
-The `for-of` loop uses iterables to return a series of values in a loop. Using `for-of` is easier than iterating with a traditional `for` loop because you no longer need to track values and control when the loop ends. The `for-of` loop automatically reads all values from the iterator until there are no more, and then it exits.
+Цикл `for-of` використовує ітерабельні об’єкти, щоб повертати серії значень у циклі. Використання `for-of` є простішим, ніж ітерування з допомогою традиційного циклу `for`, оскільки вам більше не потрібно відслідковувати значення і контролювати закінчення циклу. Цикл `for-of` автоматично читає усі значення з ітератора і закінчує роботу тоді, коли більше не залишається значень для читання.
 
-To make `for-of` easier to use, many values in ECMAScript 6 have default iterators. All the collection types--that is, arrays, maps, and sets--have iterators designed to make their contents easy to access. Strings also have a default iterator, which makes iterating over the characters of the string (rather than the code units) easy.
+Щоб зробити використання `for-of` легшим, багато значень у ECMAScript 6 мають ітератори за замовчуванням. Всі типи колекцій (масиви, мапи та множини) мають ітератори, які розроблені так, щоб зробити їхній вміст доступнішим. Рядки також мають ітератор за замовчуванням, який робить простішим ітерування по символах у рядку (замість ітерування по кодових словах).
 
-The spread operator works with any iterable and makes converting iterables into arrays easy, too. The conversion works by reading values from an iterator and inserting them individually into an array.
+Оператор розкладу працює з будь–якими ітерабельними об’єктами і робить простішою їх конвертацію у масиви. Конвертація відбувається шляхом читання значень з ітератора та вставляння кожного значення у масив.
 
-A generator is a special function that automatically creates an iterator when called. Generator definitions are indicated by a star (`*`) character and use of the `yield` keyword to indicate which value to return for each successive call to the `next()` method.
+Генератор — це спеціальна функція, яка при виклику автоматично створює ітератор. Оголошення генераторів позначаються символом зірочки (`*`) та використанням ключового слова `yield`, які показують яке значення потрібно повертати при кожному успішному виклику методу `next()`.
 
-Generator delegation encourages good encapsulation of iterator behavior by letting you reuse existing generators in new generators. You can use an existing generator inside another generator by calling `yield *` instead of `yield`. This process allows you to create an iterator that returns values from multiple iterators.
+Делегування генераторів надає хорошу інкапсуляцію поведінки генераторів дозволяючи перевикористання раніше визначених генераторів у нових генераторах. Ви можете використовувати генератор, який ви описали раніше, всередині іншого генератора з допомогою виклику `yield *`, замість `yield`. Це дозволяє вам створювати ітератор, що повертає значення з кількох ітераторів.
 
-Perhaps the most interesting and exciting aspect of generators and iterators is the possibility of creating cleaner-looking asynchronous code. Instead of needing to use callbacks everywhere, you can set up code that looks synchronous but in fact uses `yield` to wait for asynchronous operations to complete.
+Можливо найбільш цікавим та очікуваним аспектом генераторів та ітераторів є можливість створення асинхронного коду, який виглядатиме більш чистішим. Замість необхідності у використанні зворотніх викликів, ви можете написати код, який виглядатиме синхронно, але насправді використовуватиме `yield`, щоб чекати на завершення асинхронних операцій.
