@@ -1,20 +1,20 @@
-# Promises and Asynchronous Programming
+# Проміси та асинхронне програмування
 
-One of the most powerful aspects of JavaScript is how easily it handles asynchronous programming. As a language created for the Web, JavaScript needed to be able to respond to asynchronous user interactions such as clicks and key presses from the beginning. Node.js further popularized asynchronous programming in JavaScript by using callbacks as an alternative to events. As more and more programs started using asynchronous programming, events and callbacks were no longer powerful enough to support everything developers wanted to do. *Promises* are the solution to this problem.
+Одним з найбільш потужних аспектів JavaScript є те, як легко він працює з асинхронним програмуванням. Як мова, яка була розроблена для Web, JavaScript від початку потребував можливості відповідати на асинхронні взаємодії користувачів, як от кліки та натискання клавіш. Node.js ще більше популяризував асинхронне програмування у JavaScript з допомогою функцій зворотнього виклику в якості альтернативи подіям. З тим як все більше і більше програм починають використовувати асинхронне програмування, події та зворотні виклики більше є достатньо потужними для підтримки всього того, що хочуть робити розробники. *Про́міси (Promises)* є вирішенням цієї проблеми.
 
-Promises are another option for asynchronous programming, and they work like futures and deferreds do in other languages. A promise specifies some code to be executed later (as with events and callbacks) and also explicitly indicates whether the code succeeded or failed at its job. You can chain promises together based on success or failure in ways that make your code easier to understand and debug.
+Проміси є додатковим засобом для асинхронного програмування і вони схожі у своїй роботі на ф’ючерси (futures) та де́фереди (deferreds) у інших мовах. Проміси визначає деякий код, який треба виконати пізніше (так само як з подіями та зворотніми викликами) і також точно показує коли цей код успішно або з помилкою завершує свою роботу. Ви можете складати проміси у ланцюжок базуючись на тому чи успішно вони виконуються, що робить ваш код легшим для розуміння та налагодження.
 
-To have a good understanding of how promises work, however, it's important to understand some of the basic concepts upon which they are built.
+Однак, щоб добре зрозуміти як працюють проміси, важливо зрозуміти деякі базові концепції на яких вони побудовані.
 
-## Asynchronous Programming Background
+## Підґрунтя асинхронного програмування
 
-JavaScript engines are built on the concept of a single-threaded event loop. *Single-threaded* means that only one piece of code is ever executed at a time. Contrast this with languages like Java or C++, where threads can allow multiple different pieces of code to execute at the same time. Maintaining and protecting state when multiple pieces of code can access and change that state is a difficult problem and a frequent source of bugs in thread-based software.
+Рушії JavaScript побудовані на концепції однопоточного циклу подій. *Однопоточний* означає, що в один момент часу може виконуватись лише один шматок коду. Це відрізняється від мов, як от Java чи C++, в яких потоки дозволяють виконувати одночасно різні частини коду. Підтримка і захист стану, коли різні частини коду можуть мати доступ та змінювати цей стан, може бути складною проблемою та часто є джерелом багів у програмному забезпеченні, що базується на потоках.
 
-JavaScript engines can only execute one piece of code at a time, so they need to keep track of code that is meant to run. That code is kept in a *job queue*. Whenever a piece of code is ready to be executed, it is added to the job queue. When the JavaScript engine is finished executing code, the event loop executes the next job in the queue. The *event loop* is a process inside the JavaScript engine that monitors code execution and manages the job queue. Keep in mind that as a queue, job execution runs from the first job in the queue to the last.
+Рушії JavaScript можуть виконувати лише один шматок коду за раз, тому для них важливо відслідковувати код, який вона мають виконати. Цей код зберігається у *черзі завдань (job queue)*. Коли шматок коду готовий до виконання, він додається у чергу завдань. Коли рушій JavaScript завершив виконання коду, цикл подій виконує наступне завдання у цій черзі. *Цикл подій (event loop)* — це процес всередині рушія JavaScript, який відслідковує та керує чергою завдань. Пам'ятайте, що оскільки це черга, то завдання виконуються в ній від першого до останнього.
 
-### The Event Model
+### Подієва модель
 
-When a user clicks a button or presses a key on the keyboard, an *event* like `onclick` is triggered. That event might respond to the interaction by adding a new job to the back of the job queue. This is JavaScript's most basic form of asynchronous programming. The event handler code doesn't execute until the event fires, and when it does execute, it has the appropriate context. For example:
+Коли користувач клікає на кнопку або натискає клавішу на клавіатурі, спрацьовує *подія (event)*, як от `onclick`. Ця подія може відповісти на взаємодію додаванням нового завдання в кінець черги завдань. Це найбільш базова форма асинхронного програмування у JavaScript. Код обробника події не виконується до тих пір, доки не станеться подія, а коли виконується, він має відповідний контекст. Наприклад:
 
 ```js
 let button = document.getElementById("my-btn");
@@ -23,13 +23,13 @@ button.onclick = function(event) {
 };
 ```
 
-In this code, `console.log("Clicked")` will not be executed until `button` is clicked. When `button` is clicked, the function assigned to `onclick` is added to the back of the job queue and will be executed when all other jobs ahead of it are complete.
+У цьому коді, `console.log("Clicked")` не виконається до тих пір, доки немає буде кліку по `button`. Якщо на `button` клікнути, то функція, присвоєна у `onclick`, додається в кінець черги завдань і виконається тоді, коли всі завдання перед нею будуть виконані.
 
-Events work well for simple interactions, but chaining multiple separate asynchronous calls together is more complicated because you must keep track of the event target (`button` in the previous example) for each event. Additionally, you need to ensure all appropriate event handlers are added before the first time an event occurs. For instance, if `button` were clicked before `onclick` is assigned, nothing would happen. So while events are useful for responding to user interactions and similar infrequent functionality, they aren't very flexible for more complex needs.
+Події працюють добре для простих взаємодій, проте поєднання кількох окремих асинхронних викликів є більш складним, оскільки ви мусите відслідковувати елемент (`button` у попередньому випадку) для кожної події. Крім того, ви маєте бути певні у тому, що всі потрібні обробники події додані до того, як ця подія відбудеться. Наприклад, якщо клікнути `button` до того. як присвоїти яку функцію `onclick`, нічого не відбудеться. Таким чином хоч події і корисні для реагування на деякі дії користувача та створення загальної простої функціональності, вони не дуже підходять для більш складних потреб.
 
-### The Callback Pattern
+### Патерн зі зворотніми викликами
 
-When Node.js was created, it advanced the asynchronous programming model by popularizing the callback pattern of programming. The callback pattern is similar to the event model because the asynchronous code doesn't execute until a later point in time. It's different because the function to call is passed in as an argument, as shown here:
+Коли було створено Node.js, він просунув модель асинхронного програмування через популяризацію патерну програмування зі зворотніми викликами. Патерн зі зворотніми викликами схожий на подієву модель тим, що асинхронний код не виконується до певного моменту. А відрізняється він тим, що функція, яку потрібно викликати, передається у якості аргументу, як показано тут:
 
 ```js
 readFile("example.txt", function(err, contents) {
@@ -42,11 +42,11 @@ readFile("example.txt", function(err, contents) {
 console.log("Hi!");
 ```
 
-This example uses the traditional Node.js *error-first* callback style. The `readFile()` function is intended to read from a file on disk (specified as the first argument) and then execute the callback (the second argument) when complete. If there's an error, the `err` argument of the callback is an error object; otherwise, the `contents` argument contains the file contents as a string.
+Цей приклад використовує традиційний для Node.js стиль зворотніх викликів *«спершу помилка»*. Функція `readFile()` має читати з диску файл (заданий першим аргументом), а тоді, після закінчення, виконати зворотній виклик (другий аргумент). Якщо стається помилка, аргумент `err` у функції зворотнього виклику буде об’єктом помилки; в іншому випадку, аргумент `contents` міститиме вміст файлу у вигляді рядка.
 
-Using the callback pattern, `readFile()` begins executing immediately and pauses when it starts reading from the disk. That means `console.log("Hi!")` is output immediately after `readFile()` is called, before `console.log(contents)` prints anything. When `readFile()` finishes, it adds a new job to the end of the job queue with the callback function and its arguments. That job is then executed upon completion of all other jobs ahead of it.
+Використовуючи патерн зі зворотніми викликами, `readFile()` починає виконання негайно і зупиняється, коли починає читання з диску. Це означає, що `console.log("Hi!")` спрацює негайно після виклику `readFile()`, до того, як `console.log(contents)` що–небудь виведе. Коли `readFile()` закінчить читання, вона додасть нове завдання з функцією зворотнього виклику та її аргументами в кінець черги завдань. Це завдання виконається після завершення всіх завдань перед ним.
 
-The callback pattern is more flexible than events because chaining multiple calls together is easier with callbacks. For example:
+Патер зі зворотніми викликами більш гнучкий, оскільки поєднання кількох викликів легше зробити з допомогою функцій зворотнього виклику. Наприклад:
 
 ```js
 readFile("example.txt", function(err, contents) {
@@ -64,9 +64,9 @@ readFile("example.txt", function(err, contents) {
 });
 ```
 
-In this code, a successful call to `readFile()` results in another asynchronous call, this time to the `writeFile()` function. Note that the same basic pattern of checking `err` is present in both functions. When `readFile()` is complete, it adds a job to the job queue that results in `writeFile()` being called (assuming no errors). Then, `writeFile()` adds a job to the job queue when it finishes.
+У цьому коді, успішний виклик `readFile()` призводить до іншого асинхронного виклику, цього разу функції `writeFile()`. Зауважте, що схожий базовий патерн перевірки наявності `err` присутній у обох функціях. Коли `readFile()` виконується, у чергу завдань додається завдання, яке призводить до того, що викликається `writeFile()` (якщо немає помилок). Тоді, коли виконується `writeFile()`, вона додає теж завдання у чергу завдань.
 
-This pattern works fairly well, but you can quickly find yourself in *callback hell*. Callback hell occurs when you nest too many callbacks, like this:
+Цей патерн працює дуже добре, проте ви швидко можете зрозуміти, що ви потрапили у *пекло зворотніх викликів (callback hell)*. Пекло зворотніх викликів починається тоді, коли ви робите надто багато вкладених зворотніх викликів, як ось тут:
 
 ```js
 method1(function(err, result) {
@@ -103,122 +103,122 @@ method1(function(err, result) {
 });
 ```
 
-Nesting multiple method calls as this example does creates a tangled web of code that is hard to understand and debug. Callbacks also present problems when you want to implement more complex functionality. What if you want two asynchronous operations to run in parallel and notify you when they're both complete? What if you'd like to start two asynchronous operations at a time but only take the result of the first one to complete?
+Вкладення декількох викликів методів, у цьому прикладі, створює заплутану павутина коду, який важко зрозуміти та налагодити. Зворотні виклики також мають проблему з реалізацією більш складної функціональності. Що якщо ви хочете запустити дві асинхронні операції паралельно і отримати сповіщення коли вони обоє будуть виконані? Що якщо вам необхідно запустити дві асинхронні операції одночасно, але для завершення отримати результат лише одної з них?
 
-In these cases, you'd need to track multiple callbacks and cleanup operations, and promises greatly improve such situations.
+В такому випадку, вам би знадобилось відслідковувати кілька зворотніх викликів та очищувати операції, а от проміси значно покращують схожі ситуації.
 
-## Promise Basics
+## Основи промісів
 
-A promise is a placeholder for the result of an asynchronous operation. Instead of subscribing to an event or passing a callback to a function, the function can return a promise, like this:
+Проміс — це заглушка для асинхронної операції. Замість підписки на подію, або передачу зворонього виклику у функцію, функція може повертати проміс, ось так:
 
 ```js
-// readFile promises to complete at some point in the future
+// readFile повертає проміс на те, що операція виконається у майбутньому
 let promise = readFile("example.txt");
 ```
 
-In this code, `readFile()` doesn't actually start reading the file immediately; that will happen later. Instead, the function returns a promise object representing the asynchronous read operation so you can work with it in the future. Exactly when you'll be able to work with that result depends entirely on how the promise's lifecycle plays out.
+У цьому коді, `readFile()` насправді не починає читання файлу негайно — це станеться згодом. Замість цього, функція повертає об’єкт–проміс, що відповідає асинхронній операції читання і таким чином ви можете працювати з цим у майбутньому. Коли саме ви зможете працювати з результатом залежить виключно від того, як вібуватиметься життєвий цикл проміса.
 
-### The Promise Lifecycle
+### Життєвий цикл промісів
 
-Each promise goes through a short lifecycle starting in the *pending* state, which indicates that the asynchronous operation hasn't completed yet. A pending promise is considered *unsettled*. The promise in the last example is in the pending state as soon as the `readFile()` function returns it. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
+Кожен проміс проходить через короткий життєвий цикл, що починається зі стану *очікування (pending)*, який вказує на те, що асинхронна операція ще не завершена. Проміс, що перебуває у стані очікування, вважається *невстановленим (unsettled)*. Проміс з останнього прикладу перебуває у стані очікування як тільки функція фукнція `readFile()` повертає його. Як тільки асинхронна операція завершується, проміс вважається *встановленим (settled)* і переходить один з двох можливих станів:
 
-1. *Fulfilled*: The promise's asynchronous operation has completed successfully.
-1. *Rejected*: The promise's asynchronous operation didn't complete successfully due to either an error or some other cause.
+1. *fulfilled (завершений)* — коли асинхронна операція у промісі завершена успіщно;
+1. *rejected (відхилений)* — коли асинхронна операція не завершена успішно через через помилку, або з іншої причини.
 
-An internal `[[PromiseState]]` property is set to `"pending"`, `"fulfilled"`, or `"rejected"` to reflect the promise's state. This property isn't exposed on promise objects, so you can't determine which state the promise is in programmatically. But you can take a specific action when a promise changes state by using the `then()` method.
+Внутрішня властивість `[[PromiseState]]` встановлюється у `"pending"`, `"fulfilled"` або `"rejected"` щоб відображати стан проміса. Ця властивість не вікривається у об’єктах–промісах, тому ви не можете програмно визначити у якому стані перебуває проміс. Проте ви можете виконати певну дію, коли проміс змінить стан, з допомогою методу `then()`.
 
-The `then()` method is present on all promises and takes two arguments. The first argument is a function to call when the promise is fulfilled. Any additional data related to the asynchronous operation is passed to this fulfillment function. The second argument is a function to call when the promise is rejected. Similar to the fulfillment function, the rejection function is passed any additional data related to the rejection.
+Метод `then()` присутній у всіх промісів та приймає два аргументи. Перший аргумент є функцією, викликається коли проміс виконаний (fulfilled). Будь–яка додаткова інформація, що стосується асинхронної операції передається у цю функцію завершення. Другим аргументом є функція, що викликається коли проміс відхилено (rejected). Так само як і для функції завершення, будь–яка додаткова інформація, що стосується відхилення, передається у цю функцію.
 
-I> Any object that implements the `then()` method in this way is called a *thenable*. All promises are thenables, but not all thenables are promises.
+I> Будь–який об’єкт, що реалізує метод `then()` таким чином, називається *промісоподібним (thenable)* (тобто той, який має метод `then()`). Всі проміси мають об’єкт `then()`, проте не всі об’єкти, що мають метод `then()`, є промісами.
 
-Both arguments to `then()` are optional, so you can listen for any combination of fulfillment and rejection. For example, consider this set of `then()` calls:
+Обидва аргументи `then()` є опціональними, тому ви можете слухати будь–яку комбінацію завершення або відхилення. Наприклад, розгляньте такі виклики `then()`:
 
 ```js
 let promise = readFile("example.txt");
 
 promise.then(function(contents) {
-    // fulfillment
+    // завершення
     console.log(contents);
 }, function(err) {
-    // rejection
+    // відхилення
     console.error(err.message);
 });
 
 promise.then(function(contents) {
-    // fulfillment
+    // завершення
     console.log(contents);
 });
 
 promise.then(null, function(err) {
-    // rejection
+    // відхилення
     console.error(err.message);
 });
 ```
 
-All three `then()` calls operate on the same promise. The first call listens for both fulfillment and rejection. The second only listens for fulfillment; errors won't be reported. The third just listens for rejection and doesn't report success.
+Всі три виклики `then()` виконуються над одним і тим же промісом. Перший виклик слухає і завершення, і відхилення. Другий слухає лише завершення (повідомлень про помилки не буде). Третій слідкує лише за відхиленнями і не повідомляє про успішне завершення.
 
-Promises also have a `catch()` method that behaves the same as `then()` when only a rejection handler is passed. For example, the following `catch()` and `then()` calls are functionally equivalent:
+Проміси також мають метод `catch()`, що поводиться так само, як і `then()`, якщо йому передати лише обробник відхилень. Наприклад, такі виклики `catch()` та `then()` функціонально однакові:
 
 ```js
 promise.catch(function(err) {
-    // rejection
+    // відхилення
     console.error(err.message);
 });
 
-// is the same as:
+// те саме що й:
 
 promise.then(null, function(err) {
-    // rejection
+    // відхилення
     console.error(err.message);
 });
 ```
 
-The intent behind `then()` and `catch()` is for you to use them in combination to properly handle the result of asynchronous operations. This system is better than events and callbacks because it makes whether the operation succeeded or failed completely clear. (Events tend not to fire when there's an error, and in callbacks you must always remember to check the error argument.) Just know that if you don't attach a rejection handler to a promise, all failures will happen silently. Always attach a rejection handler, even if the handler just logs the failure.
+Ви можете комбінувати `then()` та `catch()` для кращої обробки результату асинхронної операції. Така система є кращою за події та зворотні виклики, тому що вона дає чітке розуміння того, чи операція завершилась успішно, чи з помилкою. (Події не відбудуться, якщо є помилка, а зворотні виклики потребують постійної перевірки аргументу–помилки.) Просто знайте, що якщо ви не задасте обробника відхилень, усі помилки будуть відбуватись без повідомлення. Завжди додавайте обробник відхилень, навіть якщо цей обробник просто виводить повідомлення про помилки.
 
-A fulfillment or rejection handler will still be executed even if it is added to the job queue after the promise is already settled. This allows you to add new fulfillment and rejection handlers at any time and guarantee that they will be called. For example:
+Обробники завершення або відхилення будуть виконуватись навіть якщо вони додаються у чергу завдань після того, як проміс став встановленим (settled). Це дозволяє вам додавати обробники завершення та відхилення будь–коли з гарантією, що вони будуть викликані. Наприклад:
 
 ```js
 let promise = readFile("example.txt");
 
-// original fulfillment handler
+// первинний обробник завершення
 promise.then(function(contents) {
     console.log(contents);
 
-    // now add another
+    // тепер додаємо ще один
     promise.then(function(contents) {
         console.log(contents);
     });
 });
 ```
 
-In this code, the fulfillment handler adds another fulfillment handler to the same promise. The promise is already fulfilled at this point, so the new fulfillment handler is added to the job queue and called when ready. Rejection handlers work the same way.
+У цьому коді, обробник завершення додає ще один обробник завершення до того ж самого проміса. У цей момент проміс уже завершений, тому новий обробник завершення додається у чергу завдань і викличеться як тільки буде готовий. Обробники відхилення працюють таким же чином.
 
-I> Each call to `then()` or `catch()` creates a new job to be executed when the promise is resolved. But these jobs end up in a separate job queue that is reserved strictly for promises. The precise details of this second job queue aren't important for understanding how to use promises so long as you understand how job queues work in general.
+I> Кожен виклик `then()` або `catch()` створює нове завдання, яке має виконатись коли проміс буде виконано. Проте ці завдання зрештою кладуться у окрему чергу завдань, що відведена спеціально для промісів. Детальна інформація про цю другу чергу не важлива для розуміння того, як використовувати проміси, якщо ви загалом розумієте як працює черга завдань.
 
-### Creating Unsettled Promises
+### Створення невстановлених промісів
 
-New promises are created using the `Promise` constructor. This constructor accepts a single argument: a function called the *executor*, which contains the code to initialize the promise. The executor is passed two functions named `resolve()` and `reject()` as arguments. The `resolve()` function is called when the executor has finished successfully to signal that the promise is ready to be resolved, while the `reject()` function indicates that the executor has failed.
+Нові проміси створюються з допомогою конструктора `Promise`. Цей конструктор приймає один аргумент: функцію під назвою *виконавець (executor)*, яка містить код що ініціалізує проміс. Виконавець приймає дві функції у якості аргументів: `resolve()` та `reject()`. Функція `resolve()` сигналізує про те, що проміс готовий бути вирішеним, і викликається тоді, коли виконавець успішно завершився. Функція `reject()` вказує на те, що виконавець завершися з помилкою.
 
-Here's an example that uses a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
+Ось приклади використання проміса в Node.js для імплементації функції `readFile()`, яка згадувалась раніше у цій главі:
 
 ```js
-// Node.js example
+// Приклад Node.js
 
 let fs = require("fs");
 
 function readFile(filename) {
     return new Promise(function(resolve, reject) {
 
-        // trigger the asynchronous operation
+        // починаємо асинхронну операцію
         fs.readFile(filename, { encoding: "utf8" }, function(err, contents) {
 
-            // check for errors
+            // перевіряємо помилку
             if (err) {
                 reject(err);
                 return;
             }
 
-            // the read succeeded
+            // читання завершилось успішно
             resolve(contents);
 
         });
@@ -227,22 +227,22 @@ function readFile(filename) {
 
 let promise = readFile("example.txt");
 
-// listen for both fulfillment and rejection
+// чекаємо на успішне завершення або відхилення з помилкою
 promise.then(function(contents) {
-    // fulfillment
+    // завершення
     console.log(contents);
 }, function(err) {
-    // rejection
+    // відхилення
     console.error(err.message);
 });
 ```
 
-In this example, the native Node.js `fs.readFile()` asynchronous call is wrapped in a promise. The executor either passes the error object to the `reject()` function or passes the file contents to the `resolve()` function.
+У цьому прикладі, нативний асинхронний виклик `fs.readFile()` з Node.js огорнутий у проміс. Виконавець передає або помилку у функцію `reject()`, або контент файлу у функцію `resolve()`.
 
-Keep in mind that the executor runs immediately when `readFile()` is called. When either `resolve()` or `reject()` is called inside the executor, a job is added to the job queue to resolve the promise. This is called *job scheduling*, and if you've ever used the `setTimeout()` or `setInterval()` functions, then you're already familiar with it. In job scheduling, you add a new job to the job queue to say, "Don't execute this right now, but execute it later." For instance, the `setTimeout()` function lets you specify a delay before a job is added to the queue:
+Пам’ятайте, що виконавець запускається негайно, коли викликається `readFile()`. Коли всередині виконавця викликається `resolve()` або `reject()`, у чергу завдань додається завдання вирішення проміса. Це називається *плануванням завдань (job scheduling)*, і якщо ви колись використовували функції `setTimeout()` або `setInterval()`, то ви вже знайомі з цим. При плануванні завдань, ви додаєте нове завдання у чергу завдань маючи на увазі: «Не виконуй це зараз, але виконай це пізніше.» Наприклад, функція `setTimeout()` дозволяє вам задавати певну затримку перед тим, як завдання потрапить у чергу завдань:
 
 ```js
-// add this function to the job queue after 500ms have passed
+// додати цю функцію у чергу завдань після того, як спливе 500 мс. 
 setTimeout(function() {
     console.log("Timeout");
 }, 500)
@@ -250,16 +250,16 @@ setTimeout(function() {
 console.log("Hi!");
 ```
 
-This code schedules a job to be added to the job queue after 500ms. The two `console.log()` calls produce the following output:
+Цей код розплановує завдання так, щоб воно має бути додане у чергу завдань через 500 мс. Ці два виклики `console.log()` дадуть такий вивід:
 
 ```
 Hi!
 Timeout
 ```
 
-Thanks to the 500ms delay, the output that the function passed to `setTimeout()` was shown after the output from the `console.log("Hi!")` call.
+Завдяки затримці у 500 мс., вивід з функції, яку ми передали у `setTimeout()` з’явиться після виводу від виклику `console.log("Hi!")`.
 
-Promises work similarly. The promise executor executes immediately, before anything that appears after it in the source code. For instance:
+Проміси працюють схожим чином. Виконавець проміса виконується негайно, до всього того, що знаходиться у коді після нього. Наприклад:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -270,14 +270,14 @@ let promise = new Promise(function(resolve, reject) {
 console.log("Hi!");
 ```
 
-The output for this code is:
+Цей код виведе:
 
 ```
 Promise
 Hi!
 ```
 
-Calling `resolve()` triggers an asynchronous operation. Functions passed to `then()` and `catch()` are executed asynchronously, as these are also added to the job queue. Here's an example:
+Виклик `resolve()` починає асинхронну операцію. Функції, передані у `then()` та `catch()` виконуються асинхронно, оскільки вони також додаються у чергу завдань. Ось приклад:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -292,7 +292,7 @@ promise.then(function() {
 console.log("Hi!");
 ```
 
-The output for this example is:
+Для цього прикладу вивід виглядає ось так:
 
 ```
 Promise
@@ -300,15 +300,15 @@ Hi!
 Resolved
 ```
 
-Note that even though the call to `then()` appears before the `console.log("Hi!")` line, it doesn't actually execute until later (unlike the executor). That's because fulfillment and rejection handlers are always added to the end of the job queue after the executor has completed.
+Зауважте, що хоча й виклик `then()` знаходиться у коді до рядка з `console.log("Hi!")`, він відкладається на потім (на відміну від виконавця). Це тому, що обробники виконання та відхилення відкладаються в кінець черги, після того як виконавець завершить роботу.
 
-### Creating Settled Promises
+### Створення встановлених промісів
 
-The `Promise` constructor is the best way to create unsettled promises due to the dynamic nature of what the promise executor does. But if you want a promise to represent just a single known value, then it doesn't make sense to schedule a job that simply passes a value to the `resolve()` function. Instead, there are two methods that create settled promises given a specific value.
+Конструктор `Promise` є найкращим способом створення невстановлених (unsettled) промісів через динамічну природу того, що робить виконавець проміса. Проте якщо проміс просто відповідає єдиному відомому значення, то немає змісту планувати завдання, яке просто передає значення у функцію `resolve()`. Замість цього, є два методи створення промісів з певним переданим значенням.
 
-#### Using Promise.resolve()
+#### Використання Promise.resolve()
 
-The `Promise.resolve()` method accepts a single argument and returns a promise in the fulfilled state. That means no job scheduling occurs, and you need to add one or more fulfillment handlers to the promise to retrieve the value. For example:
+Метод `Promise.resolve()` приймає єдиний аргумент та повертає проміс зі станом «завершено». Це означає, що планування завдань не буде, а щоб отримати значення, вам потрібно лише додати до цього проміса один, або більше обробників завершення. Наприклад:
 
 ```js
 let promise = Promise.resolve(42);
@@ -318,11 +318,11 @@ promise.then(function(value) {
 });
 ```
 
-This code creates a fulfilled promise so the fulfillment handler receives 42 as `value`. If a rejection handler were added to this promise, the rejection handler would never be called because the promise will never be in the rejected state.
+Цей код створює завершений проміс, тому обробник завершення отримує 42 в якості значення `value`. Якщо додати до цього проміса обробник відхилення, то цей обробник не виконався б ніколи, тому що цей проміс ніколи не матиме стан «відхилено».
 
-#### Using Promise.reject()
+#### Використання Promise.reject()
 
-You can also create rejected promises by using the `Promise.reject()` method. This works like `Promise.resolve()` except the created promise is in the rejected state, as follows:
+Ви також можете створювати відхилені проміси з допомогою методу `Promise.reject()`. Він працює так само, як і `Promise.resolve()`, з єдиною відмінністю: створений проміс матиме стан «відхилено», ось так:
 
 ```js
 let promise = Promise.reject(42);
@@ -332,15 +332,15 @@ promise.catch(function(value) {
 });
 ```
 
-Any additional rejection handlers added to this promise would be called, but not fulfillment handlers.
+Якщо додати до цього проміса додаткові обробники відхилення, то вони б викликались, а от обробники завершення, не спрацюють ніколи.
 
-I> If you pass a promise to either the `Promise.resolve()` or `Promise.reject()` methods, the promise is returned without modification.
+I> Якщо передати передати проміс у метод `Promise.resolve()` або `Promise.reject()`, цей проміс повернеться без змін.
 
-#### Non-Promise Thenables
+#### Промісоподібні (Thenables)
 
-Both `Promise.resolve()` and `Promise.reject()` also accept non-promise thenables as arguments. When passed a non-promise thenable, these methods create a new promise that is called after the `then()` function.
+Як `Promise.resolve()`, так і `Promise.reject()` також можуть приймати промісободібні (thenables) у якості аргументів. Якщо передавати промісободібні, ці методи створюють новий проміс, що викликається після функції `then()`.
 
-A non-promise thenable is created when an object has a `then()` method that accepts a `resolve` and a `reject` argument, like this:
+Промісоподібні — це об’єкти, що мають метод `then()`, який приймає аргументи `resolve` та `reject`, ось так:
 
 ```js
 let thenable = {
@@ -350,7 +350,7 @@ let thenable = {
 };
 ```
 
-The `thenable` object in this example has no characteristics associated with a promise other than the `then()` method. You can call `Promise.resolve()` to convert `thenable` into a fulfilled promise:
+Об’єкт `thenable`, у цьому прикладі, немає жодних спільних з промісами характеристик, окрім методу `then()`. Ви можете викликати `Promise.resolve()`, щоб конвертувати `thenable` у завершений проміс:
 
 ```js
 let thenable = {
@@ -365,9 +365,9 @@ p1.then(function(value) {
 });
 ```
 
-In this example, `Promise.resolve()` calls `thenable.then()` so that a promise state can be determined. The promise state for `thenable` is fulfilled because `resolve(42)` is called inside the `then()` method. A new promise called `p1` is created in the fulfilled state with the value passed from `thenable` (that is, 42), and the fulfillment handler for `p1` receives 42 as the value.
+У цьому прикладі, `Promise.resolve()` викликає `thenable.then()` і таким чином можна визначити стан цього проміса. `thenable` має стан «завершено», тому що всередині методу `then()` викликається `resolve(42)`. Новий проміс `p1` створюється зі станом «завершено» та значенням, яке було передано з `thenable` (тобто 42), а обробник завершення для `p1` отримує 42 у якості значення.
 
-The same process can be used with `Promise.resolve()` to create a rejected promise from a thenable:
+Таким же чином через `Promise.resolve()` з промісоподібних можна створити відхилений проміс:
 
 ```js
 let thenable = {
@@ -382,13 +382,13 @@ p1.catch(function(value) {
 });
 ```
 
-This example is similar to the last except that `thenable` is rejected. When `thenable.then()` executes, a new promise is created in the rejected state with a value of 42. That value is then passed to the rejection handler for `p1`.
+Цей приклад схожий на попередній, окрім того, що `thenable` є відхиленим. Коли виконується `thenable.then()`, створюється новий проміс зі станом «відхилено» і значення 42. Тоді це значення передається у обробник відхилення для `p1`.
 
-`Promise.resolve()` and `Promise.reject()` work like this to allow you to easily work with non-promise thenables. A lot of libraries used thenables prior to promises being introduced in ECMAScript 6, so the ability to convert thenables into formal promises is important for backwards-compatibility with previously existing libraries. When you're unsure if an object is a promise, passing the object through `Promise.resolve()` or `Promise.reject()` (depending on your anticipated result) is the best way to find out because promises just pass through unchanged.
+`Promise.resolve()` та `Promise.reject()` працюють так для того, щоб дозволити вам легко працювати з промісоподібними. Багато бібліотек використовували промісоподібні до того, як ECMAScript 6 ввів проміси, тому можливість конвертувати промісоподібні у звичайні проміси є важливою, щоб забезпечити зворотню сумісність бібліотеками, що існували раніше. Коли ви невпевнені у тому, що об’єкт є промісом, передача цього об’єкту в `Promise.resolve()` або `Promise.reject()` (в залежності від можливого результату) є найкращим способом, щоб з’ясувати це, адже проміси проходять через них незміненими.
 
-### Executor Errors
+### Помилки виконавця
 
-If an error is thrown inside an executor, then the promise's rejection handler is called. For example:
+Якщо всередині виконавця кидається помилка, тоді викликається обробник відхилення цього проміса. Наприклад:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -400,7 +400,7 @@ promise.catch(function(error) {
 });
 ```
 
-In this code, the executor intentionally throws an error. There is an implicit `try-catch` inside every executor such that the error is caught and then passed to the rejection handler. The previous example is equivalent to:
+У цьому коді, всередині виконавця кидається помилка. Всередині кожного виконавця є неявний `try-catch`, тому ця помилка була впіймана і передана у обробник відхилення. Попередній приклад еквівалентний такому:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -416,40 +416,40 @@ promise.catch(function(error) {
 });
 ```
 
-The executor handles catching any thrown errors to simplify this common use case, but an error thrown in the executor is only reported when a rejection handler is present. Otherwise, the error is suppressed. This became a problem for developers early on in the use of promises, and JavaScript environments address it by providing hooks for catching rejected promises.
+Виконавець ловить всі кинуті помилки, щоб не було необхідності щоразу використовувати таку конструкцію, проте повідомлення про кинуті помилку буде лише тоді, коли буде обробних відхилення. В іншому випадку, помилка буде прихована. Це стає проблемою для розробників, що починають використовувати проміси, тому оточення JavaScript вирішують це надаючи хуки щоб ловити відхилені проміси.
 
-## Global Promise Rejection Handling
+## Глобальна обробка відхилення у промісах
 
-One of the most controversial aspects of promises is the silent failure that occurs when a promise is rejected without a rejection handler. Some consider this the biggest flaw in the specification as it's the only part of the JavaScript language that doesn't make errors apparent.
+Одним з найбільш суперечливих аспектів промісів є ігнорування помилок, що виникають, якщо проміс не має обробника відхилення. Дехто вважає це найбільшим недоліком у специфікації, бо це єдина частина мови JavaScript, що не робить помилки видимими.
 
-Determining whether a promise rejection was handled isn't straightforward due to the nature of promises. For instance, consider this example:
+Через природу промісів, не так просто визначити чи відхилення проміса було оброблено. Наприклад, розгляньте цей приклад:
 
 ```js
 let rejected = Promise.reject(42);
 
-// at this point, rejected is unhandled
+// тут відхилення не оброблене
 
-// some time later...
+// тут теж...
 rejected.catch(function(value) {
-    // now rejected has been handled
+    // тепер відхилення оброблено
     console.log(value);
 });
 ```
 
-You can call `then()` or `catch()` at any point and have them work correctly regardless of whether the promise is settled or not, making it hard to know precisely when a promise is going to be handled. In this case, the promise is rejected immediately but isn't handled until later.
+Ви можете викликати `then()` або `catch()` будь–коли і вони будуть працювати коректно незалежно від того, чи проміс є встановленим, чи ні. Через це дуже важко точно визначити коли проміс буде оброблений. У цьому випадку, проміс відхиляється відразу, проте обробка відбувається згодом.
 
-While it's possible that the next version of ECMAScript will address this problem, both browsers and Node.js have implemented changes to address this developer pain point. They aren't part of the ECMAScript 6 specification but are valuable tools when using promises.
+Цілком можливо, що наступні версії ECMAScript вирішать цю проблему, а поки браузери та Node.js внесли зміни, що допомагають розробникам уникнути цієї проблеми. Вони не є частиною специфікації ECMAScript 6, проте є важливими засобами при використанні промісів.
 
-### Node.js Rejection Handling
+### Обробка відхилення у Node.js
 
-In Node.js, there are two events on the `process` object related to promise rejection handling:
+У Node.js є дві події на об’єкті `process`, що відповідають обробці відхилення:
 
-* `unhandledRejection`: Emitted when a promise is rejected and no rejection handler is called within one turn of the event loop
-* `rejectionHandled`: Emitted when a promise is rejected and a rejection handler is called after one turn of the event loop
+* `unhandledRejection` — публікується коли проміс відхилено і обробник відхилення не викликається протягом одного проходу циклу подій;
+* `rejectionHandled` — публікується коли проміс відхилено і обробник відхилення викликається після одного проходу циклу подій.
 
-These events are designed to work together to help identify promises that are rejected and not handled.
+Ці події розроблені таким чином, щоб їх поєднання допомагало ідентифікувати проміси, які були відхилені і не оброблені.
 
-The `unhandledRejection` event handler is passed the rejection reason (frequently an error object) and the promise that was rejected as arguments. The following code shows `unhandledRejection` in action:
+Обробник події `unhandledRejection` приймає у якості аргументів причину відхилення (rejection reason) (зазвичай об’єкт помилки) та відхилений проміс. Такий код показу `unhandledRejection` в дії:
 
 ```js
 let rejected;
@@ -462,9 +462,9 @@ process.on("unhandledRejection", function(reason, promise) {
 rejected = Promise.reject(new Error("Explosion!"));
 ```
 
-This example creates a rejected promise with an error object and listens for the `unhandledRejection` event. The event handler receives the error object as the first argument and the promise as the second.
+Цей приклад слухає подію `unhandledRejection` та створює відхилений проміс з об’єктом помилки. Обробник помилки приймає об’єкт помилки в якості першого аргументу та проміс у якості другого.
 
-The `rejectionHandled` event handler has only one argument, which is the promise that was rejected. For example:
+Обробник події `rejectionHandled` має лише один аргумент: відхилений проміс. Наприклад:
 
 ```js
 let rejected;
@@ -475,7 +475,7 @@ process.on("rejectionHandled", function(promise) {
 
 rejected = Promise.reject(new Error("Explosion!"));
 
-// wait to add the rejection handler
+// чекаємо, щоб додати обробник відхилення
 setTimeout(function() {
     rejected.catch(function(value) {
         console.log(value.message);     // "Explosion!"
@@ -483,14 +483,14 @@ setTimeout(function() {
 }, 1000);
 ```
 
-Here, the `rejectionHandled` event is emitted when the rejection handler is finally called. If the rejection handler were attached directly to `rejected` after `rejected` is created, then the event wouldn't be emitted. The rejection handler would instead be called during the same turn of the event loop where `rejected` was created, which isn't useful.
+Тут подія `rejectionHandled` публікується коли викликається обробник відхилення. Якщо обробник відхилення додати до `rejected` відразу після того, як `rejected` створюється, тоді б подія не опублікувалась. Тоді обробник відхилення викликався би на протязі того ж проходу циклу подій, коли був створений `rejected`.
 
-To properly track potentially unhandled rejections, use the `rejectionHandled` and `unhandledRejection` events to keep a list of potentially unhandled rejections. Then wait some period of time to inspect the list. For example:
+Для кращого моніторингу за потенційно необробленими відхиленнями використовуйте події `rejectionHandled` та `unhandledRejection`, щоб зберігати список потенційно необроблених відхилень. Тоді зачекайте перевіряйте цей список з деякою періодичністю. Наприклад:
 
 ```js
 let possiblyUnhandledRejections = new Map();
 
-// when a rejection is unhandled, add it to the map
+// якщо відхилення необроблене, додаємо його в мапу
 process.on("unhandledRejection", function(reason, promise) {
     possiblyUnhandledRejections.set(promise, reason);
 });
@@ -504,7 +504,7 @@ setInterval(function() {
     possiblyUnhandledRejections.forEach(function(reason, promise) {
         console.log(reason.message ? reason.message : reason);
 
-        // do something to handle these rejections
+        // робимо щось, щоб обробити ці відхилення
         handleRejection(promise, reason);
     });
 
@@ -513,24 +513,24 @@ setInterval(function() {
 }, 60000);
 ```
 
-This is a simple unhandled rejection tracker. It uses a map to store promises and their rejection reasons. Each promise is a key, and the promise's reason is the associated value. Each time `unhandledRejection` is emitted, the promise and its rejection reason are added to the map. Each time `rejectionHandled` is emitted, the handled promise is removed from the map. As a result, `possiblyUnhandledRejections` grows and shrinks as events are called. The `setInterval()` call periodically checks the list of possible unhandled rejections and outputs the information to the console (in reality, you'll probably want to do something else to log or otherwise handle the rejection). A map is used in this example instead of a weak map because you need to inspect the map periodically to see which promises are present, and that's not possible with a weak map.
+Це простий трекер для необроблених відхилень. Він використовує мапу для збереження промісів та причин їхнього відхилення. Кожен проміс є ключем, а причина відхилення цього проміса є значенням. Щоразу, коли публікується подія `unhandledRejection`, проміс та причина його відхилення додають у мапу. Щоразу, коли публікується `rejectionHandled`, оброблений проміс видаляється з мапи. В результаті, `possiblyUnhandledRejections` наповнюється та очищується в залежності від подій, що викликаються. Виклик `setInterval()` періодично перевіряє список можливих необроблених відхилень та виводить інформацію у консоль (в реальності, ви б, можливо, захотіли обробити ці відхилення). Замість слабкої мапи у цьому прикладі використовується звичайна, сильна мапа, тому що періодично потрібно перевіряти які проміси у ній знаходяться, а це неможливо зробити зі слабкою мапою.
 
-While this example is specific to Node.js, browsers have implemented a similar mechanism for notifying developers about unhandled rejections.
+Цей приклад стосується Node.js, проте браузери імплементували схожий механізм повідомлення розробників про необроблені відхилення.
 
-### Browser Rejection Handling
+### Обробка відхилення у браузері
 
-Browsers also emit two events to help identify unhandled rejections. These events are emitted by the `window` object and are effectively the same as their Node.js equivalents:
+Щоб допомогти ідентифікувати необроблені події, браузери також публікують дві події. Ці події публікуються об’єктом `window` та є практично аналогічними до таких же у Node.js:
 
-* `unhandledrejection`: Emitted when a promise is rejected and no rejection handler is called within one turn of the event loop.
-* `rejectionhandled`: Emitted when a promise is rejected and a rejection handler is called after one turn of the event loop.
+* `unhandledrejection` — публікується коли проміс відхилено і обробник відхилення не викликається протягом одного проходу циклу подій;
+* `rejectionhandled` — публікується коли проміс відхилено і обробник відхилення викликається після одного проходу циклу подій.
 
-While the Node.js implementation passes individual parameters to the event handler, the event handler for these browser events receives an event object with the following properties:
+Імплементація у Node.js передає окремі параметри у обробник події, а обробники подій у браузерах передають у обробник один параметр. Обробники подій для цих браузерних подій отримують об’єкт події з такими властивостями:
 
-* `type`: The name of the event (`"unhandledrejection"` or `"rejectionhandled"`).
-* `promise`: The promise object that was rejected.
-* `reason`: The rejection value from the promise.
+* `type` — ім’я події (`"unhandledrejection"` або `"rejectionhandled"`);
+* `promise` — об’єкт проміса, що був відхилений;
+* `reason` — значення відхилення для проміса.
 
-The other difference in the browser implementation is that the rejection value (`reason`) is available for both events. For example:
+Іншою відмінністю у браузерній імплементації є те, що значення відхилення (`reason`) доступне для обох подій. Наприклад:
 
 ```js
 let rejected;
@@ -550,14 +550,14 @@ window.onrejectionhandled = function(event) {
 rejected = Promise.reject(new Error("Explosion!"));
 ```
 
-This code assigns both event handlers using the DOM Level 0 notation of `onunhandledrejection` and `onrejectionhandled`. (You can also use `addEventListener("unhandledrejection")` and `addEventListener("rejectionhandled")` if you prefer.) Each event handler receives an event object containing information about the rejected promise. The `type`, `promise`, and `reason` properties are all available in both event handlers.
+Цей код присвоює обидва обробники подій через запис DOM Level 0 для `onunhandledrejection` та `onrejectionhandled`. (Ви також можете використовувати `addEventListener("unhandledrejection")` та `addEventListener("rejectionhandled")`, якщо вам так більше подобається.) Кожен обробник подій отримує об’єкт помилки, що містить інформацію про відхилений проміс. Властивості `type`, `promise` та `reason` доступні для обох обробників подій.
 
-The code to keep track of unhandled rejections in the browser is very similar to the code for Node.js, too:
+Код для моніторингу необроблених відхилень у браузері дуже схожий на такий же код для Node.js:
 
 ```js
 let possiblyUnhandledRejections = new Map();
 
-// when a rejection is unhandled, add it to the map
+// якщо відхилення необроблене, додаємо його в мапу
 window.onunhandledrejection = function(event) {
     possiblyUnhandledRejections.set(event.promise, event.reason);
 };
@@ -571,7 +571,7 @@ setInterval(function() {
     possiblyUnhandledRejections.forEach(function(reason, promise) {
         console.log(reason.message ? reason.message : reason);
 
-        // do something to handle these rejections
+        // робимо щось, щоб обробити ці відхилення
         handleRejection(promise, reason);
     });
 
@@ -580,15 +580,15 @@ setInterval(function() {
 }, 60000);
 ```
 
-This implementation is almost exactly the same as the Node.js implementation. It uses the same approach of storing promises and their rejection values in a map and then inspecting them later. The only real difference is where the information is retrieved from in the event handlers.
+Така імплементація майже нічим не відрізняється від імплементації на Node.js. Вона використовує той же підхід для збереження промісів та їхніх значень відхилення у мапі та їх подальшого використання. Єдина відмінність — те, як ми отримуємо інформацію з обробників подій.
 
-Handling promise rejections can be tricky, but you've just begun to see how powerful promises can really be. It's time to take the next step and chain several promises together.
+Обробка відхилення промісів може здаватись своєрідним трюком, проте ви лише почали відчувати якими потужними можуть бути проміси. Час перейти до наступного етапу і об’єднати кілька промісів у один ланцюжок.
 
-## Chaining Promises
+## Ланцюжки промісів
 
-To this point, promises may seem like little more than an incremental improvement over using some combination of a callback and the `setTimeout()` function, but there is much more to promises than meets the eye. More specifically, there are a number of ways to chain promises together to accomplish more complex asynchronous behavior.
+До цієї миті, проміси могли здаватись лише незначним покращенням над використанням зворотніх викликів та фунції `setTimeout()`, проте є ще багато чого, що можуть запропонувати проміси. Зокрема, є ряд способів об’єднання промісів у ланцюжки, щоб поєднувати утворювати більш складну асинхронну поведінку.
 
-Each call to `then()` or `catch()` actually creates and returns another promise. This second promise is resolved only once the first has been fulfilled or rejected. Consider this example:
+Кожен виклик `then()` або `catch()` насправді створює і повертає ще один проміс. Цей проміс вирішується (resolve) лише тоді, коли попередній був або завершений (fulfilled), або відхилений (rejected). Розгляньте такий приклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -602,14 +602,14 @@ p1.then(function(value) {
 });
 ```
 
-The code outputs:
+Цей код виведе:
 
 ```
 42
 Finished
 ```
 
-The call to `p1.then()` returns a second promise on which `then()` is called. The second `then()` fulfillment handler is only called after the first promise has been resolved. If you unchain this example, it looks like this:
+Виклик `p1.then()` повертає новий проміс, у якого викликається метод `then()`. Наступний обробник завершення `then()` викликається лише після того, як перший попередній проміс буде вирішено. Якщо б ви роз’єднали цей приклад у кілька промісів, це могло б виглядати ось так:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -625,11 +625,11 @@ p2.then(function() {
 });
 ```
 
-In this unchained version of the code, the result of `p1.then()` is stored in `p2`, and then `p2.then()` is called to add the final fulfillment handler. As you might have guessed, the call to `p2.then()` also returns a promise. This example just doesn't use that promise.
+При такому записі, результат `p1.then()` зберігається у `p2`, а тоді викликається `p2.then()` і додає останній обробник завершення. Як ви могли здогадатись, виклик `p2.then()` також повертає проміс. У цьому прикладі цей повернений проміс не використовується.
 
-### Catching Errors
+### Обробка помилок
 
-Promise chaining allows you to catch errors that may occur in a fulfillment or rejection handler from a previous promise. For example:
+Ланцюжки промісів дають вам можливість ловити помилки, що можуть виникати у обробниках завершення або відхилення попереднього проміса. Наприклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -643,7 +643,7 @@ p1.then(function(value) {
 });
 ```
 
-In this code, the fulfillment handler for `p1` throws an error. The chained call to the `catch()` method, which is on a second promise, is able to receive that error through its rejection handler. The same is true if a rejection handler throws an error:
+У цьому коді, обробник завершення для `p1` кидає помилку. Виклик методу `catch()`, який є наступним у ланцюжку і викликається для проміса, який повертається, може отримати цю помилку у свій обробник відхилень. Так само це спрацює якщо помилку кине обробник помилок:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -658,13 +658,13 @@ p1.catch(function(error) {
 });
 ```
 
-Here, the executor throws an error then triggers the `p1` promise's rejection handler. That handler then throws another error that is caught by the second promise's rejection handler. The chained promise calls are aware of errors in other promises in the chain.
+Тут виконавець кидає помилку і тим самим викликає обробник відхилення для `p1`. Тоді цей обробник кидає ще одну помилку, яку ловить наступний обробник відхилення. Проміси у ланцюжку знають про помилки у інших промісах цього ланцюжка.
 
-I> Always have a rejection handler at the end of a promise chain to ensure that you can properly handle any errors that may occur.
+I> Завжди додавайте обробник відхилення в кінці ланцюжка промісів, аби бути певним, що ви обобляєте всі помилки, які можуть виникнути.
 
-### Returning Values in Promise Chains
+### Повернення значень у ланцюжку промісів
 
-Another important aspect of promise chains is the ability to pass data from one promise to the next. You've already seen that a value passed to the `resolve()` handler inside an executor is passed to the fulfillment handler for that promise. You can continue passing data along a chain by specifying a return value from the fulfillment handler. For example:
+Іншим важливим аспектом у ланцюжках промісів є можливість передавати дані від одного проміса до наступного. Ви вже бачили, що значення, яке передається у обробник `resolve()` всередині виконавця, буде передане у обробник завершення цього проміса. Ви можете продовжити передачу даних по ланцюжку промісів повернувши значення з обробника завершення. Для прикладу:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -679,9 +679,9 @@ p1.then(function(value) {
 });
 ```
 
-The fulfillment handler for `p1` returns `value + 1` when executed. Since `value` is 42 (from the executor), the fulfillment handler returns 43. That value is then passed to the fulfillment handler of the second promise, which outputs it to the console.
+Обробник завершення для `p1` повертає `value + 1` при виконанні. Оскільки `value` дорівнює 42 (всередині виконавця), обробник завершення повертає 43. Це значення передається у обробник завершення наступного проміса, який виводить результат у консоль.
 
-You could do the same thing with the rejection handler. When a rejection handler is called, it may return a value. If it does, that value is used to fulfill the next promise in the chain, like this:
+Ви можете зробити те саме для обробника відхилення. При виклику обробника відхилення він може повертати значення. Якщо він це робить, то це значення використовується для обробника завершення наступного проміса у ланцюжку, ось так:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -689,20 +689,20 @@ let p1 = new Promise(function(resolve, reject) {
 });
 
 p1.catch(function(value) {
-    // first fulfillment handler
+    // перший обробник завершення
     console.log(value);         // "42"
     return value + 1;
 }).then(function(value) {
-    // second fulfillment handler
+    // другий обробник завершення
     console.log(value);         // "43"
 });
 ```
 
-Here, the executor calls `reject()` with 42. That value is passed into the rejection handler for the promise, where `value + 1` is returned. Even though this return value is coming from a rejection handler, it is still used in the fulfillment handler of the next promise in the chain. The failure of one promise can allow recovery of the entire chain if necessary.
+Тут виконавесь викликає `reject()` з значенням 42. Це значення передається у обробник відхилення проміса, а там повертається значення `value + 1`. Навіть хоча це повернене значення приходить з обробника відхилення, воно буде використовуватись у обробнику завершення наступного проміса у ланцюжку. Таким чином, при потребі можна відновити ланцюжок промісів, якщо сталась помилка в одному з них.
 
-### Returning Promises in Promise Chains
+### Повернення промісів у ланцюжках промісів
 
-Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a promise, then there's an extra step that's taken to determine how to proceed. Consider the following example:
+Поверення примітивних значення з обробників відхилення та завершення дозволяє передавати дані між промісами, проте що якщо ви повернете об’єкт? Якщо об’єкт є промісом, тоді знадобиться ще один додатковий крок для визначення як з ним поводитись. Розгляньте такий приклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -714,18 +714,18 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
-    // first fulfillment handler
+    // перший обробник завершення
     console.log(value);     // 42
     return p2;
 }).then(function(value) {
-    // second fulfillment handler
+    // другий обробник завершення
     console.log(value);     // 43
 });
 ```
 
-In this code, `p1` schedules a job that resolves to 42. The fulfillment handler for `p1` returns `p2`, a promise already in the resolved state. The second fulfillment handler is called because `p2` has been fulfilled. If `p2` were rejected, a rejection handler (if present) would be called instead of the second fulfillment handler.
+У цьому коді, `p1` планує завдання, яке повертає 42. Обробник завершення для `p1` повертає `p2`, проміс, який вже вирішений (resolved). Другий обробник завершення викликається тому, що `p2` вже завершений. Якщо б `p2` був відхиленим, тобі обробник відхилення (за наявності) викликався б замість обробника завершення.
 
-The important thing to recognize about this pattern is that the second fulfillment handler is not added to `p2`, but rather to a third promise. The second fulfillment handler is therefore attached to that third promise, making the previous example equivalent to this:
+У цьому патерні важливо помітити, що другий обробник завершення додається не до `p2`, а до третього проміса. Другий обробник завершення додається до цього третього проміса, тому попередній приклад еквівалентний до такого:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -737,18 +737,18 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 let p3 = p1.then(function(value) {
-    // first fulfillment handler
+    // перший обробник завершення
     console.log(value);     // 42
     return p2;
 });
 
 p3.then(function(value) {
-    // second fulfillment handler
+    // другий обробник завершення
     console.log(value);     // 43
 });
 ```
 
-Here, it's clear that the second fulfillment handler is attached to `p3` rather than `p2`. This is a subtle but important distinction, as the second fulfillment handler will not be called if `p2` is rejected. For instance:
+Тут чітко зрозуміло, що другий обробник завершення прикріплюється до `p3`, замість `p2`. Це маленька, але важлива деталь, тому що другий обробник завершення не викличеться, якщо `p2` буде відхилено. Наприклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -760,16 +760,16 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
-    // first fulfillment handler
+    // перший обробник завершення
     console.log(value);     // 42
     return p2;
 }).then(function(value) {
-    // second fulfillment handler
-    console.log(value);     // never called
+    // другий обробник завершення
+    console.log(value);     // ніколи не викличеться
 });
 ```
 
-In this example, the second fulfillment handler is never called because `p2` is rejected. You could, however, attach a rejection handler instead:
+У цьому прикладі, другий обробник завершення не викличеться ніколи, тому що `p2` відхилений. Однак, ви можете замість цього додати обробник відхилення:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -781,18 +781,18 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
-    // first fulfillment handler
+    // перший обробник завершення
     console.log(value);     // 42
     return p2;
 }).catch(function(value) {
-    // rejection handler
+    // обробник відхилення
     console.log(value);     // 43
 });
 ```
 
-Here, the rejection handler is called as a result of `p2` being rejected. The rejected value 43 from `p2` is passed into that rejection handler.
+Тут обробник завершення викликається з результатом, з яким `p2` був відхилений. Значення відхилення 43 з `p2` передалось у цей обробник відхилення.
 
-Returning thenables from fulfillment or rejection handlers doesn't change when the promise executors are executed. The first defined promise will run its executor first, then the second promise executor will run, and so on. Returning thenables simply allows you to define additional responses to the promise results. You defer the execution of fulfillment handlers by creating a new promise within a fulfillment handler. For example:
+Повернення промісоподібних з обробників завершення або відхилення не змінює того коли виконається виконавець проміса. Спершу виконається виконавець першого заданого проміса, потім виконається виконавець другого проміса і так далі. Повернення промісоподібних просто дає вам можливість визначати додаткові відповіді на результати промісів. Ви можете відкладати виконання обробника завершення через створення нового проміса всередині обробника завершення. Наприклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -802,7 +802,7 @@ let p1 = new Promise(function(resolve, reject) {
 p1.then(function(value) {
     console.log(value);     // 42
 
-    // create a new promise
+    // створюємо новий проміс
     let p2 = new Promise(function(resolve, reject) {
         resolve(43);
     });
@@ -813,15 +813,15 @@ p1.then(function(value) {
 });
 ```
 
-In this example, a new promise is created within the fulfillment handler for `p1`. That means the second fulfillment handler won't execute until after `p2` is fulfilled. This pattern is useful when you want to wait until a previous promise has been settled before triggering another promise.
+У цьому прикладі, всередині обробника завершення для `p1` створюється новий проміс. Це означає, що обробник заверешення другого проміса не виконається доки `p2` не буде завершено. Такий підхід корисний коли перед початком нового проміса ви хочете зачекати доки попередній проміс стане встановленим (settled).
 
-## Responding to Multiple Promises
+## Робота з кількома промісами
 
-Up to this point, each example in this chapter has dealt with responding to one promise at a time. Sometimes, however, you'll want to monitor the progress of multiple promises in order to determine the next action. ECMAScript 6 provides two methods that monitor multiple promises: `Promise.all()` and `Promise.race()`.
+До цього моменту кожен приклад у цій главі працював лише з обробкою результату одного проміса за раз. Однак часом, для визначення подальших дій, вам потрібно слідкувати за прогресом виконання кількох промісів. ECMAScript 6 надає два метод, що відслідковують кілька промісів: `Promise.all()` та `Promise.race()`.
 
-### The Promise.all() Method
+### Метод Promise.all()
 
-The `Promise.all()` method accepts a single argument, which is an iterable (such as an array) of promises to monitor, and returns a promise that is resolved only when every promise in the iterable is resolved. The returned promise is fulfilled when every promise in the iterable is fulfilled, as in this example:
+Метод `Promise.all()` приймає один аргумент який є ітерабельним об’єктом (наприклад масивом) промісів, які потрібно відслідковувати. Він повертає проміс, що буде вирішений (resolved) тільки тоді, коли кожен проміс у цьому ітерабельному об’єкті буде вирішений. Проміс–результат буде завершений тоді, коли всі проміси у ітерабельному об’єкті будуть завершені, як у цьому прикладі:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -846,9 +846,9 @@ p4.then(function(value) {
 });
 ```
 
-Each promise here resolves with a number. The call to `Promise.all()` creates promise `p4`, which is ultimately fulfilled when promises `p1`, `p2`, and `p3` are fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. The values are stored in the order the promises resolved, so you can match promise results to the promises that resolved to them.
+Кожен проміс тут вирішується з числом. Виклик `Promise.all()` створює проміс `p4`, який буде остаточно завершено коли проміси `p1`, `p2` та `p3` будуть завершені. Результат передається у обробник завершення для `p4` у вигляді масиву, що містить значення результатів: 42, 43 та 44. Значення зберігаються у порядку вирішення промісів, тому ви можете співставити проміс та результат, що відповідає цьому промісу.
 
-If any promise passed to `Promise.all()` is rejected, the returned promise is immediately rejected without waiting for the other promises to complete:
+Якщо хоч один проміс з переданих у `Promise.all()` буде відхилено, проміс–результат негайно буде відхилений без очікування завершення всіх інших промісів:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -871,13 +871,13 @@ p4.catch(function(value) {
 });
 ```
 
-In this example, `p2` is rejected with a value of 43. The rejection handler for `p4` is called immediately without waiting for `p1` or `p3` to finish executing (They do still finish executing; `p4` just doesn't wait.)
+У цьому прикладі, `p2` відхилений зі значенням 43. Обробник відхилення для `p4` викликається миттєво без очікування на заваршення виконання `p1` або `p3` (вони продовжать очікувати на завершення, проте `p4` не буде на них чекати).
 
-The rejection handler always receives a single value rather than an array, and the value is the rejection value from the promise that was rejected. In this case, the rejection handler is passed 43 to reflect the rejection from `p2`.
+Обробник відхилення завжди отримує єдине значення замість масиву, і значенням є значення відхилення проміса, який був відхилений. У цьому випадку, обробник відхилення отримав 43 що відповідає відхиленню з `p2`.
 
-### The Promise.race() Method
+### Метод Promise.race()
 
-The `Promise.race()` method provides a slightly different take on monitoring multiple promises. This method also accepts an iterable of promises to monitor and returns a promise, but the returned promise is settled as soon as the first promise is settled. Instead of waiting for all promises to be fulfilled like the `Promise.all()` method, the `Promise.race()` method returns an appropriate promise as soon as any promise in the array is fulfilled. For example:
+Метод `Promise.race()` надає дещо інший спосіб моніторингу за групою промісів. Цей метод також приймає ітерабельний об’єкт з промісами за якими потрібно слідкувати та повертає проміс, проте проміс, який повернеться в результаті завершиться як тільки завершиться один з промісів. Замість того, щоб чекати на завершення всіх промісів як метод `Promise.all()`, метод `Promise.race()` повертає проміс як тільки хоч один з усіх з промісів у масиві завершиться. Наприклад:
 
 ```js
 let p1 = Promise.resolve(42);
@@ -897,7 +897,7 @@ p4.then(function(value) {
 });
 ```
 
-In this code, `p1` is created as a fulfilled promise while the others schedule jobs. The fulfillment handler for `p4` is then called with the value of 42 and ignores the other promises. The promises passed to `Promise.race()` are truly in a race to see which is settled first. If the first promise to settle is fulfilled, then the returned promise is fulfilled; if the first promise to settle is rejected, then the returned promise is rejected. Here's an example with a rejection:
+У цьому коді, `p1` створюється як завершений проміс, тоді як інші відкладають завдання. Тоді обробник завершення для `p4` викликається зі значенням 42 та ігнорує інші проміси. Проміси які передаються у `Promise.race()` насправді перебувають у гонці хто з них першим встановиться. Якщо перший встановлений проміс матиме стан «fulfilled» (буде завершеним), тоді проміс, що повернеться у результаті, матиме стан «fulfilled». Якщо ж перший встановлений проміс матиме стан «rejected» (буде відхиленим), тоді проміс, який повернеться матиме стан «rejected». Ось приклад з відхиленням:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -917,16 +917,16 @@ p4.catch(function(value) {
 });
 ```
 
-Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
+Тут `p4` є відхиленим тому, що коли викликається `Promise.race()`, проміс `p2` вже має стан «rejected». Навіть хоча й `p1` та `p3` є завершеними, їхні результати ігноруються через те, що вони отримуються після того, як `p2` перейшов у стан «rejected».
 
-## Inheriting from Promises
+## Наслідування від промісів
 
-Just like other built-in types, you can use a promise as the base for a derived class. This allows you to define your own variation of promises to extend what built-in promises can do. Suppose, for instance, you'd like to create a promise that can use methods named `success()` and `failure()` in addition to the usual `then()` and `catch()` methods. You could create that promise type as follows:
+Як і з іншими вбудованими типами, ви можете використовувати проміси в якості основи для похідних класів. Це дозволяє вам створювати власні варіанти промісів, які будуть розширювати можливості вбудованих промісів. Припустимо, наприклад, що вам хотілося б створити проміс, що мав би методи `success()` та `failure()` на додачу до звичних методів `then()` та `catch()`. Ви можете зробити такий проміс таким чином:
 
 ```js
 class MyPromise extends Promise {
 
-    // use default constructor
+    // використовуємо конструктор за замовчуванням
 
     success(resolve, reject) {
         return this.then(resolve, reject);
@@ -949,13 +949,13 @@ promise.success(function(value) {
 });
 ```
 
-In this example, `MyPromise` is derived from `Promise` and has two additional methods. The `success()` method mimics `resolve()` and `failure()` mimics the `reject()` method.
+У цьому прикладі, `MyPromise` отримується з `Promise` та має два додаткові методи. Метод `success()` імітує метод `resolve()`, а `failure()` метод `reject()`.
 
-Each added method uses `this` to call the method it mimics. The derived promise functions the same as a built-in promise, except now you can call `success()` and `failure()` if you want.
+Обидва додані методи використовують `this` для виклику метода, який вони імітують. Функції отриманого проміса такі ж як у вбудованого, однак тепер ви, якщо хочете, можете викликати `success()` та `failure()`.
 
-Since static methods are inherited, the `MyPromise.resolve()` method, the `MyPromise.reject()` method, the `MyPromise.race()` method, and the `MyPromise.all()` method are also present on derived promises. The last two methods behave the same as the built-in methods, but the first two are slightly different.
+Оскільки статичні методи успадковуються, методи `MyPromise.resolve()`, `MyPromise.reject()`, `MyPromise.race()` та `MyPromise.all()` також присутні у отриманому промісі. Останні два методи поводяться так само як і вбудовані, проте перші два є дещо іншими.
 
-Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed because those methods use the `Symbol.species` property (covered under in Chapter 9) to determine the type of promise to return. If a built-in promise is passed to either method, the promise will be resolved or rejected, and the method will return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
+І `MyPromise.resolve()`, і `MyPromise.reject()` повернуть екземпляр `MyPromise` незалежно від переданого значення, тому що ці методи використовують властивість `Symbol.species` (описана у Главі 9) для визначення типу проміса, який треба повернути. Якщо вбудований проміс передати до одного з цих методів, проміс буде вирішений або відхилений, а метод поверне новий `MyPromise`, тому ви можете присвоїти обробники завершення та відхилення. Наприклад:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -970,29 +970,29 @@ p2.success(function(value) {
 console.log(p2 instanceof MyPromise);   // true
 ```
 
-Here, `p1` is a built-in promise that is passed to the `MyPromise.resolve()` method. The result, `p2`, is an instance of `MyPromise` where the resolved value from `p1` is passed into the fulfillment handler.
+Тут `p1` є вбудованим промісом, що передається у метод `MyPromise.resolve()`. Результат, `p2`, є екземпляром `MyPromise`, в якому значенням завершення є значення з `p1`, яке було передано у обробник завершення.
 
-If an instance of `MyPromise` is passed to the `MyPromise.resolve()` or `MyPromise.reject()` methods, it will just be returned directly without being resolved. In all other ways these two methods behave the same as `Promise.resolve()` and `Promise.reject()`.
+Якщо екземпляр `MyPromise` передати у методи `MyPromise.resolve()` або `MyPromise.reject()`, він буде просто повернений без вирішення. У всіх інших аспектах ці методи поводяться так само як і `Promise.resolve()` та `Promise.reject()`.
 
-### Asynchronous Task Running
+### Асинхронний запуск завдань
 
-In Chapter 8, I introduced generators and showed you how you can use them for asynchronous task running, like this:
+У Главі 8 я розповів про генератори та показав як ви можете використовувати їх для асинхронного запуску завдань, ось так:
 
 ```js
 let fs = require("fs");
 
 function run(taskDef) {
 
-    // create the iterator, make available elsewhere
+    // створюємо ітератор, що буде доступний усюди
     let task = taskDef();
 
-    // start the task
+    // починаємо виконувати завдання
     let result = task.next();
 
-    // recursive function to keep calling next()
+    // рекурсивна функція для постійного виклику next()
     function step() {
 
-        // if there's more to do
+        // якщо є що виконувати
         if (!result.done) {
             if (typeof result.value === "function") {
                 result.value(function(err, data) {
@@ -1012,12 +1012,12 @@ function run(taskDef) {
         }
     }
 
-    // start the process
+    // починаємо процес
     step();
 
 }
 
-// Define a function to use with the task runner
+// Визначаємо функцію, яка буде використовуватись з обробником завдань
 
 function readFile(filename) {
     return function(callback) {
@@ -1025,7 +1025,7 @@ function readFile(filename) {
     };
 }
 
-// Run a task
+// Запускаємо завдання
 
 run(function*() {
     let contents = yield readFile("config.json");
@@ -1034,28 +1034,28 @@ run(function*() {
 });
 ```
 
-There are some pain points to this implementation. First, wrapping every function in a function that returns a function is a bit confusing (even this sentence was confusing). Second, there is no way to distinguish between a function return value intended as a callback for the task runner and a return value that isn't a callback.
+Є кілька проблемних місць у цій імплементації. По–перше, огортання кожної функції у функцію, що повертає функцію може дещо заплутати (навіть саме це речення є заплутаним). По–друге, немає способу відрізнити функцію, що повертає значення, яке має бути зворотнім викликом для обробника завдань від значення, яке не є зворотнім викликом.
 
-With promises, you can greatly simplify and generalize this process by ensuring that each asynchronous operation returns a promise. That common interface means you can greatly simplify asynchronous code. Here's one way you could simplify that task runner:
+З промісами ви можете значно спростити та узагальнити цей процес, якщо кожна асинхронна операцію повертатиме проміс. Цей загальний інтерфейс дає вам можливість значно спростити асинхронний код. Ось один зі способів як ви можете спростити цей обробник завдань:
 
 ```js
 let fs = require("fs");
 
 function run(taskDef) {
 
-    // create the iterator
+    // створюємо ітератор, що буде доступний усюди
     let task = taskDef();
 
-    // start the task
+    // починаємо виконувати завдання
     let result = task.next();
 
-    // recursive function to iterate through
+    // рекурсивна функція для постійного виклику next()
     (function step() {
 
-        // if there's more to do
+        // якщо є що виконувати
         if (!result.done) {
 
-            // resolve to a promise to make it easy
+            // вирішуємо проміс, щоб зробити це простішим
             let promise = Promise.resolve(result.value);
             promise.then(function(value) {
                 result = task.next(value);
@@ -1068,7 +1068,7 @@ function run(taskDef) {
     }());
 }
 
-// Define a function to use with the task runner
+// Визначаємо функцію, яка буде використовуватись з обробником завдань
 
 function readFile(filename) {
     return new Promise(function(resolve, reject) {
@@ -1082,7 +1082,7 @@ function readFile(filename) {
     });
 }
 
-// Run a task
+// Запускаємо завдання
 
 run(function*() {
     let contents = yield readFile("config.json");
@@ -1091,40 +1091,40 @@ run(function*() {
 });
 ```
 
-In this version of the code, a generic `run()` function executes a generator to create an iterator. It calls `task.next()` to start the task and recursively calls `step()` until the iterator is complete.
+У цій версії коду, загальна функція `run()` виконує генератор, щоб створити ітератор. Вона викликає `task.next()`, щоб стартувати виконання завдання і рекурсивно викликає `step()` доки ітератор не завершить роботу.
 
-Inside the `step()` function, if there's more work to do, then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is called just in case the function in question didn't return a promise. (Remember, `Promise.resolve()` just passes through any promise passed in and wraps any non-promise in a promise.) Then, a fulfillment handler is added that retrieves the promise value and passes the value back to the iterator. After that, `result` is assigned to the next yield result before the `step()` function calls itself.
+Всередині функції `step()`, якщо є робота яку потрібно виконувати, тоді `result.done` дорівнює `false`. У цій точці, `result.value` має бути промісом, проте ми викликаємо `Promise.resolve()` на той випадок, якщо функція не повертає проміс. (Пам'ятайте, що `Promise.resolve()` просто прокидає будь–який переданий проміс, а всі інші значення огортає у проміс.) Тоді, обробник завершення додається, щоб діставати значення проміса і передавати це значення назад до ітератора. Після цього, `result` присвоюється наступне отримане через `yield` значення, перед тим як функція `step()` викличе сама себе.
 
-A rejection handler stores any rejection results in an error object. The `task.throw()` method passes that error object back into the iterator, and if an error is caught in the task, `result` is assigned to the next yield result. Finally, `step()` is called inside `catch()` to continue.
+Обробник відхилення зберігає будь–які результати відхилення у об’єкт помилки. Метод `task.throw()` передає цей об’єкт помилки назад у ітератор, і якщо помилка ловиться всередині завдання, `result` присвоюється наступне отримане через `yield` значення. На завершення, `step()` викликається всередині `catch()` для продовження процесу.
 
-This `run()` function can run any generator that uses `yield` to achieve asynchronous code without exposing promises (or callbacks) to the developer. In fact, since the return value of the function call is always coverted into a promise, the function can even return something other than a promise. That means both synchronous and asynchronous methods work correctly when called using `yield`, and you never have to check that the return value is a promise.
+Така функція `run()` може запускати будь–який генератор, що використовує `yield` для роботи з асинхронним кодом, і при цьому приховувати проміси (або зворотні виклики) від розробника. Більше того, оскільки значення, яке повертається з функції завжди огортається у проміс, функція може навіть повертати щось інше замість проміса. Це означає, що синхронні та асинхронні методи будуть працювати правильно при виклику з `yield`, і вам не потрібно перевіряти чи значення яке повертається є промісом.
 
-The only concern is ensuring that asynchronous functions like `readFile()` return a promise that correctly identifies its state. For Node.js built-in methods, that means you'll have to convert those methods to return promises instead of using callbacks.
+Єдина вимога: це щоб асинхронні функції, як от `readFile()`, повертали проміс, який правильно визначає свій стан. Для вбудованих методів Node.js, це означає, що ви маєте перетворити ці методи таким чином, щоб вони повертали проміс замість зворотніх викликів.
 
-A> ### Future Asynchronous Task Running
-A>
-A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
-A>
-A> ```js
-A> (async function() {
-A>     let contents = await readFile("config.json");
-A>     doSomethingWith(contents);
-A>     console.log("Done");
-A> });
-A> ```
-A>
-A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise. The end result is that you get to write asynchronous code as if it were synchronous without the overhead of managing an iterator-based state machine.
-A>
-A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
+### A> Майбутнє асинхронного запуску завдань
 
-## Summary
+A> На момент написання, продовжується робота щодо внесення у JavaScript більш простого синтаксису для запуску асинхронних завдань. Робота триває над `await`–синтаксисом, що дуже схожий на приклад з попереднього розділу, що використовував проміси. Основною ідеєю є використання функції яка замість генератора позначатиметься `async`, а при виклику фунцій використовуватиме `await` замість `yield`, ось так:
 
-Promises are designed to improve asynchronous programming in JavaScript by giving you more control and composability over asynchronous operations than events and callbacks can. Promises schedule jobs to be added to the JavaScript engine's job queue for execution later, while a second job queue tracks promise fulfillment and rejection handlers to ensure proper execution.
+```js
+(async function() {
+    let contents = await readFile("config.json");
+    doSomethingWith(contents);
+    console.log("Done");
+});
+```
 
-Promises have three states: pending, fulfilled, and rejected. A promise starts in a pending state and becomes fulfilled on a successful execution or rejected on a failure. In either case, handlers can be added to indicate when a promise is settled. The `then()` method allows you to assign a fulfillment and rejection handler and the `catch()` method allows you to assign only a rejection handler.
+A> Ключове слово `async` перед `function` вказує, що функція має виконуватись асинхронно. Ключове слово `await` сигналізує про те, що виклик фунції `readFile("config.json")` має повернути проміс, і якщо він не повертає проміс, тоді результат має буде огорнений у проміс. Точно як і у імплементації `run()` з попереднього розділу, `await` кине помилку, якщо проміс буде відхилено, і поверне результат, якщо все буде гаразд. Кінцевим результатом є те, що ви можете писати асинхронний код так, наче він є синхронним без зайвої роботи з машиною станів, яка базується на ітераторах.
 
-You can chain promises together in a variety of ways and pass information between them. Each call to `then()` creates and returns a new promise that is resolved when the previous one is resolved. Such chains can be used to trigger responses to a series of asynchronous events. You can also use `Promise.race()` and `Promise.all()` to monitor the progress of multiple promises and respond accordingly.
+A> Очікується, що `await`–синтаксис буде завершено у ECMAScript 2017 (ECMAScript 8).
 
-Asynchronous task running is easier when you combine generators and promises, as promises give a common interface that asynchronous operations can return. You can then use generators and the `yield` operator to wait for asynchronous responses and respond appropriately.
+## Підсумок
 
-Most new web APIs are being built on top of promises, and you can expect many more to follow suit in the future.
+Проміси розроблені для того, щоб вдосконалити асинхронне програмування у JavaScript, даючи вам кращий контроль та можливість компонування, ніж це могли дати події та зворотні виклики. Проміси планують завдання, що будуть додані у чергу завдань рушія JavaScript для подальшого виконання, тоді як інша черга завдань відслідковує обробники завершення та відхилення, що забезпечити правильне виконання.
+
+Проміси мають три стани: «pending» (очікується), «fulfilled» (завершений) та «rejected» (очікується). Проміси починають роботу з стану «penging» і переходять у стан «fulfilled», при успіщному виконанні, або у стан «rejected» при помилці. Для обох випадків можна додати обробники, що будуть вказувати коли проміс встановиться (settled). Метод `then()` дозволяє вам присвоїти обробники завершення та відхилення, а метод `catch()` дозволяє вам присвоїти лише обробник відхилення.
+
+Ви можете різними способами об’єднувати проміси у ланцюжки і передавати інформацію між ними. Кожен виклик `then()` створює та повертає новий проміс, який вирішується тоді, коли вирішується попередній. Такі ланцюжки можна використовувати для створення серій асинхронних подій. Ви також можете використовувати `Promise.race()` та `Promise.all()` для того, що відслідковувати декілька промісів та відповідно реагувати в залежності від результату.
+
+Асинхронний запуск завдань стає простішим при поєднанні генераторів та промісів, тому що проміси дають загальний інтерфейс для того, що можуть повертати асинхронні операції. Ви можете використовувати генератори та оператор `yield` для очікування на асинхронні відповіді та виконувати певні дії в залежності від результату.
+
+Більшість нових API будуються на основі промісів, і ви можете очікувати, що ця тенденція буде зберігатись у майбутньому.
