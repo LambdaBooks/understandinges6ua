@@ -549,15 +549,13 @@ let html = `
 Цей код починає шаблонний літерал на першому рядку, але він не має ніякого тексту аж до другого. Теги HTML мають відступи для гарного вигляду, а потім метод `trim()` викликається щоб видалити перший порожній рядок.
 
 A> Якщо ви бажаєте, ви також можете використовувати символ `\n` в шаблонному літералі, щоб показати де має бути створена нова лінія:
-A> {:lang="js"}
-A> ~~~~~~~~
-A>
-A> let message = `Multiline\nstring`;
-A>
-A> console.log(message);           // "Multiline
-A>                                 //  string"
-A> console.log(message.length);    // 16
-A> ~~~~~~~~
+
+```js
+let message = `Multiline\nstring`;
+console.log(message);           // "Multiline
+                                //  string"
+console.log(message.length);    // 16
+```
 
 ### Робимо підстановки
 
