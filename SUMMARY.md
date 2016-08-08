@@ -6,7 +6,7 @@
 * [Рядки та регулярні вирази](/manuscript/02-Strings-and-Regular-Expressions.md)
 * [Функції](/manuscript/03-Functions.md)
 * [Об’єкти](/manuscript/04-Objects.md)
-* Деструктурування
+* [Деструктурування](/manuscript/05-Destructuring.md)
 * Символи
 * Sets та Maps
 * Ітератори та генератори
