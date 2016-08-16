@@ -1,12 +1,12 @@
-# Proxies and the Reflection API
+# Проксі та АРІ рефлексії
 
-ECMAScript 5 and ECMAScript 6 were both developed with demystifying JavaScript functionality in mind. For example, JavaScript environments contained nonenumerable and nonwritable object properties before ECMAScript 5, but developers couldn't define their own nonenumerable or nonwritable properties. ECMAScript 5 included the `Object.defineProperty()` method to allow developers to do what JavaScript engines could do already.
+ECMAScript 5 та ECMAScript 6 розроблялись таким чином, щоб демістифікувати фунціональність JavaScript. Наприклад, до ECMAScript 5 середовища JavaScript містили неперелічувані властивості, які не можливо було змінювати, проте розробники не могли створити власних неперелічуваних і незмінюваних властивостей. ECMAScript 5 вводив метод `Object.defineProperty()` щоб дозволити розробникам робити те, що рушії JavaScript вже вміли робити.
 
-ECMAScript 6 gives developers further access to JavaScript engine capabilities by adding built-in objects. To allow developers to create built-in objects, the language exposes the inner workings of objects through *proxies*, which are wrappers that can intercept and alter low-level operations of the JavaScript engine. This chapter starts by describing the problem that proxies are meant to address in detail, and then discusses how you can create and use proxies effectively.
+ECMAScript 6 дає розробникам глибший доступ до можливостей рушія JavaScript через введення вбудованих об’єктів. Щоб дозволити розробника створювати вбудовані об’єкти, мова відкриває внутрішнє влаштування об’єктів через *проксі (proxies)*, які є прошарком, що може перервати і змінити низькорівневі операції у рушієві JavaScript. Ця глава починається з детального опису проблеми, яку мають вирішити проксі, а після того розкаже про те, як ви можете створювати та ефективно використовувати проксі.
 
-## The Array Problem
+## Проблема масивів
 
-The JavaScript array object behaves in ways that developers couldn't mimic in their own objects before ECMASCript 6. An array's `length` property is affected when you assign values to specific array items, and you can modify array items by modifying the `length` property. For example:
+До ECMASCript 6, об’єкти–масиви у JavaScript поводились так, що розробники не могли зімітувати їх поведінку у своїх власних об’єктах. У масивах властивість `length` змінюється на те, коли ви присвоюєте значення певним елементам масиву. Ви також можете змінювати елементи масиву шляхом зміни властивості `length`. Наприклад:
 
 ```js
 let colors = ["red", "green", "blue"];
@@ -26,42 +26,44 @@ console.log(colors[2]);             // undefined
 console.log(colors[1]);             // "green"
 ```
 
-The `colors` array starts with three items. Assigning `"black"` to `colors[3]` automatically increments the `length` property to `4`. Setting the `length` property to `2` removes the last two items in the array, leaving only the first two items. Nothing in ECMAScript 5 allows developers to achieve this behavior, but proxies change that.
+Спочатку масив `colors` містить три елементи. Присвоєння `"black"` у `colors[3]` автоматично збільшує властивість `length` до `4`. Встановлення властивості `length` значення `2` видаляє останні два елементи з масиву, залишаючи лише перші два. Ніщо у ECMAScript 5 не дозволяло розробникам отримати таку поведінку, проте проксі змінюють це.
 
-I> This nonstandard behavior is why arrays are considered exotic objects in ECMAScript 6.
+I> Саме через таку нестандартну поведінку масиви вважаються спеціальними об’єктами у ECMAScript 6.
 
-## What are Proxies and Reflection?
+## Що таке проксі та рефлексія?
 
-You can create a proxy to use in place of another object (called the *target*) by calling `new Proxy()`. The proxy *virtualizes* the target so that the proxy and the target appear to be the same object to functionality using the proxy.
+Ви можете створити проксі для використання замість іншого об’єкта (який називають *ціллю (target)*) через виклик `new Proxy()`. Проксі *віртуалізує (virtualizes)* ціль так, що проксі та ціль здаватимуться одним і тим самим об’єктом для функціональності через проксі.
+so that the proxy and the target appear to be the same object to functionality using the proxy.
 
-Proxies allow you to intercept low-level object operations on the target that are otherwise internal to the JavaScript engine. These low-level operations are intercepted using a *trap*, which is a function that responds to a specific operation.
+Проксі дозволяють перервати низькорівневі об’єктні операції на цілі, що в іншому випадку були б внутрішніми для рушія JavaScript. Ці низькорівневі операції перериваються з допомогою *перехоплень (trap)*, які є функціями, що відповідають певним операціям.
 
-The reflection API, represented by the `Reflect` object, is a collection of methods that provide the default behavior for the same low-level operations that proxies can override. There is a `Reflect` method for every proxy trap. Those methods have the same name and are passed the same arguments as their respective proxy traps. Table 11-1 summarizes this behavior.
+API рефлексії, якому відповідає об’єкт `Reflect`, є колекцією методів, що надаються поведінку за замовчуванням для тих самих низькорівневих операцій, які проксі можуть перевизначити. Для кожного перехоплення `Reflect` має відповідний метод. Ці методи мають таке ж ім’я і отримують такі ж аргументи, що і їх відповідні перехоплення. Таблиця 11-1 зводить ці методи.
 
-{title="Table 11-1: Proxy traps in JavaScript"}
-| Proxy Trap               | Overrides the Behavior Of | Default Behavior |
-|--------------------------|---------------------------|------------------|
-|`get`                     | Reading a property value  | `Reflect.get()` |
-|`set`                     | Writing to a property     | `Reflect.set()` |
-|`has`                     | The `in` operator         | `Reflect.has()` |
-|`deleteProperty`          | The `delete` operator     | `Reflect.deleteProperty()` |
-|`getPrototypeOf`          | `Object.getPrototypeOf()` | `Reflect.getPrototypeOf()` |
-|`setPrototypeOf`          | `Object.setPrototypeOf()` | `Reflect.setPrototypeOf()` |
-|`isExtensible`            | `Object.isExtensible()`   | `Reflect.isExtensible()` |
+**Таблиця 11-1: Перехоплення проксі у JavaScript**
+
+| Перехоплення проксі      | Перезаписує поведінку        | Поведінка за замовчуванням |
+|--------------------------|------------------------------|-----------------|
+|`get`                     | Читання значення властивості | `Reflect.get()` |
+|`set`                     | Запис властивості            | `Reflect.set()` |
+|`has`                     | Оператор `in`                | `Reflect.has()` |
+|`deleteProperty`          | Оператор `delete`            | `Reflect.deleteProperty()` |
+|`getPrototypeOf`          | `Object.getPrototypeOf()`    | `Reflect.getPrototypeOf()` |
+|`setPrototypeOf`          | `Object.setPrototypeOf()`    | `Reflect.setPrototypeOf()` |
+|`isExtensible`            | `Object.isExtensible()`      | `Reflect.isExtensible()` |
 |`preventExtensions`       | `Object.preventExtensions()` | `Reflect.preventExtensions()` |
 |`getOwnPropertyDescriptor`| `Object.getOwnPropertyDescriptor()` | `Reflect.getOwnPropertyDescriptor()` |
-|`defineProperty`          | `Object.defineProperty()` | `Reflect.defineProperty` |
+|`defineProperty`          | `Object.defineProperty()`    | `Reflect.defineProperty` |
 |`ownKeys`                 | `Object.keys`, `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
-|`apply`                   | Calling a function | `Reflect.apply()` |
-|`construct`               | Calling a function with `new` | `Reflect.construct()` |
+|`apply`                   | Виклик функції               | `Reflect.apply()` |
+|`construct`               | Виклик функції з `new`       | `Reflect.construct()` |
 
-Each trap overrides some built-in behavior of JavaScript objects, allowing you to intercept and modify the behavior. If you still need to use the built-in behavior, then you can use the corresponding reflection API method. The relationship between proxies and the reflection API becomes clear when you start creating proxies, so it's best to dive in and look at some examples.
+Кожне перехоплення перезаписує деяку вбудовану поведінку JavaScript–об’єктів, дозволяючи вам переривати та змінювати цю поведінку. Якщо ж вам все ж потрібна вбудована поведінка, тоді ви може використовувати відповідний метод API рефлексії. Взаємодія проксі та API рефлексії стає зрозумілою коли почати створювати проксі, тож найкраще поринути у приклади.
 
-I> The original ECMAScript 6 specification had an additional trap called `enumerate` that was designed to alter how `for-in` and `Object.keys()` enumerated properties on an object. However, the `enumerate` trap was removed in ECMAScript 7 (also called ECMAScript 2016) as difficulties were discovered during implementation. The `enumerate` trap no longer exists in any JavaScript environment and is therefore not covered in this chapter.
+I> Початкова специфікація ECMAScript 6 має додаткове перехоплення `enumerate`, що розроблене для зміни того як `for-in` та `Object.keys()` перелічує властивості об’єкта. Однак, перехоплення `enumerate` видалено у ECMAScript 7 (ECMAScript 2016) через складності, що виникли при його імплементації. Перехоплення `enumerate` більше немає у будь–якому оточенні JavaScript тому у цій главі про нього йти мова не буде.
 
-## Creating a Simple Proxy
+## Створення простого проксі
 
-When you use the `Proxy` constructor to make a proxy, you'll pass it two arguments: the target and a handler. A *handler* is an object that defines one or more traps. The proxy uses the default behavior for all operations except when traps are defined for that operation. To create a simple forwarding proxy, you can use a handler without any traps:
+Коли ви використовуєте конструктор `Proxy` для створення проксі, ви маєте передати два аргументи: ціль та обробник. *Обробник (handler)* — це об’єкт, що визначає одне або більше перехоплень. Проксі використовує поведінку за замовчування для всіх операцій, окрім тих для яких визначені перехоплення. Для створення простого демонстраційного проксі ви можете використати обробник без жодного перехоплення:
 
 ```js
 let target = {};
@@ -77,20 +79,20 @@ console.log(proxy.name);        // "target"
 console.log(target.name);       // "target"
 ```
 
-In this example, `proxy` forwards all operations directly to `target`. When `"proxy"` is assigned to the `proxy.name` property, `name` is created on `target`. The proxy itself is not storing this property; it's simply forwarding the operation to `target`. Similarly, the values of `proxy.name` and `target.name` are the same because they are both references to `target.name`. That also means setting `target.name` to a new value causes `proxy.name` to reflect the same change. Of course, proxies without traps aren't very interesting, so what happens when you define a trap?
+У цьому прикладі, `proxy` передає всі операції відразу до `target`. Коли властивості `proxy.name` присвоюється `"proxy"`, `name` створюється у `target`. Саме проксі не зберігає цю властивість, воно просто передає операцію до `target`. Таким чином значення `proxy.name` та `target.name` є однаковими, оскільки вони обоє посилаються на `target.name`. Це також означає, що встановлення нового значення властивості `target.name` призведе до того, що `proxy.name` відобразить цю зміну. Звісно, проксі без перехоплень не дуже цікаві, то що ж станеться якщо визначити перехоплення?
 
-## Validating Properties Using the `set` Trap
+## Валідація властивостей з використанням перехоплення `set`
 
-Suppose you want to create an object whose property values must be numbers. That means every new property added to the object must be validated, and an error must be thrown if the value isn't a number. To accomplish this, you could define a `set` trap that overrides the default behavior of setting a value. The `set` trap receives four arguments:
+Припустимо ви хочете створити об’єкт, властивості якого мусять бути числами. Це означає, що кожна нова властивість, яка додається до цього об’єкту, повинна проходити валідацію і якщо її значенням є не число, має кидатись помилка. Щоб зробити це, ви можете визначити перехоплення `set`, що перезаписує поведінку за замовченням для встановлення значення. Перехоплення `set` отримує чотири аргументи:
 
-1. `trapTarget` - the object that will receive the property (the proxy's target)
-1. `key` - the property key (string or symbol) to write to
-1. `value` - the value being written to the property
-1. `receiver` - the object on which the operation took place (usually the proxy)
+1. `trapTarget` — об’єкт, який отримає властивості (ціль проксі);
+1. `key` — ключ властивості (рядок або символ) для запису;
+1. `value` — значення, яке записується у властивість;
+1. `receiver` — об’єкт до якого застосовується операція (зазвичай проксі).
 
-`Reflect.set()` is the `set` trap's corresponding reflection method, and it's the default behavior for this operation. The `Reflect.set()` method accepts the same four arguments as the `set` proxy trap, making the method easy to use inside of the trap. The trap should return `true` if the property was set or `false` if not. (The `Reflect.set()` method returns the correct value based on whether the operation succeeded.)
+`Reflect.set()` це метод рефлексії, який відповідає перехопленню `set`, і є поведінкою за замовчування для цієї операції. Метод `Reflect.set()` приймає ті ж чотири аргументи, що і перехоплення проксі `set`, і тому його дуже зручно використовувати всередині цього перехоплення. Перехоплення має повернути `true`, якщо властивість встановлено, або `false`, якщо ні. (Метод `Reflect.set()` повертає правильне значення на основі того, чи операція завершилась успішно.)
 
-To validate the values of properties, you'd use the `set` trap and inspect the `value` that is passed in. Here's an example:
+Для валідації значень властивостей, ви, скоріш за все, будете використовувати перехоплення `set` та перевіряти значення `value`, яке передається. Ось приклад:
 
 ```js
 let target = {
@@ -100,43 +102,43 @@ let target = {
 let proxy = new Proxy(target, {
     set(trapTarget, key, value, receiver) {
 
-        // ignore existing properties so as not to affect them
+        // ігноруємо властивості, які вже існують, то це не впливатиме на них
         if (!trapTarget.hasOwnProperty(key)) {
             if (isNaN(value)) {
                 throw new TypeError("Property must be a number.");
             }
         }
 
-        // add the property
+        // додаємо властивість
         return Reflect.set(trapTarget, key, value, receiver);
     }
 });
 
-// adding a new property
+// додаємо нову властивість
 proxy.count = 1;
 console.log(proxy.count);       // 1
 console.log(target.count);      // 1
 
-// you can assign to name because it exists on target already
+// ви можете можете присвоїти значення name, бо воно вже існує на цілі
 proxy.name = "proxy";
 console.log(proxy.name);        // "proxy"
 console.log(target.name);       // "proxy"
 
-// throws an error
+// кине помилку
 proxy.anotherName = "proxy";
 ```
 
-This code defines a proxy trap that validates the value of any new property added to `target`. When `proxy.count = 1` is executed, the `set` trap is called. The `trapTarget` value is equal to `target`, `key` is `"count"`, `value` is `1`, and `receiver` (not used in this example) is `proxy`. There is no existing property named `count` in `target`, so the proxy validates `value` by passing it to `isNaN()`. If the result is `NaN`, then the property value is not numeric and an error is thrown. Since this code sets `count` to `1`, the proxy calls `Reflect.set()` with the same four arguments that were passed to the trap to add the new property.
+Цей код визначає перехоплення проксі, яке перевіряє значення будь–якої нової властивості, що додається до `target`. Коли виконується `proxy.count = 1`, викликається перехоплення `set`. Значення `trapTarget` дорівнює `target`, `key` рівне `"count"`, `value` містить `1`, а `receiver` (не використовується у цьому прикладі) буде `proxy`. `target` не має на собі властивості `count`, тому проксі валідує значення `value` шляхом передачі його в `isNaN()`. Якщо результат `NaN`, тоді значення властивості не є числовим і кидається помилка. Оскільки цей код встановлює у `count` значення `1`, проксі викликає `Reflect.set()` з тими ж чотирма аргументами, що були передані у перехоплення для встановлення нової властивості.
 
-When `proxy.name` is assigned a string, the operation completes successfully. Since `target` already has a `name` property, that property is omitted from the validation check by calling the `trapTarget.hasOwnProperty()` method. This ensures that previously-existing non-numeric property values are still supported.
+Коли `proxy.name` присвоюється рядок, операція відбувається успішно. Оскільки `target` вже має властивість `name`, ця властивість пропускається при валідації через виклик методу `trapTarget.hasOwnProperty()`. Він перевіряє чи попередньо встановлені нечислові значення властивості залишаються підтримуваними.
 
-When `proxy.anotherName` is assigned a string, however, an error is thrown. The `anotherName` property doesn't exist on the target, so its value needs to be validated. During validation, the error is thrown because `"proxy"` isn't a numeric value.
+Однак, коли `proxy.anotherName` присвоюється рядок, кидається помилка. Ціль не має властивості `anotherName`, тому її значення потребує перевірки. Під час валідації кидається помилка, бо `"proxy"` не є числовим значенням.
 
-Where the `set` proxy trap lets you intercept when properties are being written to, the `get` proxy trap lets you intercept when properties are being read.
+Перехоплення проксі `set` дає вам можливість перервати запис властивостей, а щоб перервати читання властивостей можна скористатись перехопленням проксі `get`.
 
-## Object Shape Validation Using the `get` Trap
+## Валідація форми об’єкта з допомогою перехоплення `get`
 
-One of the interesting, and sometimes confusing, aspects of JavaScript is that reading nonexistent properties doesn't throw an error. Instead, the value `undefined` is used for the property value, as in this example:
+Одним з цікавих і та часом заплутаних аспектів JavaScript є те, що читання неіснуючих властивостей не кидає помилки. Замість цього, значення `undefined` використовується в якості значення властивості, як у цьому прикладі:
 
 ```js
 let target = {};
@@ -144,19 +146,19 @@ let target = {};
 console.log(target.name);       // undefined
 ```
 
-In most other languages, attempting to read `target.name` throws an error because the property doesn't exist. But JavaScript just uses `undefined` for the value of the `target.name` property. If you've ever worked on a large code base, you've probably seen how this behavior can cause significant problems, especially when there's a typo in the property name. Proxies can help you save yourself from this problem by having object shape validation.
+У більшості інших мов, спроба зчитати `target.name` кине помилку, тому що такої властивості не існує. А от JavaScript просто використовує `undefined` в якості значення властивості `target.name`. Якщо ви коли–небудь працювали зі значною кодовою базою, ви можливо бачили як така поведінка може спричинити значні проблеми, особливо якщо допустити помилку у імені властивості. Проксі можуть врятувати вас від цієї проблеми завдяки можливості перевіряти форму об’єкта.
 
-An *object shape* is the collection of properties and methods available on the object. JavaScript engines use object shapes to optimize code, often creating classes to represent the objects. If you can safely assume an object will always have the same properties and methods it began with (a behavior you can enforce with the `Object.preventExtensions()` method, the `Object.seal()` method, or the `Object.freeze()` method), then throwing an error on attempts to access nonexistent properties can be helpful. Proxies make object shape validation easy.
+*Форма об’єкта (object shape)* — це колекція властивостей та методів, що доступні на об’єкті. Рушії JavaScript використовують форми об’єктів для оптимізації коду, зазвичай шляхом створення що відповідають цим об’єктами. Якщо ви можете ви можете зробити висновок, що об’єкт завжди матиме одні і ті ж властивості та методи (цю поведінку ми можете досягнути через методи `Object.preventExtensions()`, `Object.seal()` або `Object.freeze()`), скоріш за все вам знадобиться кидати помилки при спробі доступу до неіснуючих властивостей. Проксі роблять валідацію форми об’єктів простішою.
 
-Since property validation only has to happen when a property is read, you'd use the `get` trap. The `get` trap is called when a property is read, even if that property doesn't exist on the object, and it takes three arguments:
+Оскільки валідація властивостей має відбуватись лише при читанні властивостей, ви можете використовувати перехоплення `get`. Перехоплення `get` викликається тоді, коли властивість читається, навіть якщо цієї властивості не існує на об’єкті. Воно приймає такі три аргументи:
 
-1. `trapTarget` - the object from which the property is read (the proxy's target)
-1. `key` - the property key (a string or symbol) to read
-1. `receiver` - the object on which the operation took place (usually the proxy)
+1. `trapTarget` — об’єкт, з якого читаються властивість (ціль проксі);
+1. `key` — ключ властивості, що читається (рядок або символ);
+1. `receiver` — об’єкт до якого застосовується операція (зазвичай проксі).
 
-These arguments mirror the `set` trap's arguments, with one noticeable difference. There's no `value` argument here because `get` traps don't write values. The `Reflect.get()` method accepts the same three arguments as the `get` trap and returns the property's default value.
+Ці аргументи такі ж як і ті, що отримує перехоплення `set`, з однією важливою відмінністю: немає аргументу `value`, тому що перехоплення `get` не здійснює запис властивостей. Метод `Reflect.get()` приймає такі ж три аргументи, як і перехоплення `get` та повертає значення властивості за замовчуванням.
 
-You can use the `get` trap and `Reflect.get()` to throw an error when a property doesn't exist on the target, as follows:
+Ви можете використовувати перехоплення `get` разом з `Reflect.get()`, щоб кидати помилку, коли ціль не має такої властивості, ось так:
 
 ```js
 let proxy = new Proxy({}, {
@@ -169,21 +171,21 @@ let proxy = new Proxy({}, {
         }
     });
 
-// adding a property still works
+// можна додавати нові властивості
 proxy.name = "proxy";
 console.log(proxy.name);            // "proxy"
 
-// nonexistent properties throw an error
+// якщо властивості не існує, кидатиметься помилка
 console.log(proxy.nme);             // throws error
 ```
 
-In this example, the `get` trap intercepts property read operations. The `in` operator is used to determine if the property already exists on the `receiver`. The `receiver` is used with `in` instead of `trapTarget` in case `receiver` is a proxy with a `has` trap, a type I'll cover in the next section. Using `trapTarget` in this case would sidestep the `has` trap and potentially give you the wrong result. An error is thrown if the property doesn't exist, and otherwise, the default behavior is used.
+У цьому прикладі, перехоплення `get` перериває операцію читання властивості. Оператор `in` використовується для визначення чи властивість вже існує на `receiver`. `receiver` використовується з `in` замість `trapTarget` у випадку, коли `receiver` є проксі з перехопленням `has`, про яке я розповім у наступному розділі. Використання `trapTarget`, у цьому випадку, обходило б перехоплення `has` та імовірно дало б хибний результат. Помилка кидається тоді, коли властивості не існує, в інших випадках спрацьовує поведінка за замовчуванням.
 
-This code allows new properties like `proxy.name` to be added, written to, and read from with no problems. The last line contains a typo: `proxy.nme` should probably be `proxy.name` instead. This throws an error because `nme` doesn't exist as a property.
+Цей код без проблем дозволяє додавати нові властивості, як от `proxy.name`, писати та читати з них. Останній рядок містить помилку: `proxy.nme` має бути `proxy.name`. Це кидає помилку, тому що властивості `nme` не існує.
 
-## Hiding Property Existence Using the `has` Trap
+## Приховування існування властивості через перехоплення `has`
 
-The `in` operator determines whether a property exists on a given object and returns `true` if there is either an own property or a prototype property matching the name or symbol. For example:
+Оператор `in` визначає чи властивість існує у даного об’єкта і повертає `true`, якщо є власна властивість або властивість прототипа, що відповідає такому імені або символу. Наприклад:
 
 ```js
 let target = {
@@ -194,14 +196,14 @@ console.log("value" in target);     // true
 console.log("toString" in target);  // true
 ```
 
-Both `value` and `toString` exist on `object`, so in both cases the `in` operator returns `true`. The `value` property is an own property while `toString` is a prototype property (inherited from `Object`). Proxies allow you to intercept this operation and return a different value for `in` with the `has` trap.
+Як `value` так і `toString` існують у `object`, тому в обох випадках оператор `in` повертає `true`. Властивість `value` є власною властивістю, тоді як `toString` є властивість прототипа (успадкована від `Object`). Проксі дозволяють вам перервати цю операцію та повернути інше значення для `in` через перехопленням `has`.
 
-The `has` trap is called whenever the `in` operator is used. When called, two arguments are passed to the `has` trap:
+Перехоплення `has` викликається щоразу, коли використовується оператор `in`. При виклику, у перехоплення `has` передається два аргументи:
 
-1. `trapTarget` - the object the property is read from (the proxy's target)
-1. `key` - the property key (string or symbol) to check
+1. `trapTarget` — властивість об’єкта з якої відбувається читання (ціль проксі);
+1. `key` — ключ властивості (рядок або символ) для перевірки.
 
-The `Reflect.has()` method accepts these same arguments and returns the default response for the `in` operator. Using the `has` trap and `Reflect.has()` allows you to alter the behavior of `in` for some properties while falling back to default behavior for others. For instance, suppose you just want to hide the `value` property. You can do so like this:
+Метод `Reflect.has()` приймає ті самі аргументи та повертає відповідь за замовчування для оператор `in`. Використання перехоплення `has` та `Reflect.has()` дозволяє вам змінити поведінку `in` для деяких властивостей і в той же час для інших використовувати поведінку за замовчуванням. Наприклад, припустимо ви хочете приховати властивість `value`. Ви можете зробити це ось так:
 
 ```js
 let target = {
@@ -226,11 +228,11 @@ console.log("name" in proxy);       // true
 console.log("toString" in proxy);   // true
 ```
 
-The `has` trap for `proxy` checks to see if `key` is `"value"` returns `false` if so. Otherwise, the default behavior is used via a call to the `Reflect.has()` method. As a result, the `in` operator returns `false` for the `value` property even though `value` actually exists on the target. The other properties, `name` and `toString`, correctly return `true` when used with the `in` operator.
+Перехоплення `has` для `proxy` перевіряє чи `key` є `"value"` та повертає `false` якщо це так. В іншому випадку, використовується поведінка за замовчування через виклик методу `Reflect.has()`. В результаті, оператор `in` повертає `false` для властивості `value`, не дивлячись на те, що `value` насправді існує на цілі. Для інших властивостей, `name` та `toString`, при використанні оператора `in` повертається `true`.
 
-## Preventing Property Deletion with the `deleteProperty` Trap
+## Перешкоджання видаленню властивості з допомогою перехоплення `deleteProperty`
 
-The `delete` operator removes a property from an object and returns `true` when successful and `false` when unsuccessful. In strict mode, `delete` throws an error when you attempt to delete a nonconfigurable property; in nonstrict mode, `delete` simply returns `false`. Here's an example:
+Оператор `delete` видаляє властивість з об’єкта та повертає `true`, якщо операція відбулась успішно, та `false`, якщо ні. У строгому режимі `delete` кидає помилку при спробі видалення властивості, яку не можна змінювати; у нестрогому режимі `delete` просто повертає `false`. Ось приклад:
 
 ```js
 let target = {
@@ -247,21 +249,21 @@ console.log(result1);               // true
 
 console.log("value" in target);     // false
 
-// Note: The following line throws an error in strict mode
+// Зверніть увагу: ці рядки кинуть помилку у строгому режимі
 let result2 = delete target.name;
 console.log(result2);               // false
 
 console.log("name" in target);      // true
 ```
 
-The `value` property is deleted using the `delete` operator and, as a result, the `in` operator returns `false` in the third `console.log()` call. The nonconfigurable `name` property can't be deleted so the `delete` operator simply returns `false` (if this code is run in strict mode, an error is thrown instead). You can alter this behavior by using the `deleteProperty` trap in a proxy.
+Властивість `value` видаляється з допомогою оператора `delete` і в результаті оператор `in` повертає `false` у третьому виклику `console.log()`. Властивість `name`, яку не можна змінювати, не можна видалити, тому оператор `delete` просто повертає `false` (якщо цей код запустити у строгому режимі, замість цього кинеться помилка). Ви можете змінити таку поведінку через використання перехоплення `deleteProperty` на проксі.
 
-The `deleteProperty` trap is called whenever the `delete` operator is used on an object property. The trap is passed two arguments:
+Перехоплення `deleteProperty` викликається щоразу, коли оператор `delete` застосовується до властивості об’єкта. Перехоплення приймає два аргументи:
 
-1. `trapTarget` - the object from which the property should be deleted (the proxy's target)
-1. `key` - the property key (string or symbol) to delete
+1. `trapTarget` - об’єкт з якого треба видалити властивість (ціль проксі)
+1. `key` - ключ властивості (рядок або символ) який видаляється
 
-The `Reflect.deleteProperty()` method provides the default implementation of the `deleteProperty` trap and accepts the same two arguments. You can combine `Reflect.deleteProperty()` and the `deleteProperty` trap to change how the `delete` operator behaves. For instance, you could ensure that the `value` property can't be deleted:
+Метод `Reflect.deleteProperty()` надає імплементацію за замовчування для перехоплення `deleteProperty` та приймає такі ж два аргументи. Ви можете комбінувати `Reflect.deleteProperty()` та перехоплення `deleteProperty` для того, щоб змінити поведінку оператора `delete`. Наприклад, ви можете убезпечити властивість `value` від видалення:
 
 ```js
 let target = {
@@ -280,7 +282,7 @@ let proxy = new Proxy(target, {
     }
 });
 
-// Attempt to delete proxy.value
+// Спроба видалення proxy.value
 
 console.log("value" in proxy);      // true
 
@@ -289,7 +291,7 @@ console.log(result1);               // false
 
 console.log("value" in proxy);      // true
 
-// Attempt to delete proxy.name
+// Спроба видалення proxy.name
 
 console.log("name" in proxy);       // true
 
@@ -299,24 +301,24 @@ console.log(result2);               // true
 console.log("name" in proxy);       // false
 ```
 
-This code is very similar to the `has` trap example in that the `deleteProperty` trap checks to see if the `key` is `"value"` and returns `false` if so. Otherwise, the default behavior is used by calling the `Reflect.deleteProperty()` method. The `value` property can't be deleted through `proxy` because the operation is trapped, but the `name` property is deleted as expected. This approach is especially useful when you want to protect properties from deletion without throwing an error in strict mode.
+Цей код дуже схожий на приклад з перехопленням `has` тим, що перехоплення `deleteProperty` перевіряє чи `key` рівне `"value"` та повертає `false` якщо це так. В інших випадках, буде використовуватись поведінка за замовчуванням з допомогою виклику методу `Reflect.deleteProperty()`. Властивість `value` не можна видалити через `proxy`, тому що операція перехоплюється, проте властивість `name` видаляється так, як і очікується. Такий підхід особливо корисний, коли ви хочете захистити властивості від видалення без кидання помилки у строгому режимі.
 
-## Prototype Proxy Traps
+## Перехоплення проксі прототипів
 
-Chapter 4 introduced the `Object.setPrototypeOf()` method that ECMAScript 6 added to complement the ECMAScript 5 `Object.getPrototypeOf()` method. Proxies allow you to intercept execution of both methods through the `setPrototypeOf` and `getPrototypeOf` traps. In both cases, the method on `Object` calls the trap of the corresponding name on the proxy, allowing you to alter the methods' behavior.
+Глава 4 розповідала про метод `Object.setPrototypeOf()`, що додається ECMAScript 6 в якості доповнення до методу `Object.getPrototypeOf()` з ECMAScript 5. Проксі дозволяють вам перервати виконання обох методів через перехоплення `setPrototypeOf` та `getPrototypeOf`. У обох випадках, методи `Object` викликають відповідні перехоплення на проксі, дозволяючи вам змінити поведінку цих методів.
 
-Since there are two traps associated with prototype proxies, there's a set of methods associated with each type of trap. The `setPrototypeOf` trap receives these arguments:
+Оскільки є два перехоплення, що стосуються проксі прототипів, є сукупність методів, що стосуються кожного з них. Перехоплення `setPrototypeOf` отримує три аргументи:
 
-1. `trapTarget` - the object for which the prototype should be set (the proxy's target)
-1. `proto` - the object to use for as the prototype
+1. `trapTarget` — об’єкт для кого встановлюється прототип (ціль проксі);
+1. `proto` — об’єкт, що використовуватиметься у якості прототипу.
 
-These are the same arguments passed to the `Object.setPrototypeOf()` and `Reflect.setPrototypeOf()` methods. The `getPrototypeOf` trap, on the other hand, only receives the `trapTarget` argument, which is the argument passed to the `Object.getPrototypeOf()` and `Reflect.getPrototypeOf()` methods.
+Такі ж аргументи передаються у методи `Object.setPrototypeOf()` та `Reflect.setPrototypeOf()`. В той же час, перехоплення `getPrototypeOf`, отримує лише аргумент `trapTarget`, який є аргументом, що передається у методи `Object.getPrototypeOf()` та `Reflect.getPrototypeOf()`.
 
-### How Prototype Proxy Traps Work
+### Як працюють перехоплення проксі прототипів
 
-There are some restrictions on these traps. First, the `getPrototypeOf` trap must return an object or `null`, and any other return value results in a runtime error. The return value check ensures that `Object.getPrototypeOf()` will always return an expected value. Similarly, the return value of the `setPrototypeOf` trap must be `false` if the operation doesn't succeed. When `setPrototypeOf` returns `false`, `Object.setPrototypeOf()` throws an error. If `setPrototypeOf` returns any value other than `false`, then `Object.setPrototypeOf()` assumes the operation succeeded.
+Ці перехоплення мають кілька обмежень. По–перше, перехоплення `getPrototypeOf` мусить повертати об’єкт або `null`, а всі інші значення в якості результату призведуть до помилки оточення. Значення, що повертається, перевіряється для певності, що `Object.getPrototypeOf()` поверне очікуване значення. Так само, перехоплення `setPrototypeOf` мусить повертати `false`. якщо операція завершилась безуспішно. Коли `setPrototypeOf` повертає `false`, тоді `Object.setPrototypeOf()` кидає помилку. Коли `setPrototypeOf` поверне будь–яке інше значення замість `false`, тоді `Object.setPrototypeOf()` вважає, що операція завершилась успішно.
 
-The following example hides the prototype of the proxy by always returning `null` and also doesn't allow the prototype to be changed:
+Наступні приклади завжди повертають `null` і тим самим приховують прототип проксі та не дозволяють змінювати прототип:
 
 ```js
 let target = {};
@@ -336,16 +338,16 @@ console.log(targetProto === Object.prototype);      // true
 console.log(proxyProto === Object.prototype);       // false
 console.log(proxyProto);                            // null
 
-// succeeds
+// виконується успішно
 Object.setPrototypeOf(target, {});
 
-// throws error
+// кидає помилку
 Object.setPrototypeOf(proxy, {});
 ```
 
-This code emphasizes the difference between the behavior of `target` and `proxy`. While `Object.getPrototypeOf()` returns a value for `target`, it returns `null` for `proxy` because the `getPrototypeOf` trap is called. Similarly, `Object.setPrototypeOf()` succeeds when used on `target` but throws an error when used on `proxy` due to the `setPrototypeOf` trap.
+Цей код підкреслює відмінність між поведінкою `target` та `proxy`. Якщо `Object.getPrototypeOf()` повертає значення для `target`, то для `proxy` він повертає `null`, тому що викликається перехоплення `getPrototypeOf`. Так само, `Object.setPrototypeOf()` успішно використовується з `target`, проте кидає помилку при використанні з `proxy` через перехоплення `setPrototypeOf`.
 
-If you want to use the default behavior for these two traps, you can use the corresponding methods on `Reflect`. For instance, this code implements the default behavior for the `getPrototypeOf` and `setPrototypeOf` traps:
+Якщо ви хочете використовувати поведінку за замовчуванням для цих двох перехоплень, ви можете скористатись відповідними методами з `Reflect`. Для прикладу, цей код реалізує поведінку за замовчуванням для перехоплень `getPrototypeOf` та `setPrototypeOf`:
 
 ```js
 let target = {};
@@ -364,36 +366,37 @@ let proxyProto = Object.getPrototypeOf(proxy);
 console.log(targetProto === Object.prototype);      // true
 console.log(proxyProto === Object.prototype);       // true
 
-// succeeds
+// виконується успішно
 Object.setPrototypeOf(target, {});
 
-// also succeeds
+// кидає помилку
 Object.setPrototypeOf(proxy, {});
 ```
 
-In this example, you can use `target` and `proxy` interchangeably and get the same results because the `getPrototypeOf` and `setPrototypeOf` traps are just passing through to use the default implementation. It's important that this example use the `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods rather than the methods of the same name on `Object` due to some important differences.
+У цьому прикладі ви можете використовувати і `target`, і `proxy` незалежно і отримати один і той же результат завдяки тому, що перехоплення `getPrototypeOf` та `setPrototypeOf` просто передають керування імплементації за замовчуванням. Важливо те, що цей приклад використовує методи `Reflect.getPrototypeOf()` та `Reflect.setPrototypeOf()` замість тих самих методів у `Object` через деякі важливі відмінності
 
+### Чому дві множини методів?
 ### Why Two Sets of Methods?
 
-The confusing aspect of `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` is that they look suspiciously similar to the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. While both sets of methods perform similar operations, there are some distinct differences between the two.
+Складним для розуміння аспектом у `Reflect.getPrototypeOf()` та `Reflect.setPrototypeOf()` є те, що вони виглядають підозріло схоже на методи `Object.getPrototypeOf()` та `Object.setPrototypeOf()`. Хоча ці дві множини методів і виконують схожі операції, між ними є кілька суттєвих відмінностей.
 
-To begin, `Object.getPrototypeOf()` and `Object.setPrototypeOf()` are higher-level operations that were created for developer use from the start. The `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods are lower-level operations that give developers access to the previously internal-only `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]` operations. The `Reflect.getPrototypeOf()` method is the wrapper for the internal `[[GetPrototypeOf]]` operation (with some input validation). The `Reflect.setPrototypeOf()` method and `[[SetPrototypeOf]]` have the same relationship. The corresponding methods on `Object` also call `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]` but perform a few steps before the call and inspect the return value to determine how to behave.
+Для початку, `Object.getPrototypeOf()` та `Object.setPrototypeOf()` є високорівневими операціями, що від початку розроблені для того, щоб їх використовували розробники. Методи `Reflect.getPrototypeOf()` та `Reflect.setPrototypeOf()` є низькорівневими операціями, що дають розробникам доступ до операцій `[[GetPrototypeOf]]` та `[[SetPrototypeOf]]`, які раніше були виключно внутрішніми. Метод `Reflect.getPrototypeOf()` є обгорткою для внутрішньої операції `[[GetPrototypeOf]]` (з валідацією вхідних параметрів). Методи `Reflect.setPrototypeOf()` та `[[SetPrototypeOf]]` пов’язані так само. Відповідні методи у `Object` також викликають `[[GetPrototypeOf]]` та `[[SetPrototypeOf]]`, проте перед цим виконують декілька кроків та перевіряють значення, що повертається, аби визначити як їм поводитись.
 
-The `Reflect.getPrototypeOf()` method throws an error if its argument is not an object, while `Object.getPrototypeOf()` first coerces the value into an object before performing the operation. If you were to pass a number into each method, you'd get a different result:
+Метод `Reflect.getPrototypeOf()` кидає помилку якщо аргумент не є об’єктом, тоді як `Object.getPrototypeOf()` спершу приводить значення до об’єкту перед виконанням операції. Якщо ви передасте число у кожен з методів, ви отримаєте різний результат:
 
 ```js
 let result1 = Object.getPrototypeOf(1);
 console.log(result1 === Number.prototype);  // true
 
-// throws an error
+// кидає помилку
 Reflect.getPrototypeOf(1);
 ```
 
-The `Object.getPrototypeOf()` method allows you retrieve a prototype for the number `1` because it first coerces the value into a `Number` object and then returns `Number.prototype`. The `Reflect.getPrototypeOf()` method doesn't coerce the value, and since `1` isn't an object, it throws an error.
+Метод `Object.getPrototypeOf()` дозволяє отримати прототип числа для `1` тому, що спершу він приводить це значення у об’єкт `Number`, а потім повертає `Number.prototype`. Метод `Reflect.getPrototypeOf()` не приводить значення, і оскільки `1` не об’єкт, він кидає помилку.
 
-The `Reflect.setPrototypeOf()` method also has a few more differences from the `Object.setPrototypeOf()` method. First, `Reflect.setPrototypeOf()` returns a boolean value indicating whether the operation was successful. A `true` value is returned for success, and `false` is returned for failure. If `Object.setPrototypeOf()` fails, it throws an error.
+Метод `Reflect.setPrototypeOf()` також має кілька відмінностей від метода `Object.setPrototypeOf()`. По–перше, `Reflect.setPrototypeOf()` повертає булеве значення, яке вказує на те, чи операція завершилась успішно. Значення `true` повертається у випадку успішного завершення, а `false` у випадку негараздів. Якщо `Object.setPrototypeOf()` завершується безуспішно, він кидає помилку.
 
-As the first example under "How Prototype Proxy Traps Work" showed, when the `setPrototypeOf` proxy trap returns `false`, it causes `Object.setPrototypeOf()` to throw an error. The `Object.setPrototypeOf()` method returns the first argument as its value and therefore isn't suitable for implementing the default behavior of the `setPrototypeOf` proxy trap. The following code demonstrates these differences:
+У першому прикладі з «Як працюють перехоплення проксі прототипів» показано, що коли перехоплення проксі `setPrototypeOf` повертає `false`, це спричинено тим, що `Object.setPrototypeOf()` кидає помилку. Метод `Object.setPrototypeOf()` повертає перший аргумент в якості свого значення і тому не дуже підходить для реалізації поведінки за замовчуванням для перехоплення `setPrototypeOf`. Такий код демонструє ці відмінності:
 
 ```js
 let target1 = {};
@@ -406,19 +409,19 @@ console.log(result2 === target2);                   // false
 console.log(result2);                               // true
 ```
 
-In this example, `Object.setPrototypeOf()` returns `target1` as its value, but `Reflect.setPrototypeOf()` returns `true`. This subtle difference is very important. You'll see more seemingly duplicate methods on `Object` and `Reflect`, but always be sure to use the method on `Reflect` inside any proxy traps.
+У цьому прикладі, `Object.setPrototypeOf()` повертає `target1` в якості свого значення, проте `Reflect.setPrototypeOf()` повертає `true`. Ця маленька відмінність є дуже важливою. Ви ще побачите схожі методи `Object` та `Reflect`, що схожі на перший погляд, проте пам’ятайте, що всередині перехоплень для проксі краще використовувати методи з `Reflect`.
 
-I> Both sets of methods will call the `getPrototypeOf` and `setPrototypeOf` proxy traps when used on a proxy.
+I> Обидві множини методів викликають перехоплення `getPrototypeOf` та `setPrototypeOf` при виклику для проксі.
 
-## Object Extensibility Traps
+## Перехоплення розширення об’єктів
 
-ECMAScript 5 added object extensibility modification through the `Object.preventExtensions()` and `Object.isExtensible()` methods, and ECMAScript 6 allows proxies to intercept those method calls to the underlying objects through the `preventExtensions` and `isExtensible` traps. Both traps receive a single argument called `trapTarget` that is the object on which the method was called. The `isExtensible` trap must return a boolean value indicating whether the object is extensible while the `preventExtensions` trap must return a boolean value indicating if the operation succeeded.
+ECMAScript 5 додав можливість розширювати об’єкти через методи `Object.preventExtensions()` та `Object.isExtensible()`, а ECMAScript 6 дозволяє проксі переривати виклики цих методів для відповідних об’єктів через перехоплення `preventExtensions` та `isExtensible`. Обидва перехоплення отримують єдиний аргумент `trapTarget`, що є об’єктом для якого викликається метод. Перехоплення `isExtensible` має повернути булеве значення, що вказує на те, чи об’єкт можна розширити, а перехоплення `preventExtensions` повертає булеве значення, яке вказує на успішність операції.
 
-There are also `Reflect.preventExtensions()` and `Reflect.isExtensible()` methods to implement the default behavior. Both return boolean values, so they can be used directly in their corresponding traps.
+Є також метод `Reflect.preventExtensions()` та `Reflect.isExtensible()`, які реалізують поведінку за замовчуванням. Обидва повертають булеві значення, тож їх можна використовувати у відповідних перехопленнях.
 
-### Two Basic Examples
+### Два простих приклади
 
-To see object extensibility traps in action, consider the following code, which implements the default behavior for the `isExtensible` and `preventExtensions` traps:
+Щоб побачити перехоплення розширень у дії, розгляньте наступний код, який реалізує поведінку за замовчуванням для перехоплень `isExtensible` та `preventExtensions`:
 
 ```js
 let target = {};
@@ -441,7 +444,7 @@ console.log(Object.isExtensible(target));       // false
 console.log(Object.isExtensible(proxy));        // false
 ```
 
-This example shows that both `Object.preventExtensions()` and `Object.isExtensible()` correctly pass through from `proxy` to `target`. You can, of course, also change the behavior. For example, if you don't want to allow `Object.preventExtensions()` to succeed on your proxy, you could return `false` from the `preventExtensions` trap:
+Цей приклад показує, що і `Object.preventExtensions()`, і `Object.isExtensible()` правильно передаються через від `proxy` до `target`. Ви можете, звісно, змінити цю поведінку. Наприклад, якщо ви хочете заборонити успішне застосування `Object.preventExtensions()` до ваших проксі, ви можете повернути `false` з перехоплення `preventExtensions`:
 
 ```js
 let target = {};
@@ -464,23 +467,23 @@ console.log(Object.isExtensible(target));       // true
 console.log(Object.isExtensible(proxy));        // true
 ```
 
-Here, the call to `Object.preventExtensions(proxy)` is effectively ignored because the `preventExtensions` trap returns `false`. The operation isn't forwarded to the underlying `target`, so `Object.isExtensible()` returns `true`.
+Тут виклик `Object.preventExtensions(proxy)` успішно ігнорується завдяки тому, що перехоплення `preventExtensions` повертає `false`. Операція не переходить до залежного `target`, тому `Object.isExtensible()` повертає `true`.
 
-### Duplicate Extensibility Methods
+### Дублювання методів розширення
 
-You may have noticed that, once again, there are seemingly duplicate methods on `Object` and `Reflect`. In this case, they're more similar than not. The methods `Object.isExtensible()` and `Reflect.isExtensible()` are similar except when passed a non-object value. In that case, `Object.isExtensible()` always returns `false` while `Reflect.isExtensible()` throws an error. Here's an example of that behavior:
+Ви могли помітити, що знову є очевидне дублювання методів `Object` та `Reflect`. У цьому випадку вони більш схожі, аніж відмінні. Методи `Object.isExtensible()` та `Reflect.isExtensible()` схожі у всьому, окрім поведінки при спробі передати значення, яке не є об’єктом. У цьому випадку, `Object.isExtensible()` завжди повертає `false`, а `Reflect.isExtensible()` кидає помилку. Ось приклад такої поведінки:
 
 ```js
 let result1 = Object.isExtensible(2);
 console.log(result1);                       // false
 
-// throws error
+// кидає помилку
 let result2 = Reflect.isExtensible(2);
 ```
 
-This restriction is similar to the difference between the `Object.getPrototypeOf()` and `Reflect.getPrototypeOf()` methods, as the method with lower-level functionality has stricter error checks than its higher-level counterpart.
+Це обмеження схоже на відмінність між методами `Object.getPrototypeOf()` та `Reflect.getPrototypeOf()`, оскільки методи з низькорівневим функціоналом мають більш строгу перевірку на помилки, ніж їхні високорівневі аналоги.
 
-The `Object.preventExtensions()` and `Reflect.preventExtensions()` methods are also very similar. The `Object.preventExtensions()` method always returns the value that was passed to it as an argument even if the value isn't an object. The `Reflect.preventExtensions()` method, on the other hand, throws an error if the argument isn't an object; if the argument is an object, then `Reflect.preventExtensions()` returns `true` when the operation succeeds or `false` if not. For example:
+Методи `Object.preventExtensions()` та `Reflect.preventExtensions()` також дуже схожі. Метод `Object.preventExtensions()` завжди повертає значення, яке передається йому в якості аргументу, навіть якщо це значення не є об’єктом. З іншого боку, метод `Reflect.preventExtensions()` кидає помилку, якщо аргумент не є об’єктом. Якщо ж аргумент є об’єктом, тоді `Reflect.preventExtensions()` повертає `true`, коли операція завершується успішно, і `false` якщо ні. Наприклад:
 
 ```js
 let result1 = Object.preventExtensions(2);
@@ -494,19 +497,19 @@ console.log(result2);                               // true
 let result3 = Reflect.preventExtensions(2);
 ```
 
-Here, `Object.preventExtensions()` passes through the value `2` as its return value even though `2` isn't an object. The `Reflect.preventExtensions()` method returns `true` when an object is passed to it and throws an error when `2` is passed to it.
+Тут `Object.preventExtensions()` повертає значення `2`, не дивлячись на те, що `2` не є об’єктом. Метод `Reflect.preventExtensions()` повертає `true`, коли у нього передається об’єкт, та кидає помилку, коли передається `2`.
 
-## Property Descriptor Traps
+## Перехоплення дескрипторів властивостей
 
-One of the most important features of ECMAScript 5 was the ability to define property attributes using the `Object.defineProperty()` method. In previous versions of JavaScript, there was no way to define an accessor property, make a property read-only, or make a property nonenumerable. All of these are possible with the `Object.defineProperty()` method, and you can retrieve those attributes with the `Object.getOwnPropertyDescriptor()` method.
+Одним з найбільш важливих нововведень ECMAScript 5 була можливість встановлювати атрибути властивостей через метод `Object.defineProperty()`. У попередніх версіях JavaScript не було можливості задати властивість–аксесор, зробити властивість доступною лише для читання або зробити її неперелічуваною. Всі це можливо з методом `Object.defineProperty()`, Ви можете дістати ці атрибути через метод `Object.getOwnPropertyDescriptor()`.
 
-Proxies let you intercept calls to `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` using the `defineProperty` and `getOwnPropertyDescriptor` traps, respectively. The `defineProperty` trap receives the following arguments:
+Проксі дозволяють вам переривати виклики `Object.defineProperty()` та `Object.getOwnPropertyDescriptor()` через перехоплення `defineProperty` та `getOwnPropertyDescriptor` відповідно. Перехоплення `defineProperty` отримує такі аргументи:
 
-1. `trapTarget` - the object on which the property should be defined (the proxy's target)
-1. `key` - the string or symbol for the property
-1. `descriptor` - the descriptor object for the property
+1. `trapTarget` — об’єкт якому встановлюються властивості (ціль проксі);
+1. `key` — рядок або символ, що буде ключем властивості;
+1. `descriptor` — об’єкт–дескриптор для цієї властивості.
 
-The `defineProperty` trap requires you to return `true` if the operation is successful and `false` if not. The `getOwnPropertyDescriptor` traps receives only `trapTarget` and `key`, and you are expected to return the descriptor. The corresponding `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods accept the same arguments as their proxy trap counterparts. Here's an example that just implements the default behavior for each trap:
+Перехоплення `defineProperty` повинне повертати `true`, якщо операція завершилась успішно, і `false` якщо ні. Перехоплення `getOwnPropertyDescriptor` отримує лише `trapTarget` і `key`, а в якості результату має повернути дескриптор. Відповідні методи `Reflect.defineProperty()` та `Reflect.getOwnPropertyDescriptor()` приймають ті самі аргументи, що й їхні аналоги–перехоплення в проксі. Ось приклад, який просто реалізує поведінку за замовчуванням для кожного перехоплення:
 
 ```js
 let proxy = new Proxy({}, {
@@ -530,11 +533,11 @@ let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
 console.log(descriptor.value);      // "proxy"
 ```
 
-This code defines a property called `"name"` on the proxy with the `Object.defineProperty()` method. The property descriptor for that property is then retrieved by the `Object.getOwnPropertyDescriptor()` method.
+Цей код встановлює проксі властивість `"name"` через метод `Object.defineProperty()`. Потім методом `Object.getOwnPropertyDescriptor()` отримується дескриптор цієї властивості.
 
-### Blocking Object.defineProperty()
+### Блокування Object.defineProperty()
 
-The `defineProperty` trap requires you to return a boolean value to indicate whether the operation was successful. When `true` is returned, `Object.defineProperty()` succeeds as usual; when `false` is returned, `Object.defineProperty()` throws an error. You can use this functionality to restrict the kinds of properties that the `Object.defineProperty()` method can define. For instance, if you want to prevent symbol properties from being defined, you could check that the key is a string and return `false` if not, like this:
+Перехоплення `defineProperty` має повертати булеве значення, яке вказуватиме на успішність операції. Коли повертається `true`, тоді `Object.defineProperty()` завершується як зазвичай, якщо повертається `false`, тоді `Object.defineProperty()` кидає помилку. Ви можете використовувати цей функціонал щоб заборонити методу `Object.defineProperty()` встановлювати певний тип властивостей. Наприклад, якщо ви не хочете, щоб об’єкту можна було встановлювати символьні властивості, ви можете перевірити чи ключ є рядком і повернути `false` якщо ні, ось так:
 
 ```js
 let proxy = new Proxy({}, {
@@ -563,15 +566,15 @@ Object.defineProperty(proxy, nameSymbol, {
 });
 ```
 
-The `defineProperty` proxy trap returns `false` when `key` is a symbol and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with `"name"` as the key, the method succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, it throws an error because the `defineProperty` trap returns `false`.
+Перехоплення проксі `defineProperty` повертає `false`, коли `key` є символом, а для інших випадках використовує поведінку за замовчуванням. Коли викликається `Object.defineProperty()` з `"name"` в якості ключа, метод завершується успішно, тому що ключ є рядком. Коли `Object.defineProperty()` викликається з `nameSymbol`, він кидає помилку, тому що перехоплення `defineProperty` повертає `false`.
 
-I> You can also have `Object.defineProperty()` silently fail by returning `true` and not calling the `Reflect.defineProperty()` method. That will suppress the error while not actually defining the property.
+I> Ви також можете завершити `Object.defineProperty()` без помилки просто повернувши `true`, але не викликавши метод `Reflect.defineProperty()`. Це не призведе до помилки, але й не встановить властивості.
 
-### Descriptor Object Restrictions
+### Обмеження об’єктів–дескрипторів
 
-To ensure consistent behavior when using the `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` methods, descriptor objects passed to the `defineProperty` trap are normalized. Objects returned from `getOwnPropertyDescriptor` trap are always validated for the same reason.
+Для забезпечення правильної поведінки при використанні методів `Object.defineProperty()` та `Object.getOwnPropertyDescriptor()`, об’єкти–дескриптори, які передаються у перехоплення `defineProperty` нормалізуються. Об’єкти, які повертаються з перехоплення `getOwnPropertyDescriptor` завжди перевіряються з цією ж метою.
 
-No matter what object is passed as the third argument to the `Object.defineProperty()` method, only the properties `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` will be on the descriptor object passed to the `defineProperty` trap. For example:
+Не важливо який об’єкт передається у якості третього аргументу в метод `Object.defineProperty()`, об’єкт–дескриптор, який передається у перехоплення `defineProperty`, завжди матиме лише властивості `enumerable`, `configurable`, `value`, `writable`, `get` та `set`. Наприклад:
 
 ```js
 let proxy = new Proxy({}, {
@@ -590,9 +593,9 @@ Object.defineProperty(proxy, "name", {
 });
 ```
 
-Here, `Object.defineProperty()` is called with a nonstandard `name` property on the third argument. When the `defineProperty` trap is called, the `descriptor` object doesn't have a `name` property but does have a `value` property. That's because `descriptor` isn't a reference to the actual third argument passed to the `Object.defineProperty()` method, but rather a new object that contains only the allowable properties. The `Reflect.defineProperty()` method also ignores any nonstandard properties on the descriptor.
+Тут `Object.defineProperty()` викликається з об’єктом, який має нестандартну властивість `name` в якості третього аргументу. Коли спрацьовує перехоплення `defineProperty`, об’єкт `descriptor` не має властивості `name`, проте все ще має властивість `value`. Це тому, що `descriptor` не є посиланням на об’єкт, який передається у метод `Object.defineProperty()`, натомість він є новим об’єктом, що містить лише дозволені властивості. Метод `Reflect.defineProperty()` також ігнорує всі нестандартні властивості дескриптора.
 
-The `getOwnPropertyDescriptor` trap has a slightly different restriction that requires the return value to be `null`, `undefined`, or an object. If an object is returned, only `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` are allowed as own properties of the object. An error is thrown if you return an object with an own property that isn't allowed, as this code shows:
+Перехоплення `getOwnPropertyDescriptor` має дещо інше обмеження: значення, яке воно повертає має бути `null`, `undefined` або об’єктом. Якщо повертається об’єкт, то він мусить містити виключно `enumerable`, `configurable`, `value`, `writable`, `get` та `set` в якості власних властивостей. Якщо ви повернете об’єкт з власними властивостями, які є забороненими, кинеться помилка. Ось код, що це демонструє:
 
 ```js
 let proxy = new Proxy({}, {
@@ -603,19 +606,19 @@ let proxy = new Proxy({}, {
     }
 });
 
-// throws error
+// кидає помилку
 let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
 ```
 
-The property `name` isn't allowable on property descriptors, so when `Object.getOwnPropertyDescriptor()` is called, the `getOwnPropertyDescriptor` return value triggers an error. This restriction ensures that the value returned by `Object.getOwnPropertyDescriptor()` always has a reliable structure regardless of use on proxies.
+Властивість `name` є забороненою для дескриптора, тож при виклику `Object.getOwnPropertyDescriptor()`, значення, яке повертає `getOwnPropertyDescriptor` призводить до помилки. Таке обмеження забезпечує правильну структуру значення, яке повертає `Object.getOwnPropertyDescriptor()`, незалежно від використання проксі.
 
-### Duplicate Descriptor Methods
+### Дублювання дескрипторних методів
 
-Once again, ECMAScript 6 has some confusingly similar methods, as the `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` methods appear to do the same thing as the `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods, respectively. Like other method pairs discussed earlier in this chapter, these have some subtle but important differences.
+І знову ECMAScript 6 має плутанину зі схожими методами, адже методи `Object.defineProperty()` та `Object.getOwnPropertyDescriptor()`, здається, роблять те саме, що й методи `Reflect.defineProperty()` та `Reflect.getOwnPropertyDescriptor()`, відповідно. Як і методи, про які вже йшла мова у цій главі, вони також мають незначні, проте важливі відмінності.
 
-#### defineProperty() Methods
+#### Методи defineProperty()
 
-The `Object.defineProperty()` and `Reflect.defineProperty()` methods are exactly the same except for their return values. The `Object.defineProperty()` method returns the first argument, while `Reflect.defineProperty()` returns `true` if the operation succeeded and `false` if not. For example:
+Методи `Object.defineProperty()` та `Reflect.defineProperty()` методи є однаковими, за виключенням значень, які вони повертають. Метод `Object.defineProperty()` повертає перший аргумент, тоді як `Reflect.defineProperty()` повертає `true`, якщо операція завершилась успішно, і `false` якщо ні. Наприклад:
 
 
 ```js
@@ -630,11 +633,11 @@ let result2 = Reflect.defineProperty(target, "name", { value: "reflect" });
 console.log(result2);                   // true
 ```
 
-When `Object.defineProperty()` is called on `target`, the return value is `target`. When `Reflect.defineProperty()` is called on `target`, the return value is `true`, indicating that the operation succeeded. Since the `defineProperty` proxy trap requires a boolean value to be returned, it's better to use `Reflect.defineProperty()` to implement the default behavior when necessary.
+Коли `Object.defineProperty()` викликається для `target`, він повертає `target`. Коли `Reflect.defineProperty()` викликається для `target`, він повертає `true`, вказуючи на те, що операція завершилась успішно. Оскільки перехоплення `defineProperty` для проксі повинне повертати булеве значення, якщо необхідно реалізувати поведінку за замовчуванням, краще використовувати `Reflect.defineProperty()`.
 
-#### getOwnPropertyDescriptor() Methods
+#### Методи getOwnPropertyDescriptor()
 
-The `Object.getOwnPropertyDescriptor()` method coerces its first argument into an object when a primitive value is passed and then continues the operation. On the other hand, the `Reflect.getOwnPropertyDescriptor()` method throws an error if the first argument is a primitive value. Here's an example showing both:
+Метод `Object.getOwnPropertyDescriptor()` приводить свій перший аргумент до об’єкта, якщо передати у нього примітивне значення, і тоді продовжує виконувати операцію. З іншого боку, метод `Reflect.getOwnPropertyDescriptor()` кидає помилку, якщо перший аргумент є примітивним значенням. Ось приклад, який демонструє відмінність:
 
 ```js
 let descriptor1 = Object.getOwnPropertyDescriptor(2, "name");
@@ -644,15 +647,15 @@ console.log(descriptor1);       // undefined
 let descriptor2 = Reflect.getOwnPropertyDescriptor(2, "name");
 ```
 
-The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it coerces `2` into an object, and that object has no `name` property. This is the standard behavior of the method when a property with the given name isn't found on an object. When `Reflect.getOwnPropertyDescriptor()` is called, however, an error is thrown immediately because that method doesn't accept primitive values for the first argument.
+Метод `Object.getOwnPropertyDescriptor()` повертає `undefined`, тому що він приводить `2` до об’єкта, а такий об’єкт не має властивості `name`. Така поведінка є стандартною для цього методу, коли переданий об’єкт не має властивості `name`. Однак, коли викликається `Reflect.getOwnPropertyDescriptor()`, негайно кидається помилка, тому що цей метод не приймає примітивні значення в якості першого аргументу.
 
-## The `ownKeys` Trap
+## Перехоплення `ownKeys`
 
-The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in four methods: the `Object.keys()` method, the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, and the `Object.assign()` method. (The `Object.assign()` method uses the array to determine which properties to copy.)
+Перехоплення проксі `ownKeys` перериває внутрішній метод `[[OwnPropertyKeys]]` та дозволяє вам перезаписувати цю поведінку шляхом повернення масиву значень. Цей масив використовується у чотирьох методах: методі `Object.keys()`, методі `Object.getOwnPropertyNames()`, методі `Object.getOwnPropertySymbols()` та методі `Object.assign()`. (Метод `Object.assign()` використовує цей масив для визначення властивостей, які треба копіювати.)
 
-The default behavior for the `ownKeys` trap is implemented by the `Reflect.ownKeys()` method and returns an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` method and the `Object.keys()` method filter symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
+Поведінка за замовчування для перехоплення `ownKeys` реалізується методом `Reflect.ownKeys()` та повертає масив всіх власних ключів властивостей, включаючи рядки та символи. Методи `Object.getOwnProperyNames()` та `Object.keys()` відфільтровують символи з масиву та повертають результат, тоді як `Object.getOwnPropertySymbols()` відфільтровує рядки з масиву і повертає результат. Метод `Object.assign()` використовує масив з рядками та символами.
 
-The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object; otherwise, an error is thrown. You can use the `ownKeys` trap to, for example, filter out certain property keys that you don't want used when the `Object.keys()`, the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, or the `Object.assign()` method is used. Suppose you don't want to include any property names that begin with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys as follows:
+Перехоплення `ownKeys` отримує єдиний аргумент, ціль (target), та мусить повернути масив або об’єкт з цифровими числовими ключами, інакше кинеться помилка. Ви можете використовувати перехоплення `ownKeys`, наприклад, для того, щоб відфільтрувати певні властивості, які не мають використовуватись в `Object.keys()`, `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()` або `Object.assign()`. Припустимо, ви не хочете включати властивості, що починаються з нижнього підкреслення (underscore), загальноприйнятого позначення у JavaScript, що поле є приватним. Ви можете використовувати перехоплення `ownKeys`, щоб відфільтрувати такі ключі ось так:
 
 ```js
 let proxy = new Proxy({}, {
@@ -683,28 +686,28 @@ console.log(symbols.length);    // 1
 console.log(symbols[0]);        // "Symbol(name)"
 ```
 
-This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` and `Object.keys()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
+Цей приклад використовує перехоплення `ownKeys`, яке спершу викликає `Reflect.ownKeys()` щоб отримати список ключів за замовчуванням. Потім метод `filter()` відфільтровує ключі, що є рядками і починаються з символу нижнього підкреслення. Тоді до об’єкту `proxy` додаються три властивості: `name`, `_name` та `nameSymbol`. Коли `Object.getOwnPropertyNames()` та `Object.keys()` викликається для `proxy`, повертається лише властивості `name`. Схожим чином, лише `nameSymbol` повертається при виклику `Object.getOwnPropertySymbols()` на `proxy`. Властивість `_name` не з’являється в жодному з результатів через те, що вона відфільтрована.
 
-While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it doesn't affect more commonly used operations such as the `for-of` loop and the `Object.keys()` method. Those can't be altered using proxies.
+Перехоплення `ownKeys` дозволяє вам змінити ключі, що повертаються з допомогою невеликої кількості операцій, проте воно не впливає на більш поширені операції, як от цикл `for-of` та метод `Object.keys()`. Їх не можна змінити з допомогою проксі.
 
-I> The `ownKeys` trap also affects the `for-in` loop, which calls the trap to determine which keys to use inside of the loop.
+I> Перехоплення `ownKeys` також можна застосувати до циклу `for-in`, який викликає перехоплення для визначення ключів, які мають використовуватись всередині циклу.
 
-## Function Proxies with the `apply` and `construct` Traps
+## Проксі функцій з перехопленнями `apply` та `construct`
 
-Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. Recall from Chapter 3 that functions have two internal methods called `[[Call]]` and `[[Construct]]` that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to and let you override those internal methods. When a function is called without `new`, the `apply` trap receives, and `Reflect.apply()` expects, the following arguments:
+З усіх перехоплень проксі, лише `apply` та `construct` вимагають щоб ціль проксі була функцією. Згадаємо з Глави 3, що функції мають два внутрішні методи `[[Call]]` та `[[Construct]]`, які викликаються коли функція викликається з та без оператора `new`, відповідно. Перехоплення `apply` та `construct` відповідають цим методам та дозволяють їх перевизначити. Коли функція викликається без `new`, перехоплення `apply` приймає, а `Reflect.apply()` очікує на такі аргументи:
 
-1. `trapTarget` - the function being executed (the proxy's target)
-1. `thisArg` - the value of `this` inside of the function during the call
-1. `argumentsList` - an array of arguments passed to the function
+1. `trapTarget` — функція, яка виконується (ціль проксі);
+1. `thisArg` — значення `this` всередині функції протягом виклику;
+1. `argumentsList` — масив аргументів, які передаються у функцію.
 
-The `construct` trap, which is called when the function is executed using `new`, receives the following arguments:
+Перехоплення `construct`, яке викликається коли функція виконується з використанням `new`, отримує такі аргументи:
 
-1. `trapTarget` - the function being executed (the proxy's target)
-1. `argumentsList` - an array of arguments passed to the function
+1. `trapTarget` — функція, яка виконується (ціль проксі);
+1. `argumentsList` — масив аргументів, які передаються у функцію.
 
-The `Reflect.construct()` method also accepts these two arguments and has an optional third argument called `newTarget`. When given, the `newTarget` argument specifies the value of `new.target` inside of the function.
+Метод `Reflect.construct()` також приймає ці два аргументи і має необов’язковий третій аргумент `newTarget`. Якщо його передати, аргумент `newTarget` визначає значення `new.target` всередині функції.
 
-Together, the `apply` and `construct` traps completely control the behavior of any proxy target function. To mimic the default behavior of a function, you can do this:
+Разом, перехоплення `apply` та `construct` повністю контролюють поведінку будь–якої цілі проксі функції. Щоб зімітувати поведінку функцій за замовчуванням, ви можете зробити ось так:
 
 ```js
 let target = function() { return 42 },
@@ -717,7 +720,7 @@ let target = function() { return 42 },
         }
     });
 
-// a proxy with a function as its target looks like a function
+// проксі з функцією в якості цілі виглядає як функція
 console.log(typeof proxy);                  // "function"
 
 console.log(proxy());                       // 42
@@ -727,14 +730,14 @@ console.log(instance instanceof proxy);     // true
 console.log(instance instanceof target);    // true
 ```
 
-This example has a function that returns the number 42. The proxy for that function uses the `apply` and `construct` traps to delegate those behaviors to the `Reflect.apply()` and `Reflect.construct()` methods, respectively. The end result is that the proxy function works exactly like the target function, including identifying itself as a function when `typeof` is used. The proxy is called without `new` to return 42 and then is called with `new` to create an object called `instance`. The `instance` object is considered an instance of both `proxy` and `target` because `instanceof` uses the prototype chain to determine this information. Prototype chain lookup is not affected by this proxy, which is why `proxy` and `target` appear to have the same prototype to the JavaScript engine.
+Цей приклад має функцію, що повертає число 42. Проксі для цієї функції використовує перехоплення `apply` та `construct`, щоб делегувати поведінку до методі `Reflect.apply()` та `Reflect.construct()`, відповідно. Кінцевим результатом є те, що проксі–функція працює точно так, як функція–ціль, включаючи самовизначення як функція при використанні `typeof`. Проксі викликається без `new` та повертає 42, а потім викликається з `new` для створення об’єкту `instance`. Об’єкт `instance` розглядається як екземпляр як `proxy`, так і `target`, тому що `instanceof` використовує ланцюжок прототипів для визначення цієї інформації. Пошук по ланцюжку прототипів не залежить від цього проксі, ось чому для рушія JavaScript це виглядає так, наче `proxy` та `target` мають той самий прототип.
 
-### Validating Function Parameters
+### Валідація параметрів функції
 
-The `apply` and `construct` traps open up a lot of possibilities for altering the way a function is executed. For instance, suppose you want to validate that all arguments are of a specific type. You can check the arguments in the `apply` trap:
+Перехоплення `apply` та `construct` відкривають багато можливостей для зміни того, як функції виконуються. Для прикладу, припустимо ви хочете перевірити, що всі аргументи мають певний тип. Ви можете перевірити це у перехопленні `apply`:
 
 ```js
-// adds together all arguments
+// додаємо разом всі аргументи
 function sum(...values) {
     return values.reduce((previous, current) => previous + current, 0);
 }
@@ -757,16 +760,16 @@ let sumProxy = new Proxy(sum, {
 
 console.log(sumProxy(1, 2, 3, 4));          // 10
 
-// throws error
+// кидає помилку
 console.log(sumProxy(1, "2", 3, 4));
 
-// also throws error
+// також кидає помилку
 let result = new sumProxy();
 ```
 
-This example uses the `apply` trap to ensure that all arguments are numbers. The `sum()` function adds up all of the arguments that are passed. If a non-number value is passed, the function will still attempt the operation, which can cause unexpected results. By wrapping `sum()` inside the `sumProxy()` proxy, this code intercepts function calls and ensures that each argument is a number before allowing the call to proceed. To be safe, the code also uses the `construct` trap to ensure that the function can't be called with `new`.
+Цей приклад використовує перехоплення `apply` для певності, що всі аргументи є числами. Функція `sum()` додає всі аргументи, що були передані. Якщо передати щось замість числа, функція спробує виконати цю операцію, що призведе до неочікуваного результату. Огорнувши `sum()` всередину проксі `sumProxy()`, цей код може перервати виклики функції та перевірити, що кожен аргумент є числом, перед тим як дозволити виконатись цьому виклику. Про всяк випадок, код також використовує перехоплення `construct` для перевірки того, що функцію не можна викликати з `new`.
 
-You can also do the opposite, ensuring that a function must be called with `new` and validating its arguments to be numbers:
+Ви можете також зробити протилежне, забезпечити, щоб функція викликалась лише з `new` та перевіряти щоб її аргументи були числами:
 
 ```js
 function Numbers(...values) {
@@ -793,15 +796,15 @@ let NumbersProxy = new Proxy(Numbers, {
 let instance = new NumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 
-// throws error
+// кидає помилку
 NumbersProxy(1, 2, 3, 4);
 ```
 
-Here, the `apply` trap throws an error while the `construct` trap uses the `Reflect.construct()` method to validate input and return a new instance. Of course, you can accomplish the same thing without proxies using `new.target` instead.
+Тут, перехоплення `apply` кидає помилку, бо перехоплення `construct` використовує метод `Reflect.construct()` для перевірки вводу та повернення нового екземпляра. Звичайно ви можете зробити те саме і без проксі, а з використанням `new.target`, замість цього.
 
-### Calling Constructors Without new
+### Виклик конструктора без new
 
-Chapter 3 introduced the `new.target` metaproperty. To review, `new.target` is a reference to the function on which `new` is called, meaning that you can tell if a function was called using `new` or not by checking the value of `new.target` like this:
+Глава 3 вводила метавластивість `new.target`. Нагадаємо, що `new.target` є посиланням на функцію до якої застосовується `new`. Це означає, що ви можете сказати чи функція викликана з використанням `new`, чи без нього, перевіривши значення `new.target` ось так:
 
 ```js
 function Numbers(...values) {
@@ -820,9 +823,9 @@ console.log(instance.values);               // [1,2,3,4]
 Numbers(1, 2, 3, 4);
 ```
 
-This example throws an error when `Numbers` is called without using `new`, which is similar to the example in the "Validating Function Parameters" section but doesn't use a proxy. Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
+Цей приклад кидає помилку коли `Numbers` викликається без використання `new`, що є тим самим, що і в прикладі з розділу «Валідація параметрів функції», проте без використання проксі. Написання такого коду набагато простіше за використання проксі, тому краще надавати перевагу саме йому, якщо вам потрібно просто перешкоджати виклику функції без `new`. Проте часом ви не можете контролювати функцію, поведінка якої змінено. В такому випадку, використання проксі має зміст.
 
-Suppose the `Numbers` function is defined in code you can't modify. You know that the code relies on `new.target` and want to avoid that check while still calling the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
+Припустимо функція `Numbers` визначена у коді, який ви не можете змінювати. Ви знаєте, що код використовує `new.target`, і хочете уникнути цієї перевірки при виклику функції. Поведінка при використанні `new` вже визначена, тому ви можете використати лише перехоплення `apply`:
 
 ```js
 function Numbers(...values) {
@@ -846,11 +849,11 @@ let instance = NumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 ```
 
-The `NumbersProxy` function allows you to call `Numbers` without using `new` and have it behave as if `new` were used. To do so, the `apply` trap calls `Reflect.construct()` with the arguments passed into `apply`. The `new.target` inside of `Numbers` is equal to `Numbers` itself, and no error is thrown. While this is a simple example of modifying `new.target`, you can also do so more directly.
+Функція `NumbersProxy` дозволяє вам викликати `Numbers` без використання `new` і мати таку поведінку, як і при використанні `new`. Щоб зробити це, перехоплення `apply` викликає `Reflect.construct()` з аргументами, які передаються у `apply`. `new.target` всередині `Numbers` дорівнює самому `Numbers` і тому не кидається помилка. Це простий приклад модифікації `new.target`, проте ви можете зробити і більш складні.
 
-### Overriding Abstract Base Class Constructors
+### Перевизначення конструкторів абстрактних базових класів
 
-You can go one step further and specify the third argument to `Reflect.construct()` as the specific value to assign to `new.target`. This is useful when a function is checking `new.target` against a known value, such as when creating an abstract base class constructor (discussed in Chapter 9). In an abstract base class constructor, `new.target` is expected to be something other than the class constructor itself, as in this example:
+Ви можете зробити ще один крок і передати третій аргумент у `Reflect.construct()`, який буде значенням `new.target`. Це корисно, коли функція перевіряє `new.target` проти відомого значення, як от при створенні конструктора абстрактного базового класу (про які йшла мова у Главі 9). У конструкторі абстрактного базового класу, очікується, що `new.target` буде чимось відмінним від самого конструктора класу, як у цьому прикладі:
 
 ```js
 class AbstractNumbers {
@@ -869,11 +872,11 @@ class Numbers extends AbstractNumbers {}
 let instance = new Numbers(1, 2, 3, 4);
 console.log(instance.values);           // [1,2,3,4]
 
-// throws error
+// кидає помилку
 new AbstractNumbers(1, 2, 3, 4);
 ```
 
-When `new AbstractNumbers()` is called, `new.target` is equal to `AbstractNumbers` and an error is thrown. Calling `new Numbers()` still works because `new.target` is equal to `Numbers`. You can bypass this restriction by manually assigning `new.target` with a proxy:
+Коли викликається `new AbstractNumbers()`, `new.target` дорівнює `AbstractNumbers`, тому кидається помилка. Виклик `new Numbers()` продовжує працювати, бо `new.target` дорівнює `Numbers`. Ви можете обійти це обмеження простим присвоєнням `new.target` з проксі:
 
 ```js
 class AbstractNumbers {
@@ -898,11 +901,11 @@ let instance = new AbstractNumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 ```
 
-The `AbstractNumbersProxy` uses the `construct` trap to intercept the call to the `new AbstractNumbersProxy()` method. Then, the `Reflect.construct()` method is called with arguments from the trap and adds an empty function as the third argument. That empty function is used as the value of `new.target` inside of the constructor. Because `new.target` is not equal to `AbstractNumbers`, no error is thrown and the constructor executes completely.
+`AbstractNumbersProxy` використовує перехоплення `construct`, щоб перервати виклик методу `new AbstractNumbersProxy()`. Тоді, метод `Reflect.construct()` викликається з аргументами з перехоплення та порожньою функцією в якості третього аргументу. Ця порожня функція використовується в якості значення для `new.target` всередині конструктора. Оскільки `new.target` не дорівнює `AbstractNumbers`, помилка не кидається і конструктор виконується до кінця.
 
-### Callable Class Constructors
+### Конструктори класів, які можна викликати
 
-Chapter 9 explained that class constructors must always be called with `new`. That happens because the internal `[[Call]]` method for class constructors is specified to throw an error. But proxies can intercept calls to the `[[Call]]` method, meaning you can effectively create callable class constructors by using a proxy. For instance, if you want a class constructor to work without using `new`, you can use the `apply` trap to create a new instance. Here's some sample code:
+Глава 9 розповідала, що конструктори класів завжди повинні викликатись з `new`. Це стається завдяки внутрішньому методу `[[Call]]` для конструкторів класів, який кидає помилку. Проте проксі можуть перервати виклик методу `[[Call]]`, тобто, з використанням проксі, ви можете легко створити конструктори класів, які можна викликати. Наприклад, якщо ви хочете, щоб конструктор класу працював без використання `new`, ви можете використати перехоплення `apply` для створення нового екземпляра. Ось код, який це ілюструє:
 
 ```js
 class Person {
@@ -924,18 +927,18 @@ console.log(me instanceof Person);      // true
 console.log(me instanceof PersonProxy); // true
 ```
 
-The `PersonProxy` object is a proxy of the `Person` class constructor. Class constructors are just functions, so they behave like functions when used in proxies. The `apply` trap overrides the default behavior and instead returns a new instance of `trapTarget` that's equal to `Person`. (I used `trapTarget` in this example to show that you don't need to manually specify the class.) The `argumentList` is passed to `trapTarget` using the spread operator to pass each argument separately. Calling `PersonProxy()` without using `new` returns an instance of `Person`; if you attempt to call `Person()` without `new`, the constructor will still throw an error. Creating callable class constructors is something that is only possible using proxies.
+Об’єкт `PersonProxy`, що є проксі конструктора класу `Person`. Конструкторами класів є прості функції, тому вони поводяться як функції при використанні у проксі. Перехоплення `apply` перевизначає поведінку за замовчування та повертає екземпляр `trapTarget`, який рівний `Person`. (Я використовую `trapTarget` у цьому прикладі, щоб продемонструвати, що ви не потребуєте вручну вказувати клас.) `argumentList` передається у `trapTarget` з використанням оператора розкладу, щоб передати кожен аргумент окремо. Виклик `PersonProxy()` без використання `new` повертає екземпляр `Person`. Якщо ви спробуєте викликати `Person()` без `new`, конструктор досі кидатиме помилку. Створення конструкторів класів, які можна викликати, можливе лише з допомогою проксі.
 
-## Revocable Proxies
+## Відміна проксі
 
-Normally, a proxy can't be unbound from its target once the proxy has been created. All of the examples to this point in this chapter have used nonrevocable proxies. But there may be situations when you want to revoke a proxy so that it can no longer be used. You'll find it most helpful to revoke proxies when you want to provide an object through an API for security purposes and maintain the ability to cut off access to some functionality at any point in time.
+Зазвичай, проксі не можна відв’язати від цілі після його створення. Всі попередні приклади у цій главі використовували проксі, які не можна відмінити. Проте можуть бути ситуації, коли ви захочете відмінити проксі, яке не може більше використовуватись. Це може бути найбільш корисним, коли ви захочете передавати об’єкт через API з метою безпеки або підтримувати здатність обмежувати доступність до певного функціоналу в певний момент часу.
 
-You can create revocable proxies with the `Proxy.revocable()` method, which takes the same arguments as the `Proxy` constructor--a target object and the proxy handler. The return value is an object with the following properties:
+Ви можете створити проксі, які можна відмінити, через метод `Proxy.revocable()`, який приймає ті ж аргументи, що і конструктор `Proxy`: об’єкт–ціль та проксі–обробник. Повертати він має об’єкт з такими властивостями:
 
-1. `proxy` - the proxy object that can be revoked
-1. `revoke` - the function to call to revoke the proxy
+1. `proxy` — об’єкт проксі, яке можна відмінити;
+1. `revoke` — функція, яку можна викликати, щоб відмінити проксі.
 
-When the `revoke()` function is called, no further operations can be performed through the `proxy`. Any attempt to interact with the proxy object in a way that would trigger a proxy trap throws an error. For example:
+Після виклику функції `revoke()`, більше не можна застосувати жодної операції через `proxy`. Будь–яка спроба взаємодії з об’єктом проксі, яка запускає перехоплення, призведе до помилки. Наприклад:
 
 ```js
 let target = {
@@ -948,15 +951,15 @@ console.log(proxy.name);        // "target"
 
 revoke();
 
-// throws error
+// кидає помилку
 console.log(proxy.name);
 ```
 
-This example creates a revocable proxy. It uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned by the `Proxy.revocable()` method. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that would trigger a trap on `proxy`.
+Цей приклад створює проксі, яке можна відмінити. Він використовує деструктурування щоб присвоїти змінним `proxy` та `revoke` властивості з такими ж іменами з об’єкту, який повертається методом `Proxy.revocable()`. Після цього, об’єкт `proxy` можна використовувати так само, як і об’єкт проксі, яке не можна відмінити, тому `proxy.name` повертає `"target"`, яке передається через `target.name`. Однак, як тільки викликається функція `revoke()`, `proxy` перестає функціонувати. Спроба звернутись до `proxy.name` призведе до помилки, як і будь–яка інша операція, яка викликає перехоплення на `proxy`.
 
-## Solving the Array Problem
+## Вирішення проблеми масивів
 
-At the beginning of this chapter, I explained how developers couldn't mimic the behavior of an array accurately in JavaScript prior to ECMAScript 6. Proxies and the reflection API allow you to create an object that behaves in the same manner as the built-in `Array` type when properties are added and removed. To refresh your memory, here's an example showing the behavior that proxies help to mimick:
+На початку цієї глави я пояснював як розробники не могли імітувати точну поведінку масивів у JavaScript аж до ECMAScript 6. Проксі та АРІ рефлексії дозволяє створювати об’єкти, що поводяться так само, як і вбудований тип `Array`, коли йому додаються або видаляють властивості. Щоб освіжити пам’ять, ось приклад, що показує яку поведінку допомагають зімітувати проксі:
 
 ```js
 let colors = ["red", "green", "blue"];
@@ -976,20 +979,20 @@ console.log(colors[2]);             // undefined
 console.log(colors[1]);             // "green"
 ```
 
-There are two particularly important behaviors to notice in this example:
+У цьому прикладі є дві важливі особливості, на які слід звернути увагу:
 
-1. The `length` property is increased to 4 when `colors[3]` is assigned a value.
-1. The last two items in the array are deleted when the `length` property is set to 2.
+1. властивість `length` збільшується до 4, коли `colors[3]` присвоюється значення;
+1. останні два елементи масиву видаляються, коли властивості `length` встановлюється 2.
 
-These two behaviors are the only ones that need to be mimicked to accurately recreate how built-in arrays work. The next few sections describe how to make an object that correctly mimics them.
+Щоб точно відтворити роботу вбудованих масивів потрібно реалізувати лише ці дві особливості. Наступні кілька розділів описуватимуть те, як можна зробити об’єкти, які точно імітуватимуть їх.
 
-### Detecting Array Indices
+### Видалення індексів у масиві
 
-Keep in mind that assigning to an integer property key is a special case for arrays, as those are treated differently from non-integer keys. The ECMAScript 6 specification gives these instructions on how to determine if a property key is an array index:
+Пам’ятайте, що присвоєння цілочисельного ключа властивості є спеціальним випадком для масивів, оскільки це трактується не так, як для випадку з нечисловими ключами. Специфікація ECMAScript 6 дає такі вказівки щодо того, як визначити, чи ключ властивості є індексом масиву:
 
-> A String property name `P` is an array index if and only if `ToString(ToUint32(P))` is equal to `P` and `ToUint32(P)` is not equal to 2^32^-1.
+> Рядкова властивість `P` є індексом масиву тоді, і тільки тоді, коли `ToString(ToUint32(P))` дорівнює `P`, а `ToUint32(P)` не дорівнює 2^32^-1.
 
-This operation can be implemented in JavaScript as follows:
+Така операція може бути реалізована на JavaScript ось так:
 
 ```js
 function toUint32(value) {
@@ -1002,11 +1005,11 @@ function isArrayIndex(key) {
 }
 ```
 
-The `toUint32()` function converts a given value into an unsigned 32-bit integer using an algorithm described in the specification. The `isArrayIndex()` function first converts the key into a uint32 and then performs the comparisons to determine if the key is an array index or not. With these utility functions available, you can start to implement an object that will mimic a built-in array.
+Функція `toUint32()` конвертує дане значення у беззнакове 32-бітне ціле число через алгоритм описаний у специфікації. Функція `isArrayIndex()` спершу конвертує ключ у 32–бітний код, а тоді застосовує порівняння, щоб визначити чи ключ є індексом масиву, чи ні. З цими функціями–утилітами, ви можете почати імплементувати об’єкт, який буде імітувати вбудовані масиви.
 
-### Increasing length when Adding New Elements
+### Збільшення довжини при додаванні нових елементів
 
-You might have noticed that both array behaviors I described rely on the assignment of a property. That means you really only need to use the `set` proxy trap to accomplish both behaviors. To get started, here's an example that implements the first of the two behaviors by incrementing the `length` property when an array index larger than `length - 1` is used:
+Ви могли помітити, що обидві особливості, які я описав раніше, базуються на присвоєння властивості. Це означає, що насправді вам потрібно використовувати лише перехоплення проксі `set`, щоб забезпечити таку поведінку. Для початку, ось приклад, який імплементує першу особливість: збільшення властивості `length`, коли використовується індекс масиву, більший за `length - 1`:
 
 ```js
 function toUint32(value) {
@@ -1024,7 +1027,7 @@ function createMyArray(length=0) {
 
             let currentLength = Reflect.get(trapTarget, "length");
 
-            // the special case
+            // особливий випадок
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
@@ -1033,7 +1036,7 @@ function createMyArray(length=0) {
                 }
             }
 
-            // always do this regardless of key type
+            // завжди робити це, незалежно від типу ключа
             return Reflect.set(trapTarget, key, value);
         }
     });
@@ -1054,15 +1057,15 @@ console.log(colors.length);         // 4
 console.log(colors[3]);             // "black"
 ```
 
-This example uses the `set` proxy trap to intercept the setting of an array index. If the key is an array index, then it is converted into a number because keys are always passed as strings. Next, if that numeric value is greater than or equal to the current `length` property, then the `length` property is updated to be one more than the numeric key (setting an item in position 3 means the `length` must be 4). After that, the default behavior for setting a property is used via `Reflect.set()`, since you do want the property to receive the value as specified.
+Цей приклад використовує перехоплення проксі `set` щоб перервати встановлення індексу масиву. Якщо ключ є індексом масиву, тоді він конвертується у число, тому що ключі завжди передаються як рядки. Далі, якщо це числове значення є більшим або дорівнює поточній властивості `length`, тоді властивість `length` збільшується на один за числове значення (встановлення елементу у позицію 3 означає, що `length` мусить бути 4). Після цього, використовується поведінка встановлення властивості за замовчуванням через `Reflect.set()`, оскільки ви хочете присвоїти властивості вказане значення.
 
-The initial custom array is created by calling `createMyArray()` with a `length` of 3 and the values for those three items are added immediately afterward. The `length` property correctly remains 3 until the value `"black"` is assigned to position 3. At that point, `length` is set to 4.
+Початковий користувацький масив створюється через виклик `createMyArray()` з `length` рівним 3 та значеннями для цих трьох елементів, які додаються відразу після цього. Властивість `length` точно рівна 3, доки значення `"black"` не присвоюється у позицію 3. Тоді `length` встановлюється значення 4.
 
-With the first behavior working, it's time to move on to the second.
+З готовою першою особливістю, час перейти до другої.
 
-### Deleting Elements on Reducing length
+### Видалення елементів та зменшення довжини
 
-The first array behavior to mimic is used only when an array index is greater than or equal to the `length` property. The second behavior does the opposite and removes array items when the `length` property is set to a smaller value than it previously contained. That involves not only changing the `length` property, but also deleting all items that might otherwise exist. For instance, if an array with a `length` of 4 has `length` set to 2, the items in positions 2 and 3 are deleted. You can accomplish this inside the `set` proxy trap alongside the first behavior. Here's the previous example again, with an updated `createMyArray` method:
+Перша особливість, яку треба імітувати, використовується лише тоді, коли індекс масиву більший або дорівнює властивості `length`. Інша особливість є протилежною і видаляє елементи масиву коли властивості `length` встановлюється менше значення, ніж вона містила до цього. Це включає в себе не лише зміна властивості `length`, але й також видалення всіх елементів, які могли б там існувати. Наприклад, якщо масиву з `length`, що рівна 4, встановити `length` рівну 2, то елементи з позицій 2 та 3 видаляться. Ви можете отримати це всередині перехоплення `set`, поруч з першою особливістю. Ось попередній приклад з оновленим методом `createMyArray`:
 
 ```js
 function toUint32(value) {
@@ -1080,7 +1083,7 @@ function createMyArray(length=0) {
 
             let currentLength = Reflect.get(trapTarget, "length");
 
-            // the special case
+            // особливий випадок
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
@@ -1097,7 +1100,7 @@ function createMyArray(length=0) {
 
             }
 
-            // always do this regardless of key type
+            // завжди робити це, незалежно від типу
             return Reflect.set(trapTarget, key, value);
         }
     });
@@ -1122,17 +1125,17 @@ console.log(colors[1]);             // "green"
 console.log(colors[0]);             // "red"
 ```
 
-The `set` proxy trap in this code checks to see if `key` is `"length"` in order to adjust the rest of the object correctly. When that happens, the current length is first retrieved using `Reflect.get()` and compared against the new value. If the new value is less than the current length, then a `for` loop deletes all properties on the target that should no longer be available. The `for` loop goes backward from the current array length (`currentLength`) and deletes each property until it reaches the new array length (`value`).
+Проксі перехоплення `set` у цьому коді перевіряє чи `key` є `"length"` для того, щоб правильно підлаштувати решту об’єкта. Коли це стається, спершу, через `Reflect.get()`, дістається поточна довжина і порівнюється з новим значенням. Якщо нове значення є меншим за поточну довжину, тоді цикл `for` видаляє всі властивості цілі, які більше не мають бути доступними. Цикл `for` проходить від поточної довжини масиву (`currentLength`) і видаляє всі властивості покине досягає нової довжини масиву (`value`).
 
-This example adds four colors to `colors` and then sets the `length` property to 2. That effectively removes the items in positions 2 and 3, so they now return `undefined` when you attempt to access them. The `length` property is correctly set to 2 and the items in positions 0 and 1 are still accessible.
+Цей приклад додає чотири кольори у `colors`, а тоді встановлює властивості `length` значення 2. Він просто видаляє елементи з позицій 2 та 3, тому тепер вони повертають `undefined` при спробі звернутись до них. Властивості `length` правильно встановлюється значення 2, а елементи з позицій 0 та 1 залишаються доступними.
 
-With both behaviors implemented, you can easily create an object that mimics the behavior of built-in arrays. But doing so with a function isn't as desirable as creating a class to encapsulate this behavior, so the next step is to implement this functionality as a class.
+Тепер, коли обидві особливості імплементовані, ви можете легко створити об’єкт, який імітує поведінку вбудованих масивів. Проте не бажано робити це з допомогою функції, краще інкапсулювати цю поведінку всередині класу, тому наступним кроком буде імплементація цієї функціональності у вигляді класу.
 
-### Implementing the MyArray Class
+### Імплементація класу MyArray
 
-The simplest way to create a class that uses a proxy is to define the class as usual and then return a proxy from the constructor. That way, the object returned when a class is instantiated will be the proxy instead of the instance. (The instance is the value of `this` inside the constructor.) The instance becomes the target of the proxy and the proxy is returned as if it were the instance. The instance will be completely private and you won't be able to access it directly, though you'll be able to access it indirectly through the proxy.
+Найпростішим способом створити клас, що використовуватиме проксі — це визначити звичайний клас та повернути проксі з його конструктора. Таким чином, об’єктом, який повернуться після ініціалізації класу буде проксі, а не екземпляром класу. (Екземпляром є значення `this` всередині конструктора.) Екземпляр стає ціллю проксі, а проксі повертається так, наче воно є екземпляром. Екземпляр є повністю приватним і у вас не буде безпосереднього доступу до нього, хоча ви й матимете можливість звертатись до нього за посередництва проксі.
 
-Here's a simple example of returning a proxy from a class constructor:
+Ось простий приклад повернення проксі з конструктора класу:
 
 ```js
 class Thing {
@@ -1145,9 +1148,9 @@ let myThing = new Thing();
 console.log(myThing instanceof Thing);      // true
 ```
 
-In this example, the class `Thing` returns a proxy from its constructor. The proxy target is `this` and the proxy is returned from the constructor. That means `myThing` is actually a proxy even though it was created by calling the `Thing` constructor. Because proxies pass through their behavior to their targets, `myThing` is still considered an instance of `Thing`, making the proxy completely transparent to anyone using the `Thing` class.
+У цьому прикладі, клас `Thing` повертає проксі зі свого конструктора. Ціллю проксі є `this`, а проксі повертається з конструктора. Це означає, що `myThing` насправді є проксі, не зважаючи на те, що воно створене викликом конструктора `Thing`. Оскільки проксі передають свою поведінку до своїх цілей, `myThing` вважається екземпляром `Thing`, роблячи проксі повністю прозорим для тих, хто використовує клас `Thing`.
 
-With that in mind, creating a custom array class using a proxy in relatively straightforward. The code is mostly the same as the code in the "Deleting Elements on Reducing Length" section. The same proxy code is used, but this time, it's inside a class constructor. Here's the complete example:
+Пам’ятаючи це, створення власного класу масивів з використанням проксі є відносно простим. Код майже такий самий, як і код з розділу «Видалення елементів та зменшення довжини». Використовується такий же код для проксі, проте цього разу він всередині конструктора класу. Ось повний приклад:
 
 ```js
 function toUint32(value) {
@@ -1168,7 +1171,7 @@ class MyArray {
 
                 let currentLength = Reflect.get(trapTarget, "length");
 
-                // the special case
+                // особливий випадок
                 if (isArrayIndex(key)) {
                     let numericKey = Number(key);
 
@@ -1185,7 +1188,7 @@ class MyArray {
 
                 }
 
-                // always do this regardless of key type
+                // завжди робити це, незалежно від типу
                 return Reflect.set(trapTarget, key, value);
             }
         });
@@ -1215,22 +1218,22 @@ console.log(colors[1]);             // "green"
 console.log(colors[0]);             // "red"
 ```
 
-This code creates a `MyArray` class that returns a proxy from its constructor. The `length` property is added in the constructor (initialized to either the value that is passed in or to a default value of 0) and then a proxy is created and returned. This gives the `colors` variable the appearance of being just an instance of `MyArray` and implements both of the key array behaviors.
+Цей код створює клас `MyArray`, який повертає проксі з свого конструктора. Властивість `length` додається в конструкторі (ініціалізується зі значення, яке передається або зі значення 0 за замовчуванням), а тоді створюється і повертає проксі. Через це змінна `colors` виглядає як екземпляр `MyArray` та імплементує обидві ключові особливості масивів.
 
-Although returning a proxy from a class constructor is easy, it does mean that a new proxy is created for every instance. There is, however, a way to have all instances share one proxy: you can use the proxy as a prototype.
+Повернути проксі з конструктора класу легко, проте це означає, що нове проксі створюється для кожного екземпляру. Однак, існує спосіб мати поширити одне проксі на всі екземпляри: ви можете використати проксі в якості прототип.
 
-## Using a Proxy as a Prototype
+## Використання проксі в якості прототипу
 
-Proxies can be used as prototypes, but doing so is a bit more involved than the previous examples in this chapter. When a proxy is a prototype, the proxy traps are only called when the default operation would normally continue on to the prototype, which does limit a proxy's capabilities as a prototype. Consider this example:
+Проксі можна використати в якості прототипу, проте зробити це дещо складніше ніж у попередніх прикладах з цієї глави. Коли проксі є прототипом, перехоплення проксі б викликались лише тоді, коли операції за замовчуванням продовжувалися б до прототипу, що обмежувало б можливості проксі в якості прототипу. Розгляньте приклад:
 
 ```js
 let target = {};
 let newTarget = Object.create(new Proxy(target, {
 
-    // never called
+    // ніколи не викличеться
     defineProperty(trapTarget, name, descriptor) {
 
-        // would cause an error if called
+        // спричинило б помилку при виклику
         return false;
     }
 }));
@@ -1243,17 +1246,17 @@ console.log(newTarget.name);                    // "newTarget"
 console.log(newTarget.hasOwnProperty("name"));  // true
 ```
 
-The `newTarget` object is created with a proxy as the prototype. Making `target` the proxy target effectively makes `target` the prototype of `newTarget` because the proxy is transparent. Now, proxy traps will only be called if an operation on `newTarget` would pass the operation through to happen on `target`.
+Об’єкт `newTarget` створюється з проксі в якості прототипу. Роблячи `target` ціллю проксі, робить `target` прототипом `newTarget`, тому що проксі є прозорим. Тепер проксі перехоплення викликатиметься якщо операція над `newTarget`, якщо операція передаватиметься, що відбуватись над `target`.
 
-The `Object.defineProperty()` method is called on `newTarget` to create an own property called `name`. Defining a property on an object isn't an operation that normally continues to the object's prototype, so the `defineProperty` trap on the proxy is never called and the `name` property is added to `newTarget` as an own property.
+Метод `Object.defineProperty()` викликається для `newTarget`, щоб створити нову властивість `name`. Визначення властивості об’єкта не є операцією, що зазвичай передається до прототипа об’єкта, тому перехоплення `defineProperty`для проксі не викликатиметься, а властивість `name` додасться до `newTarget` як власна властивість.
 
-While proxies are severely limited when used as prototypes, there are a few traps that are still useful.
+Проксі дещо обмежені при використанні їх в якості прототипів, проте є кілька перехоплень, які є досі корисними.
 
-### Using the `get` Trap on a Prototype
+### Використання перехоплення `get` на прототипі
 
-When the internal `[[Get]]` method is called to read a property, the operation looks for own properties first. If an own property with the given name isn't found, then the operation continues to the prototype and looks for a property there. The process continues until there are no further prototypes to check.
+Коли внутрішній метод `[[Get]]` викликається для читання властивості, операція спершу шукає за власними властивостями. Якщо власна властивість з даним ім’ям не знаходиться, тоді операція продовжується для прототипа і шукає властивість там. Цей процес продовжується до тих пір, доки не залишиться прототипів для перевірки.
 
-Thanks to that process, if you set up a `get` proxy trap, the trap will be called on a prototype whenever an own property of the given name doesn't exist. You can use the `get` trap to prevent unexpected behavior when accessing properties that you can't guarantee will exist. Just create an object that throws an error whenever you try to access a property that doesn't exist:
+Завдяки цьому процесу, якщо ви встановите перехоплення `get`, перехоплення буде викликатись на прототипі щоразу, коли власної властивості з заданим ім’ям не існуватиме. Ви можете використовувати перехоплення `get`, щоб запобігти неочікуваній поведінці при зверненні до властивостей, які можуть не існувати. Просто створіть об’єкт, який кидатиме помилку щоразу, коли ви спробуєте звернутись до властивості, якої не існує:
 
 ```js
 let target = {};
@@ -1267,21 +1270,21 @@ thing.name = "thing";
 
 console.log(thing.name);        // "thing"
 
-// throw an error
+// кидає помилку
 let unknown = thing.unknown;
 ```
 
-In this code, the `thing` object is created with a proxy as its prototype. The `get` trap throws an error when called to indicate that the given key doesn't exist on the `thing` object. When `thing.name` is read, the operation never calls the `get` trap on the prototype because the property exists on `thing`. The `get` trap is called only when the `thing.unknown` property, which doesn't exist, is accessed.
+У цьому коді, об’єкт `thing` створюється з проксі в якості прототипу. Перехоплення `get` кидає помилку коли виклик показує, що переданого ключа не існує на об’єкті `thing`. Коли `thing.name` зчитується, операція ніколи не викликає перехоплення `get` для прототипа, бо властивість існує у `thing`. Перехоплення `get` викликається лише при зверненні до властивості `thing.unknown`, якої не існує.
 
-When the last line executes, `unknown` isn't an own property of `thing`, so the operation continues to the prototype. The `get` trap then throws an error. This type of behavior can be very useful in JavaScript, where unknown properties silently return `undefined` instead of throwing an error (as happens in other languages).
+Коли виконується останній рядок, `unknown` не є власною властивістю `thing`, тому операція продовжується на прототипі. Тоді перехоплення `get` кидає помилку. Така поведінка може бути дуже корисною у JavaScript, в якому невідомі властивості просто повертають `undefined` замість того, щоб кинути помилку (як це стається у інших мовах).
 
-It's important to understand that in this example, `trapTarget` and `receiver` are different objects. When a proxy is used as a prototype, the `trapTarget` is the prototype object itself while the `receiver` is the instance object. In this case, that means `trapTarget` is equal to `target` and `receiver` is equal to `thing`. That allows you access both to the original target of the proxy and the object on which the operation is meant to take place.
+Важливо зрозуміти, що у цьому прикладі, `trapTarget` та `receiver` є різними об’єктами. Коли проксі використовується у якості прототипу, `trapTarget` є прототипом самого об’єкта, тоді як `receiver` є екземпляром цього об’єкта. У цьому випадку, це означає, `trapTarget` є однаковим з `target`, а `receiver` є однаковим з `thing`. Це дозволяє мати доступ і до початкової цілі проксі, і до об’єкту, до якого має застосуватись операція.
 
-### Using the `set` Trap on a Prototype
+### Використання перехоплення `set` на прототипі
 
-The internal `[[Set]]` method also checks for own properties and then continues to the prototype if needed. When you assign a value to an object property, the value is assigned to the own property with the same name if it exists. If no own property with the given name exists, then the operation continues to the prototype. The tricky part is that even though the assignment operation continues to the prototype, assigning a value to that property will create a property on the instance (not the prototype) by default, regardless of whether a property of that name exists on the prototype.
+Внутрішня властивість `[[Set]]` також перевіряє власні властивості і, за потреби, продовжує шукати їх на прототипі. Коли ви присвоюєте значення властивості об’єкта, значення присвоюється власні властивості з таким же ім’ям, якщо вона вже існує. Якщо ж властивості з таким ім’ям не існує, тоді операція застосовується до прототипу. Підступним моментом є те, що навіть хоча й оператор присвоєння спускається до прототипу, присвоєння значення цій властивості за замовчуванням створить цю властивість екземпляру (не прототипу), незалежно від того, чи властивість з таким ім’ям існує на прототипі.
 
-To get a better idea of when the `set` trap will be called on a prototype and when it won't, consider the following example showing the default behavior:
+Щоб краще зрозуміти коли перехоплення `set` викликається на прототипі, а коли ні, розгляньте такий приклад, який демонструє поведінку за замовчуванням:
 
 ```js
 let target = {};
@@ -1293,27 +1296,27 @@ let thing = Object.create(new Proxy(target, {
 
 console.log(thing.hasOwnProperty("name"));      // false
 
-// triggers the `set` proxy trap
+// запускає перехоплення проксі `set`
 thing.name = "thing";
 
 console.log(thing.name);                        // "thing"
 console.log(thing.hasOwnProperty("name"));      // true
 
-// does not trigger the `set` proxy trap
+// не запускає перехоплення проксі `set`
 thing.name = "boo";
 
 console.log(thing.name);                        // "boo"
 ```
 
-In this example, `target` starts with no own properties. The `thing` object has a proxy as its prototype that defines a `set` trap to catch the creation of any new properties. When `thing.name` is assigned `"thing"` as its value, the `set` proxy trap is called because `thing` doesn't have an own property called `name`. Inside the `set` trap, `trapTarget` is equal to `target` and `receiver` is equal to `thing`. The operation should ultimately create a new property on `thing`, and fortunately `Reflect.set()` implements this default behavior for you if you pass in `receiver` as the fourth argument.
+У цьому випадку, `target` створюється без власних властивостей. Об’єкт `thing` має проксі в якості прототипу, яке визначає перехоплення `set`, яке ловить створення усіх нових властивостей. Коли `thing.name` присвоюється значення `"thing"`, перехоплення `set` викликається через те, що `thing` не має власної властивості `name`. Всередині перехоплення `set`, `trapTarget` дорівнює `target`, а `receiver` дорівнює `thing`. Операція, зрештою, створює нову властивість у `thing`, і, на щастя, `Reflect.set()` реалізує цю поведінку за замовчуванням для вас, якщо передати `receiver` в якості четвертого аргументу.
 
-Once the `name` property is created on `thing`, setting `thing.name` to a different value will no longer call the `set` proxy trap. At that point, `name` is an own property so the `[[Set]]` operation never continues on to the prototype.
+Як тільки властивість `name` створюється у `thing`, встановлення `thing.name` іншого значення більше не викликатиме перехоплення проксі `set`. Після цього, `name` є власною властивістю, тому операція `[[Set]]` ніколи не спускатиметься до прототипа.
 
-### Using the `has` Trap on a Prototype
+### Використання перехоплення `has` на прототипі
 
-Recall that the `has` trap intercepts the use of the `in` operator on objects. The `in` operator searches first for an object's own property with the given name. If an own property with that name doesn't exist, the operation continues to the prototype. If there's no own property on the prototype, then the search continues through the prototype chain until the own property is found or there are no more prototypes to search.
+Згадаємо, що перехоплення `has` перериває використання оператора `in` до об’єкта. Оператор `in` шукає спершу власну властивість об’єкту з даним ім’ям. Якщо власної властивості з таким ім’ям не існує, тоді операція застосовується до прототипа. Якщо немає власної властивості прототипа, тоді пошук спускається по ланцюжкові прототипів доки не знайде таку власну властивість, або поки не залишиться прототипів для пошуку.
 
-The `has` trap is therefore only called when the search reaches the proxy object in the prototype chain. When using a proxy as a prototype, that only happens when there's no own property of the given name. For example:
+Тому перехоплення `has` викликається коли пошук досягає об’єкту проксі у ланцюжкові прототипів. При використанні проксі у якості прототипа, це стається лише тоді, коли не існує власної властивості з даним ім’ям. Наприклад:
 
 ```js
 let target = {};
@@ -1323,26 +1326,26 @@ let thing = Object.create(new Proxy(target, {
     }
 }));
 
-// triggers the `has` proxy trap
+// запускає перехоплення проксі `has`
 console.log("name" in thing);                   // false
 
 thing.name = "thing";
 
-// does not trigger the `has` proxy trap
+// не запускає перехоплення проксі `has`
 console.log("name" in thing);                   // true
 ```
 
-This code creates a `has` proxy trap on the prototype of `thing`. The `has` trap isn't passed a `receiver` object like the `get` and `set` traps are because searching the prototype happens automatically when the `in` operator is used. Instead, the `has` trap must operate only on `trapTarget`, which is equal to `target`. The first time the `in` operator is used in this example, the `has` trap is called because the property `name` doesn't exist as an own property of `thing`. When `thing.name` is given a value and then the `in` operator is used again, the `has` trap isn't called because the operation stops after finding the own property `name` on `thing`.
+Цей код створює перехоплення проксі `has` на прототипі `thing`. Перехоплення `has` не отримує об’єкта `receiver`, на відміну від перехоплень `get` та `set`, тому що пошук по прототипі автоматично відбувається при використанні оператора `in`. Замість цього, перехоплення `has` повинне виконувати лише для `trapTarget`, яке дорівнює `target`. Спершу оператор `in` використовується у цьому прикладі, перехоплення `has` викликається тому, що `thing` не має власної властивості `name`. Коли `thing.name` дається значення і оператор `in` застосовується знову, перехоплення `has` не викликається, бо операція зупиняється знайшовши власну властивість `name` у `thing`.
 
-The prototype examples to this point have centered around objects created using the  `Object.create()` method. But if you want to create a class that has a proxy as a prototype, the process is a bit more involved.
+До цього, приклади з прототипами були пов’язані зі створенням об’єктів через метод `Object.create()`. Проте, якщо ви хочете створити клас, що має проксі у якості прототипа, процес дещо ускладнюється.
 
-### Proxies as Prototypes on Classes
+### Проксі в якості прототипів у класах
 
-Classes cannot be directly modified to use a proxy as a prototype because their `prototype` property is non-writable. You can, however, use a bit of misdirection to create a class that has a proxy as its prototype by using inheritance. To start, you need to create an ECMAScript 5-style type definition using a constructor function. You can then overwrite the prototype to be a proxy. Here's an example:
+Класи не можна модифікувати таким чином, щоб використовувати проксі у якості прототипів, тому що їхня властивість `prototype` недоступна для запису. Однак, ви можете скористатись обхідним шляхом, щоб створити клас, який матиме проксі в якості прототипа, через використання наслідування. Для початку, вам потрібно створити оголошення типу у стилі ECMAScript 5 через функцію–конструктор. Потім ви можете встановити йому проксі у якості прототипа. Ось приклад:
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // порожньо
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1353,17 +1356,17 @@ NoSuchProperty.prototype = new Proxy({}, {
 
 let thing = new NoSuchProperty();
 
-// throws error due to `get` proxy trap
+// кидає помилку через перехоплення проксі `get`
 let result = thing.name;
 ```
 
-The `NoSuchProperty` function represents the base from which the class will inherit. There are no restrictions on the `prototype` property of functions, so you can overwrite it with a proxy. The `get` trap is used to throw an error when the property doesn't exist. The `thing` object is created as an instance of `NoSuchProperty` and throws an error when the nonexistent `name` property is accessed.
+Функція `NoSuchProperty` являє собою базу, від якої будуть успадковуватись класи. Ця функція не має жодних обмежень щодо `prototype`, тому ви можете перезаписати його на проксі. Перехоплення `get` використовується для того, щоб кинути помилку, коли властивості не існує. Об’єкт `thing` створюється як екземпляр `NoSuchProperty` і кидає помилку при спробі звернення до неіснуючої властивості `name`.
 
-The next step is to create a class that inherits from `NoSuchProperty`. You can simply use the `extends` syntax discussed in Chapter 9 to introduce the proxy into the class' prototype chain, like this:
+Наступним кроком є створення класу, який наслідується від `NoSuchProperty`. Ви можете просто використати синтаксис `extends`, про який йшла мова у Главі 9, щоб ввести проксі у ланцюжок прототипів класу, ось так:
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // порожньо
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1385,20 +1388,20 @@ let shape = new Square(2, 6);
 let area1 = shape.length * shape.width;
 console.log(area1);                         // 12
 
-// throws an error because "wdth" doesn't exist
+// кидає помилку, бо "wdth" не існує
 let area2 = shape.length * shape.wdth;
 ```
 
-The `Square` class inherits from `NoSuchProperty` so the proxy is in the `Square` class' prototype chain. The `shape` object is then created as a new instance of `Square` and has two own properties: `length` and `width`. Reading the values of those properties succeeds because the `get` proxy trap is never called. Only when a property that doesn't exist on `shape` is accessed (`shape.wdth`, an obvious typo) does the `get` proxy trap trigger and throw an error.
+Клас `Square` наслідується від `NoSuchProperty`, тому проксі з’являється у ланцюжкові прототипів класу `Square`. Об’єкт `shape` створюється як новий екземпляр `Square` і має дві власні властивості: `length` та `width`. Читання значень з цих властивостей відбувається успішно, тому що перехоплення проксі `get` ніколи не викликається. Лише при зверненні до властивості `shape`, якої не існує (`shape.wdth`, очевидно помилкова) призводить до того, що спрацьовує перехоплення проксі `get` і кидається помилка.
 
-That proves the proxy is in the prototype chain of `shape`, but it might not be obvious that the proxy is not the direct prototype of `shape`. In fact, the proxy is a couple of steps up the prototype chain from `shape`. You can see this more clearly by slightly altering the preceding example:
+Це доводить те, що у ланцюжкові прототипів `shape` є проксі, проте це може бути недостатньо очевидно, що проксі не є прямим прототипом `shape`. Фактично, проксі перебуває у ланцюжку прототипів на кілька кроків вище від `shape`. Ви можете побачити це більш зрозуміло трішки змінивши приклад:
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // порожньо
 }
 
-// store a reference to the proxy that will be the prototype
+// зберігаємо посилання на проксі, яке буде прототипом
 let proxy = new Proxy({}, {
     get(trapTarget, key, receiver) {
         throw new ReferenceError(`${key} doesn't exist`);
@@ -1426,13 +1429,13 @@ let secondLevelProto = Object.getPrototypeOf(shapeProto);
 console.log(secondLevelProto === proxy);            // true
 ```
 
-This version of the code stores the proxy in a variable called `proxy` so it's easy to identify later. The prototype of `shape` is `Shape.prototype`, which is not a proxy. But the prototype of `Shape.prototype` is the proxy that was inherited from `NoSuchProperty`.
+Така версія цього коду зберігає проксі у змінну з ім’ям `proxy`, тому його легко буде ідентифікувати згодом. Прототипом `shape` є `Shape.prototype`, який не є проксі. Проте прототипом `Shape.prototype` є проксі, що було успадковане від `NoSuchProperty`.
 
-The inheritance adds another step in the prototype chain, and that matters because operations that might result in calling the `get` trap on `proxy` need to go through one extra step before getting there. If there's a property on `Shape.prototype`, then that will prevent the `get` proxy trap from being called, as in this example:
+Наслідування додає додатковий крок у ланцюжкові прототипів, і це важливо, тому що операціям, які можуть залежати від викликів перехоплення `get` на `proxy`, потрібно проходити додатковий крок, щоб дістатись до нього. Якщо ж `Shape.prototype` матиме таку властивість, то це буде перешкоджати виклику перехоплення проксі `get`, як у цьому прикладі:
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // порожньо
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1461,20 +1464,20 @@ console.log(area1);                         // 12
 let area2 = shape.getArea();
 console.log(area2);                         // 12
 
-// throws an error because "wdth" doesn't exist
+// кидає помилку, бо "wdth" не існує
 let area3 = shape.length * shape.wdth;
 ```
 
-Here, the `Square` class has a `getArea()` method. The `getArea()` method is automatically added to `Square.prototype` so when `shape.getArea()` is called, the search for the method `getArea()` starts on the `shape` instance and then proceeds to its prototype. Because `getArea()` is found on the prototype, the search stops and the proxy is never called. That is actually the behavior you want in this situation, as you wouldn't want to incorrectly throw an error when `getArea()` was called.
+Тут, клас `Square` має метод `getArea()`. Метод `getArea()` автоматично додається до `Square.prototype`, тому коли викликається `shape.getArea()`, пошук методу `getArea()` починається з екземпляра `shape` і переходить до його прототипа. Оскільки `getArea()` знаходиться на прототипі, пошук припиняється і проксі ніколи не викличеться. Насправді це саме та поведінка, яка вам потрібна у цьому випадку, адже ви не хочете, щоб при виклику `getArea()` кидались помилки.
 
-Even though it takes a little bit of extra code to create a class with a proxy in its prototype chain, it can be worth the effort if you need such functionality.
+Навіть хоча й створення класу з проксі в ланцюжкові прототипів і потребує деякого додаткового коду, це може виправдати зусилля, якщо ви потребуєте такої функціональності.
 
-## Summary
+## Підсумок
 
-Prior to ECMAScript 6, certain objects (such as arrays) displayed nonstandard behavior that developers couldn't replicate. Proxies change that. They let you define your own nonstandard behavior for several low-level JavaScript operations, so you can replicate all behaviors of built-in JavaScript objects through proxy traps. These traps are called behind the scenes when various operations take place, like a use of the `in` operator.
+До ECMAScript 6, певні об’єкти (як от масиви) мали нестандартну поведінку, яку не могли відтворити розробники. Проксі змінюють це. Вони дають вам можливість визначати власну нестандартну поведінку для ряду низькорівневих операцій у JavaScript, тому ви можете відтворити поведінку всіх вбудованих об’єктів JavaScript через перехоплення проксі. Ці перехоплення викликаються за кулісами, коли відбуваються різні операції, як от використання оператора `in`.
 
-A reflection API was also introduced in ECMAScript 6 to allow developers to implement the default behavior for each proxy trap. Each proxy trap has a corresponding method of the same name on the `Reflect` object, another ECMAScript 6 addition. Using a combination of proxy traps and reflection API methods, it's possible to filter some operations to behave differently only in certain conditions while defaulting to the built-in behavior.
+ ECMAScript 6 також вводить API рефлексі, щоб дозволити розробникам імплементувати поведінку за замовчуванням для перехоплень проксі. Кожне перехоплення проксі має відповідний метод на об’єкті `Reflect` — ще одним розширенням ECMAScript 6. Використовуючи комбінації перехоплень проксі та методів API рефлексі можливо створити різну поведінку для певних операцій в залежності від певних умов.
 
-Revocable proxies are a special proxies that can be effectively disabled by using a `revoke()` function. The `revoke()` function terminates all functionality on the proxy, so any attempt to interact with the proxy's properties throws an error after `revoke()` is called. Revocable proxies are important for application security where third-party developers may need access to certain objects for a specified amount of time.
+Проксі, які можна відмінювати, є спеціальними проксі, які можна просто відключити з допомогою функції `revoke()`. Функція `revoke()` відміняє всю функціональність проксі, тому будь–яка спроба взаємодіяти з властивостями проксі призведе до помилки після виклику `revoke()`. Проксі, які можна відміняти, є важливими для безпеки додатків, в яких сторонні розробники можуть потребувати доступу до певних об’єктів протягом певного проміжку часу.
 
-While using proxies directly is the most powerful use case, you can also use a proxy as the prototype for another object. In that case, you are severely limited in the number of proxy traps you can effectively use. Only the `get`, `set`, and `has` proxy traps will ever be called on a proxy when it's used as a prototype, making the set of use cases much smaller.
+Безпосереднє використання проксі є дуже потужним, проте ви також можете використовувати проксі в якості прототипу іншого об’єкта. В такому випадку, ви зменшуєте кількість перехоплень проксі, які ви можете використовувати ефективно. Лише перехоплення проксі `get`, `set` та `has` будуть викликатись на проксі, якщо використовувати його в якості прототипа, зменшуючи поле можливих застосувань.
