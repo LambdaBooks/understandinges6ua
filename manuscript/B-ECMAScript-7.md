@@ -1,16 +1,16 @@
-# Understanding ECMAScript 7 (2016)
+# Розуміння ECMAScript 7 (2016)
 
-The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
+Розробка ECMAScript 6 зайняла близько чотирьох років, і пілся цього, TC-39 вирішив, що такий довгий процес розробки є неприйнятним. Замість цього, вони перейшли до щорічного релізного циклу, щоб забезпечити швидше надходження нововведень мови у розробку.
 
-More frequent releases mean that each new edition of ECMAScript should have fewer new features than ECMAScript 6. To signify this change, new versions of the specification no longer prominently feature the edition number, and instead refer to the year in which the specification was published. As a result, ECMAScript 6 is also known as ECMAScript 2015, and ECMAScript 7 is formally known as ECMAScript 2016. TC-39 expects to use the year-based naming system for all future ECMAScript editions.
+Більш часті релізи означають, що кожна нова редакція ECMAScript матиме меншу кількість нововведень ніж ECMAScript 6. Щоб підкреслити цю зміну, нові версії специфікації більше не акцентують увагу на номері редакції. Замість цього версії посилаютьс яна рік публікації специфікації. В результаті, ECMAScript 6 також відомий як ECMAScript 2015, а ECMAScript 7 формально відомий як ECMAScript 2016. TC-39 збирається використовувати систему іменування прив’язану до року публікації для майбутніх редакцій ECMAScript.
 
-ECMAScript 2016 was finalized in March 2016 and contained only three additions to the language: a new mathematical operator, a new array method, and a new syntax error. Both are covered in this appendix.
+ECMAScript 2016 був фіналізований у березні 2016 і містить лише три розширення мови: математичний оператор, новий метод масивів та нову синтаксичну помилку. Про них ітиметься у цьому додатку.
 
-## The Exponentiation Operator
+## Експоненціальний оператор
 
-The only change to JavaScript syntax introduced in ECMAScript 2016 is the *exponentiation operator*, which is a mathematical operation that applies an exponent to a base. JavaScript already had the `Math.pow()` method to perform exponentiation, but JavaScript was also one of the only languages that required a method rather than a formal operator. (And some developers argue an operator is easier to read and reason about.)
+Єдиною зміною у синтаксисі JavaScript, яка вводиться ECMAScript 2016, є *експоненціальний оператор (exponentiation operator)*, який є математичною операцію піднесення до степеня. JavaScript також мав метод `Math.pow()` для виконання цієї операції, проте JavaScript був однією з небагатьох мов, які вимагали для цього метод, а не формальний оператор. (І деякі розробники вважають оператор простішим для читання та розуміння.)
 
-The exponentiation operator is two asterisks (`**`) where the left operand is the base and the right operand is the exponent. For example:
+Експоненціальним оператором є дві зірочки (`**`), де лівий операнд є основою, а правий — степенем. Наприклад:
 
 ```js
 let result = 5 ** 2;
@@ -19,40 +19,41 @@ console.log(result);                        // 25
 console.log(result === Math.pow(5, 2));     // true
 ```
 
-This example calculates 5^2^, which is equal to 25. You can still use `Math.pow()` to achieve the same result.
+Цей приклад обчислює 5^2^, що дорівнює 25. Ви також можете використовувати `Math.pow()` для отримання такого ж результату.
 
-### Order of Operations
+### Порядок операцій
 
-The exponentiation operator has the highest precedence of all binary operators in JavaScript (unary operators have higher precedence than `**`). That means it is applied first to any compound operation, as in this example:
+Експоненціальний оператор має найвищий пріоритет з усіх бінарних операторів у JavaScript (унарні оператори мають вищий пріоритет ніж `**`). Це означає, що він застосовується першим до складених операціях, як у цьому прикладі:
 
 ```js
 let result = 2 * 5 ** 2;
 console.log(result);        // 50
 ```
 
-The calculation of 5^2^ happens first. The resulting value is then multiplied by 2 for a final result of 50.
+Спершу обчислюється 5^2^. Отриманий результат множиться на 2 і отримується остаточний результат 50.
 
-### Operand Restriction
+### Обмеження операндів
 
-The exponentiation operator does have a somewhat unusual restriction that isn't present for other operators. The left side of an exponentiation operation cannot be a unary expression other than `++` or `--`. For example, this is invalid syntax:
+Експоненціальний оператор має одне незвичайне обмеження, якого немає у інших операторів. Лівою частиною експоненціальної операції не може бути будь–який унарний вираз, окрім `++` або `--`. Наприклад, такий синтаксис не є валідним:
 
 ```js
-// syntax error
+// синтаксична помилка
 let result = -5 ** 2;
 ```
 
-The `-5` in this example is a syntax error because the order of operations is ambiguous. Does the `-` apply just to `5` or the result of the `5 ** 2` expression? Disallowing unary expressions on the left side of the exponentiation operator eliminates that ambiguity. In order to clearly specify intent, you need to include parentheses either around `-5` or around `5 ** 2` as follows:
+У цьому прикладі `-5` є синтаксичною помилкою, бо порядок операцій є неоднозначним. Чи має `-` застосовуватись до `5`, чи до результату виразу `5 ** 2`? Заборона використання унарних виразів у лівій частині експоненціального оператора виключає цю невизначеність. Для того, щоб чітко визначити порядок вам потрібно додати круглі дужки довкола `-5` або довкола `5 ** 2`, ось так:
 
 ```js
-// ok
-let result1 = -(5 ** 2);    // equal to -25
+// добре
+let result1 = -(5 ** 2);    // дорівнює -25
 
-// also ok
-let result2 = (-5) ** 2;    // equal to 25
+// також добре
+let result2 = (-5) ** 2;    // дорівнює 25
 ```
-If you put the parentheses around the expression, the `-` is applied to the whole thing. When the parentheses surround `-5`, it's clear that you want to raise -5 to the second power.
 
-You don't need parentheses to use `++` and `--` on the left side of the exponentiation operator because both operators have clearly-defined behavior on their operands. A prefix `++` or `--` changes the operand before any other operations take place, and the postfix versions don't apply any changes until after the entire expression has been evaluated. Both use cases are safe on the left side of this operator, as this code demonstrates:
+Якщо ви додасте круглі дужки довкола виразу, `-` застосується до результату. Коли ж ви обернете у круглі дужки `-5`, буде точно зрозуміло, що ви хочете піднести -5 до квадрату.
+
+Вам не потрібні круглі дужки при використанні `++` та `--` у лівій частині експоненціального оператора, тому що оператори мають чітко визначену поведінку над своїми операндами. Префікс `++` або `--` змінюють операнд до того, як застосується будь–яка інша операція, постфіксні версії не виконають жодних змін, доки весь вираз не буде обчислено. Обидва випадки є безпечними у лівій частині цього оператора, і приклад це демонструє:
 
 ```js
 let num1 = 2,
@@ -65,15 +66,15 @@ console.log(num2-- ** 2);       // 4
 console.log(num2);              // 1
 ```
 
-In this example, `num1` is incremented before the exponentiation operator is applied, so `num1` becomes 3 and the result of the operation is 9. For `num2`, the value remains 2 for the exponentiation operation and then is decremented to 1.
+У цьому прикладі, `num1` збільшується до того, як застосовується експоненціальний оператор, тому `num1` стає 3, а результатом операції є 9. Для `num2`, значення залишається 2 для експоненціального оператора, а потім результат зменшується на 1.
 
-## The Array.prototype.includes() Method
+## Метод Array.prototype.includes()
 
-You might recall that ECMAScript 6 added `String.prototype.includes()` in order to check whether certain substrings exist within a given string. Originally, ECMAScript 6 was also going to introduce an `Array.prototype.includes()` method to continue the trend of treating strings and arrays similarly. But the specification for `Array.prototype.includes()` was incomplete by the ECMAScript 6 deadline, and so `Array.prototype.includes()` ended up in ECMAScript 2016 instead.
+Ви маєте пам’ятати, що ECMAScript 6 додав `String.prototype.includes()` для перевірки того, чи підрядок є частиною даного рядка. Початково, ECMAScript 6 також мав додати метод `Array.prototype.includes()`, щоб продовжити тенденцію до трактування рядків та масивів однаковим чином. Проте специфікація для `Array.prototype.includes()` не була завершеною вчасно, і тому `Array.prototype.includes()` з’являється лише в ECMAScript 2016.
 
-### How to Use Array.prototype.includes()
+### Як використовувати Array.prototype.includes()
 
-The `Array.prototype.includes()` method accepts two arguments: the value to search for and an optional index from which to start the search. When the second argument is provided, `includes()` starts the match from that index. (The default starting index is `0`.) The return value is `true` if the value is found inside the array and `false` if not. For example:
+Метод `Array.prototype.includes()` приймає два аргументи: значення для пошуку і необов’язковий індекс з якого потрібно починати пошук. Якщо передати другий аргумент, `includes()` почне шукати співпадіння починаючи з вказаного індекса. (За замовчуванням початковим індексом є `0`.) Результатом є `true`, якщо значення знайдено всередині масиву, і `false`, якщо ні. Наприклад:
 
 ```js
 let values = [1, 2, 3];
@@ -81,15 +82,15 @@ let values = [1, 2, 3];
 console.log(values.includes(1));        // true
 console.log(values.includes(0));        // false
 
-// start the search from index 2
+// шукаємо починаючи з індексу 2
 console.log(values.includes(1, 2));     // false
 ```
 
-Here, calling `values.includes()` returns `true` for the value of `1` and `false` for the value of `0` because `0` isn't in the array. When the second argument is used to start the search at index 2 (which contains the value `3`), the `values.includes()` method returns `false` because the number `1` is not found between index 2 and the end of the array.
+Тут виклик `values.includes()` повертає `true` для значення `1` та `false` для значення `0`, тому що `0` немає у масиві. Коли використовується другий аргумент, щоб починати пошук з індексу 2 (який містить значення  `3`), метод `values.includes()` повертає `false`, тому що число `1` не знайдено у проміж індексом 2 та кінцем масиву.
 
-### Value Comparison
+### Порівняння значень
 
-The value comparison performed by the `includes()` method uses the `===` operotor with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of the `indexOf()` method, which strictly uses `===` for comparison. To see the difference, consider this code:
+Порівняння значень, яке відбувається у методі `includes()`, використовує оператор `===` з одним виключенням: `NaN` вважається рівним `NaN`, не дивлячись на те, що `NaN === NaN` обчислюється у `false`. Ця відрізняється від поведінки методу `indexOf()`, який для порівняння строго використовує `===`. Щоб побачити відмінність, розгляньте код:
 
 ```js
 let values = [1, NaN, 2];
@@ -98,11 +99,11 @@ console.log(values.indexOf(NaN));       // -1
 console.log(values.includes(NaN));      // true
 ```
 
-The `values.indexOf()` method returns `-1` for `NaN` even though `NaN` is contained in the `values` array. On the other hand, `values.includes()` returns `true` for `NaN` because it uses a different value comparison operator used.
+Метод `values.indexOf()` повертає `-1` для `NaN`, незважаючи на те, що `NaN` міститься у масиві `values`. З іншого боку, `values.includes()` повертає `true` для `NaN`, тому що він використовує інший оператор порівняння.
 
-W> When you want to check just for the existence of a value in an array and don't need to know the index , I recommend using `includes()` because of the difference in how `NaN` is treated by the `includes()` and `indexOf()` methods. If you do need to know where in the array a value exists, then you have to use the `indexOf()` method.
+W> Коли ви хочете перевірити існування значення у масиві і вам не потрібно дізнаватись його індекс, я раджу використовувати `includes()`, через відмінність того, як `NaN` трактується у методах `includes()` та `indexOf()`. Якщо ж вам потрібно дізнатись де значення існує у масиві, тоді ви маєте використовувати метод `indexOf()`.
 
-Another quirk of this implementation is that `+0` and `-0` are considered to be equal. In this case, the behavior of `indexOf()` and `includes()` is the same:
+Іншою підступністю цієї імплементації є те, що `+0` та `-0` вважаються однаковими. У цьому випадку, поведінка `indexOf()` та `includes()` є однаковою:
 
 ```js
 let values = [1, +0, 2];
@@ -111,11 +112,12 @@ console.log(values.indexOf(-0));        // 1
 console.log(values.includes(-0));       // true
 ```
 
-Here, both `indexOf()` and `includes()` find `+0` when `-0` is passed because the two values are considered equal. Note that this is different than the behavior of the `Object.is()` method, which considers `+0` and `-0` to be different values.
+Тут, і метод `indexOf()`, і метод `includes()` знаходять `+0`, коли передається `-0`, тому що обидва значення вважаються однаковими. Зауважте, що це відрізняється від поведінки метода `Object.is()`, який вважає `+0` та `-0` різними значеннями.
 
+## Зміни й строгому режимі у функціональної області видимості
 ## Change to Function-Scoped Strict Mode
 
-When strict mode was introduced in ECMAScript 5, the language was quite a bit simpler than it became in ECMAScript 6. Despite that, ECMAScript 6 still allowed you to specify strict mode using the `"use strict"` directive either in the global scope (which would make all code run in strict mode) or in a function scope (so only the function would run in strict mode). The latter ended up being a problem in ECMAScript 6 due to the more complex ways that parameters could be defined, specifically, with destructuring and default parameter values. To understand the problem, consider the following code:
+Коли ECMAScript 5 ввів строгий режим, мова була дещо простішою ніж вона стала з приходом ECMAScript 6. Не зважаючи на це, ECMAScript 6 дозволяв використовувати строгий режим через використання дерективи `"use strict"` у глобальні області видимості (що запустило б весь код у строгому режимі) або у функціональній області видимості (так щоб лише функція запускалась у строгому режимі). Останній спосіб був проблематичним у ECMAScript 6 через більш складні способи визначення параметрів, наприклад, з деструктуруванням, значеннями параметрів за замовчуванням. Щоб зрозуміти проблему, розгляньте такий код:
 
 ```js
 function doSomething(first = this) {
@@ -125,26 +127,26 @@ function doSomething(first = this) {
 }
 ```
 
-Here, the named parameter `first` is assigned a default value of `this`. What would you expect the value of `first` to be? The ECMAScript 6 specification instructed JavaScript engines to treat the parameters as being run in strict mode in this case, so `this` should be equal to `undefined`. However, implementing parameters running in strict mode when `"use strict"` is present inside the function turned out to be quite difficult because parameter default values can be functions as well. This difficulty led to most JavaScript engines not implementing this feature (so `this` would be equal to the global object).
+Тут іменованому параметру `first` присвоюється значення за замовчуванням `this`. Яке значенням матиме `first`? Специфікація ECMAScript 6 вказує рушієві JavaScript трактувати параметри, у цьому випадку так, як під час запуску у строгому режимі, тому `this` має бути рівним `undefined`. Однак, імплементація параметрів, які запускаються у строгому режимі, коли всередині функції присутня деректива `"use strict"`, стає складною через те, що значенням за замовчуванням також може бути функція. Ця складність призвела до того, що більшість рушіїв JavaScript не імплементують це нововведення (тому `this` був би рівним глобальному об’єкту).
 
-As a result of the implementation difficulty, ECMAScript 2016 makes it illegal to have a `"use strict"` directive inside of a function whose parameters are either destructured or have default values. Only *simple parameter lists*, those that don't contain destructuring or default values, are allowed when `"use strict"` is present in the body of a function. Here are some examples:
+Внаслідок складнощів, пов’язаних з імплементацією, ECMAScript 2016 забороняє мати дерективу `"use strict"` всередині функції, параметри якої містять деструктурування або значення за замовчуванням. Лише *простий список параметрів*, який не містить декструктурування або значень за замовчуванням, дозволений коли тіло функції містить `"use strict"`. Ось кілька прикладів:
 
 ```js
-// okay - using simple parameter list
+// добре - використання простого списку параметрів
 function okay(first, second) {
     "use strict";
 
     return first;
 }
 
-// syntax error
+// синтаксична помилка
 function notOkay1(first, second=first) {
     "use strict";
 
     return first;
 }
 
-// syntax error
+// синтаксична помилка
 function notOkay2({ first, second }) {
     "use strict";
 
@@ -152,6 +154,6 @@ function notOkay2({ first, second }) {
 }
 ```
 
-You can still use `"use strict"` with simple parameter lists, which is why `okay()` works as you would expect (the same as it would in ECMAScript 5). The `notOkay1()` function is a syntax error because you can no longer use `"use strict"` in functions with default parameter values. Similarly, the `notOkay2()` function is a syntax error because you can't use `"use strict" in a function with destructured parameters.
+Ви досі можете використовувати `"use strict"` з простим списком параметрів, ось чому `okay()` працює так, як і очікується (так само, як би він працював у  ECMAScript 5). Функція `notOkay1()` має синтаксичну помилку, тому що ви не можете використовувати `"use strict"` у функціях зі значеннями параметрів за замовчуванням. Так само, функція `notOkay2()` має синтаксичну помилку, бо ви не можете використовувати `"use strict"` у функції з деструктивним параметром.
 
-Overall, this change removes both a point of confusion for JavaScript developers and an implementation problem for JavaScript engines.
+Зрештою, ця зміна звільняє як і JavaScript–розробників від плутанини, так і рушії JavaScript від проблеми з імплементацією.
