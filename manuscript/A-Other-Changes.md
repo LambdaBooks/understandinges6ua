@@ -1,14 +1,14 @@
-# Appendix A: Smaller Changes
+# Додаток А: Дрібніші зміни
 
-Along with the major changes this book has already covered, ECMAScript 6 made several other changes that are smaller but still helpful in improving JavaScript. Those changes include making integers easier to use, adding new methods for calculations, a tweak to Unicode identifiers, and formalizing the`__proto__` property. I describe all of those in this appendix.
+Поруч з великими змінами, про які вже розповідалось у цій книзі, ECMAScript 6 робить ряд інших змін, які є меншими, проте такими ж корисними для покращення JavaScript. Ці зміни включають покращення цілих чисел, введення нових методів для обчислень, вдосконалення Unicode–ідентифікаторів та формалізація властивості `__proto__`. Я опишу їх всі у цьому додатку.
 
-## Working with Integers
+## Робота з цілими числами
 
-JavaScript uses the IEEE 754 encoding system to represent both integers and floats, which has caused a lot of confusion over the years. The language takes great pains to ensure that developers don't need to worry about the details of number encoding, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making integers easier to identify and work with.
+JavaScript використовує систему кодування IEEE 754 для представлення цілих та дійсних чисел, яка була причиною численних непорозумінь протягом багатьох років. Мова докладає великих зусиль, щоб гарантувати, що розробникам не потрібно турбуватися про деталі кодування чисел, але проблеми все ще з’являються час від часу. ECMAScript 6 прагне вирішити це, роблячи цілі числа легшими для ідентифікації та роботи з ними. seeks to address this by making integers easier to identify and work with.
 
-### Identifying Integers
+### Ідентифікація цілих чисел
 
-First, ECMAScript 6 added the `Number.isInteger()` method, which can determine whether a value represents an integer in JavaScript. While JavaScript uses IEEE 754 to represent both types of numbers, floats and integers are stored differently. The `Number.isInteger()` method takes advantage of that, and when the method is called on a value, the JavaScript engine looks at the underlying representation of the value to determine whether that value is an integer. That means numbers that look like floats might actually be stored as integers and cause `Number.isInteger()` to return `true`. For example:
+По–перше, ECMAScript 6 додає метод `Number.isInteger()`, який може визначити чи значення відображає ціле число у JavaScript. Оскільки JavaScript використовує IEEE 754 для відображення чисел обох типів, дійсні та цілі числа зберігаються по різному. Метод `Number.isInteger()` використовує переваги цього і коли метод викликається для значення, рушій JavaScript дивиться на представлення значення, щоб визначити чи значення є цілим числом. Це означає, що для чисел, які виглядають як дійсні, проте зберігаються як цілі, метод `Number.isInteger()` поверне `true`. Наприклад:
 
 ```js
 console.log(Number.isInteger(25));      // true
@@ -16,20 +16,20 @@ console.log(Number.isInteger(25.0));    // true
 console.log(Number.isInteger(25.1));    // false
 ```
 
-In this code, `Number.isInteger()` returns `true` for both `25` and `25.0` even though the latter looks like a float. Simply adding a decimal point to a number doesn't automatically make it a float in JavaScript. Since `25.0` is really just `25`, it is stored as an integer. The number `25.1`, however, is stored as a float because there is a fraction value.
+У цьому коді, `Number.isInteger()` повертає `true` і для `25`, і для `25.0`, не дивлячись на те, що останнє виглядає як дійсне. Просте додавання десяткової точки до числа не робить його автоматично дійсним числом у JavaScript. Оскільки `25.0` насправді є простим `25`, воно просто зберігається як ціле число. Однак, число `25.1` зберігається як дійсне число, оскільки воно є десятковим дробом.
 
-### Safe Integers
+### Безпечні цілі числа
 
-IEEE 754 can only accurately represent integers between -2^53^ and 2^53^, and outside this "safe" range, binary representations end up reused for multiple numeric values. That means JavaScript can only safely represent integers within the IEEE 754 range before problems become apparent. For instance, consider this code:
+IEEE 754 може точно представляти цілі числа між -2^53^ та 2^53^, а поза цим “безпечним” проміжком, двійкове представлення починають повторно використовуватись для декількох числових значень. Це означає, що JavaScript може безпечно, представляти цілі числа у проміжку IEEE 754. Наприклад, розгляньте такий код:
 
 ```js
 console.log(Math.pow(2, 53));      // 9007199254740992
 console.log(Math.pow(2, 53) + 1);  // 9007199254740992
 ```
 
-This example doesn't contain a typo, yet two different numbers are represented by the same JavaScript integer. The effect becomes more prevalent the further the value falls outside the safe range.
+Цей приклад містить помилку, обидва різних числа представляються як однакові цілі числа у JavaScript. Цей ефект стає більш помітнішим при подальшому виході за межі безпечного діапазону.
 
-ECMAScript 6 introduced the `Number.isSafeInteger()` method to better identify integers that the language can accurately represent. It also added the `Number.MAX_SAFE_INTEGER` and `Number.MIN_SAFE_INTEGER` properties to represent the upper and lower bounds of the integer range, respectively. The `Number.isSafeInteger()` method ensures that a value is an integer and falls within the safe range of integer values, as in this example:
+ECMAScript 6 вводить метод `Number.isSafeInteger()` для кращої ідентифікації цілих числе, які мова може представити точно. Він також додає властивості `Number.MAX_SAFE_INTEGER` та `Number.MIN_SAFE_INTEGER` для представлення найбільшого та найменшого значення з проміжку цілих чисел, відповідно. Метод `Number.isSafeInteger()` забезпечує, щоб значення є цілочисельним і потрапляє у безпечний проміжок цілих числових значень, як у цьому прикладі:
 
 ```js
 var inside = Number.MAX_SAFE_INTEGER,
@@ -42,84 +42,83 @@ console.log(Number.isInteger(outside));         // true
 console.log(Number.isSafeInteger(outside));     // false
 ```
 
-The number `inside` is the largest safe integer, so it returns `true` for both the `Number.isInteger()` and `Number.isSafeInteger()` methods. The number `outside` is the first questionable integer value, and it isn't considered safe even though it's still an integer.
+Число `inside` є найбільшим безпечним цілим числом, тому `true` повертається з обох методів `Number.isInteger()` та `Number.isSafeInteger()`. Число `outside` є першим підозрілим цілочисельним значенням і воно не вважається безпечним, не зважаючи на те, що воно залишається цілим числом.
 
-Most of the time, you only want to deal with safe integers when doing integer arithmetic or comparisons in JavaScript, so using `Number.isSafeInteger()` as part of input validation is a good idea.
+Зазвичай, про виконанні арифметичних операцій або порівнянь, вам потрібно працювати лише з безпечними цілими числами, тому використовувати `Number.isSafeInteger()` як частину валідації вводу було б хорошою ідеєю.
 
-## New Math Methods
+## Нові математичні методи
 
-The new emphasis on gaming and graphics that led ECMAScript 6 to include typed arrays in JavaScript also led to the realization that a JavaScript engine could do many mathematical calculations more efficiently. But optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. For instance, knowing whether the numbers should be treated as 32-bit integers or as 64-bit floats is important for hardware-based operations, which are much faster than software-based operations.
+Новий акцент на іграх та графіці, який призвів до того, ECMAScript 6 додав у JavaScript типізовані масиви, також призвів до усвідомлення того, що рушії JavaScript можуть робити багато математичних обчислень більш ефективно. Проте стратегії оптимізації, як от asm.js, які для підвищення швидкодії працюють на підмножині JavaScript, потребують більше інформації для виконання обчислень найшвидшим шляхом. Наприклад, розуміння того, коли числа мають трактуватись як 32-бітні цілі числа або 64-бітні дійсні числа є важливим для апаратних операцій, які є набагато швидшими за програмні операції.
 
-As a result, ECMAScript 6 added several methods to the `Math` object to improve the speed of common mathematical calculations. Improving the speed of common calculations also improves the overall speed of applications that perform many calculations, such as graphics programs. The new methods are listed below:
+В результаті, ECMAScript 6 додає кілька методів у об’єкт `Math`, для підвищення швидкості загальних математичних обчислень. Підвищення швидкості загальних обчислень також покращує загальну швидкість додатків, які виконують велику кількість обчислень, як от графічні програми. Нові методи перелічені нижче:
 
-* `Math.acosh(x)` Returns the inverse hyperbolic cosine of `x`.
-* `Math.asinh(x)` Returns the inverse hyperbolic sine of `x`.
-* `Math.atanh(x)` Returns the inverse hyperbolic tangent of `x`
-* `Math.cbrt(x)` Returns the cubed root of `x`.
-* `Math.clz32(x)` Returns the number of leading zero bits in the 32-bit integer representation of `x`.
-* `Math.cosh(x)` Returns the hyperbolic cosine of `x`.
-* `Math.expm1(x)` Returns the result of subtracting 1 from the exponential function of `x`
-* `Math.fround(x)` Returns the nearest single-precision float of `x`.
-* `Math.hypot(...values)` Returns the square root of the sum of the squares of each argument.
-* `Math.imul(x, y)` Returns the result of performing true 32-bit multiplication of the two arguments.
-* `Math.log1p(x)` Returns the natural logarithm of `1 + x`.
-* `Math.log10(x)` Returns the base 10 logarithm of `x`.
-* `Math.log2(x)` Returns the base 2 logarithm of `x`.
-* `Math.sign(x)` Returns -1 if the `x` is negative, 0 if `x` is +0 or -0, or 1 if `x` is positive.
-* `Math.sinh(x)` Returns the hyperbolic sine of `x`.
-* `Math.tanh(x)` Returns the hyperbolic tangent of `x`.
-* `Math.trunc(x)` Removes fraction digits from a float and returns an integer.
+* `Math.acosh(x)` повертає обернений гіперболічний косинус `x`;
+* `Math.asinh(x)` повертає обернений гіперболічний синус `x`;
+* `Math.atanh(x)` повертає обернений гіперболічний тангенс `x`;
+* `Math.cbrt(x)` повертає корінь кубічний з `x`;
+* `Math.clz32(x)` повертає кількість ведучих нульових бітів у 32-бітному цілочисельному представленні `x`;
+* `Math.cosh(x)` повертає гіперболічний косинус `x`;
+* `Math.expm1(x)` повертає результат віднімання 1 від експоненціальної функції з `x`;
+* `Math.fround(x)` повертає найближче дійсне число одинарної точності від `x`;
+* `Math.hypot(...values)` повертає квадратний корінь суми квадратів кожного з аргументів;
+* `Math.imul(x, y)` повертає результат виконання істинного 32-бітного множення двох аргументів;
+* `Math.log1p(x)` повертає натуральний логарифм від `1 + x`;
+* `Math.log10(x)` повертає логарифм за основою 10 від `x`;
+* `Math.log2(x)` повертає логарифм за основою 2 від `x`;
+* `Math.sign(x)` повертає -1, якщо `x` є від’ємним, 0 якщо `x` рівний +0 або -0 та 1, якщо `x` є додатнім;
+* `Math.sinh(x)` повертає гіперболічний синус `x`;
+* `Math.tanh(x)` повертає гіперболічний тангенс `x`;
+* `Math.trunc(x)` видаляє дробову частину з дійсного числа та повертає ціле число.
 
-It's beyond the scope of this book to explain each new method and what it does in detail. But if your application needs to do a reasonably common calculation, be sure to check the new `Math` methods before implementing it yourself.
+Детальне пояснення кожного нового метода та того, що вони роблять, виходить за межі цієї книги. Проте якщо ваш додаток має робити загальні обчислення, не забудьте перевірити нові методи `Math` перед тим, як писати імплементацію самостійно.
 
-## Unicode Identifiers
+## Unicode–ідентифікатори
 
-ECMAScript 6 offers better Unicode support than previous versions of JavaScript, and it also changes what characters may be used as identifiers. In ECMAScript 5, it was already possible to use Unicode escape sequences for identifiers. For example:
+ECMAScript 6 пропонує кращу підтримку Unicode, ніж попередні версії JavaScript, і він також змінює те, які символи можуть використовуватись в якості ідентифікаторів. У ECMAScript 5 вже можливо було використовувати Unicod–послідовності для ідентифікаторів. Наприклад:
 
 ```js
-// Valid in ECMAScript 5 and 6
+// Валідно у ECMAScript 5 та 6
 var \u0061 = "abc";
 
 console.log(\u0061);     // "abc"
 
-// equivalent to:
+// еквівалентно до:
 console.log(a);          // "abc"
 ```
 
-After the `var` statement in this example, you can use either `\u0061` or `a` to access the variable. In ECMAScript 6, you can also use Unicode code point escape sequences as identifiers, like this:
+Після оператора `var`, у цьому прикладі, для звернення до змінної ви можете використовувати і `\u0061`, і `a`. У ECMAScript 6 ви також можете використовувати кодові керівні послідовності в якості ідентифікаторів, ось так:
 
 ```js
-// Valid in ECMAScript 5 and 6
+// Валідно у ECMAScript 5 та 6
 var \u{61} = "abc";
 
 console.log(\u{61});      // "abc"
 
-// equivalent to:
+// еквівалентно до:
  console.log(a);          // "abc"
 ```
 
-This example just replaces `\u0061` with its code point equivalent. Otherwise, it does exactly the same thing as the previous example.
+Цей приклад просто заміняє `\u0061` на його кодовий еквівалент. В решті він робить те саме, що і попередній приклад.
 
-Additionally, ECMAScript 6 formally specifies valid identifiers in terms of [Unicode Standard Annex #31: Unicode Identifier and Pattern Syntax](http://unicode.org/reports/tr31/), which gives the following rules:
+Крім того, ECMAScript 6 формально визначає валідні ідентифікатори у відповідності до [Unicode Standard Annex #31: Unicode Identifier and Pattern Syntax](http://unicode.org/reports/tr31/), який дає такі вказівки:
 
-1. The first character must be `$`, `_`, or any Unicode symbol with a derived core property of `ID_Start`.
-1. Each subsequent character must be `$`, `_`, `\u200c` (a zero-width non-joiner), `\u200d` (a zero-width joiner), or any Unicode symbol with a derived core property of `ID_Continue`.
+1. Першим символом повинен бути `$`, `_` або будь–який інший Unicode–символ з похідною основною властивістю `ID_Start`.
+1. Кожен символ субпослідовності повинен бути `$`, `_`, `\u200c` (zero-width non-joiner), `\u200d` (zero-width joiner) або будь–який інший Unicode–символ з похідною основною властивістю `ID_Start`.
 
-The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identify symbols that are appropriate for use in identifiers such as variables and domain names. The specification is not specific to JavaScript.
+Похідні основні властивості `ID_Start` та `ID_Continue` визначені в синтаксисі ідентифікаторів та шаблонів Unicode (Unicode Identifier and Pattern Syntax) як спосіб ідентифікації символів, які є прийнятними для використання в якості ідентифікаторів, як от змінних або доменних імен. Ця специфікацій не стосується лише JavaScript.
 
-## Formalizing the `__proto__` Property
+## Формалізація властивості `__proto__`
 
-Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set the `[[Prototype]]` property. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. Expecting all JavaScript engines to remove this property is unrealistic (there were popular JavaScript libraries making use of `__proto__`), so ECMAScript 6 also formalized the `__proto__` behavior. But the formalization appears in Appendix B of ECMA-262 along with this warning:
+Ще до того як ECMAScript 5 було завершено, декілька рушіїв JavaScript вже імплементували власну властивість `__proto__`, яка може використовуватись для отримання та встановлення властивості `[[Prototype]]`. Практично `__proto__` був передвісник для методів `Object.getPrototypeOf()` та `Object.setPrototypeOf()`. Очікування того, що рушії JavaScript видалять цю властивість не має змісту (було багато популярних JavaScript–бібліотек, які використовували `__proto__`), тому ECMAScript 6 також формалізує поведінку `__proto__`. Проте формалізація з’являється в Додатку Б до ECMA-262 разом з таким попередженням:
 
-> These features are not considered part of the core ECMAScript language. Programmers should not use or assume the existence of these features and behaviours when writing new ECMAScript code. ECMAScript implementations are discouraged from implementing these features unless the
-implementation is part of a web browser or is required to run the same legacy ECMAScript code that web browsers encounter.
+> Ці нововведення не вважаються частиною ядра мови ECMAScript. Програмістам не слід використовувати або покладатись на існування цих нововведень та особливостей при написанні нового коду на ECMAScript. Імплементаціям ECMAScript не рекомендується реалізувати ці нововведення якщо ця імплементація не є частиною веб–браузера або не потребує запуску застарілого ECMAScript–коду з яким зустрічаються веб–браузери.
 
-The ECMAScript specification recommends using `Object.getPrototypeOf()` and `Object.setPrototypeOf()` instead because `__proto__` has the following characteristics:
+Специфікація ECMAScript рекомендує використання `Object.getPrototypeOf()` та `Object.setPrototypeOf()` замість `__proto__`, оскільки `__proto__` має такі характеристики:
 
-1. You can only specify `__proto__` once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property with that restriction.
-1. The computed form `["__proto__"]` acts like a regular property and doesn't set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, which has exceptions.
+1. Ви можете визначити `__proto__` лише раз у об’єктному літералі. Якщо ви визначите дві властивості `__proto__`, тоді кинеться помилка. Це єдина властивість об’єктного літералу з таким обмеженням.
+1. Обчислювана форма `["__proto__"]` поводиться як звичайна властивість і не встановлює та не повертає прототип об’єкта. Всі правила, які стосуються властивостей об’єктних літералів застосовуються у цій формі, на відміну від необчислюваної форми, яка має виключення.
 
-While you should avoid using the `__proto__` property, the way the specification defined it is interesting. In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls the `Object.setPrototypeOf()` method. This leaves no real difference between using `__proto__` and `Object.getPrototypeOf()`/`Object.setPrototypeOf()`, except that `__proto__` allows you to set the prototype of an object literal directly. Here's how that works:
+Вам слід уникати використання властивості `__proto__`, проте спосіб того, як специфікація її визначає, є цікавим. У рушіях ECMAScript 6, `Object.prototype.__proto__` визначається як властивість–аксесор, у якої метод `get` викликає `Object.getPrototypeOf()`, а метод `set` викликає `Object.setPrototypeOf()`. Це не залишає справжніх відмінностей від використання `__proto__` та `Object.getPrototypeOf()`/`Object.setPrototypeOf()`, за виключенням того, що `__proto__` дозволяє вам встановлювати прототип у об’єктному літералі. Ось як це працює:
 
 ```js
 let person = {
@@ -134,7 +133,7 @@ let dog = {
     }
 };
 
-// prototype is person
+// person є прототипом
 let friend = {
     __proto__: person
 };
@@ -142,11 +141,11 @@ console.log(friend.getGreeting());                      // "Hello"
 console.log(Object.getPrototypeOf(friend) === person);  // true
 console.log(friend.__proto__ === person);               // true
 
-// set prototype to dog
+// встановлюємо dog в якості прототипа
 friend.__proto__ = dog;
 console.log(friend.getGreeting());                      // "Woof"
 console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-Instead of calling `Object.create()` to make the `friend` object, this example creates a standard object literal that assigns a value to the `__proto__` property. When creating an object with the `Object.create()` method, on the other hand, you'd have to specify full property descriptors for any additional object properties.
+Замість виклику `Object.create()` для створення об’єкта `friend`, цей приклад створює об’єктний літерал, який присвоює значення властивості `__proto__`. З іншого боку, при створенні об’єкту через метод `Object.create()`, вам би довелось визначати повні дескриптори властивостей для кожної додаткової властивості.
