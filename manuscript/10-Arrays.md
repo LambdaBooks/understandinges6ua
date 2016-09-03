@@ -1,14 +1,14 @@
-# Improved Array Capabilities
+# Вдосконалені можливості масивів
 
-The array is a foundational JavaScript object. But while other aspects of JavaScript have evolved over time, arrays remained the same until ECMAScript 5 introduced several methods to make them easier to use. ECMAScript 6 continues to improve arrays by adding a lot more functionality, like new creation methods, several useful convenience methods, and the ability to make typed arrays.
+Масив — це фундаментальний об’єкт JavaScript. Але, в той час як інші аспекти JavaScript вдосконалювались час від часу, масиви залишалися незмінними до того часу, як ECMAScript 5 презентував кілька методів для їх легшого використання. ECMAScript 6 продовжує вдосконалювати масиви, додаючи більше функціональності, як нові методи створення, де-які корисні та зручні методи, а також можливість створювати типізовані масиви.
 
-## Creating Arrays
+## Створення масивів
 
-Prior to ECMAScript 6, there were two primary ways to create arrays: the `Array` constructor and array literal syntax. Both approaches require listing array items individually and are otherwise fairly limited. Options for converting an array-like object (that is, an object with numeric indices and a `length` property) into an array were also limited and often required extra code. To make JavaScript arrays easier to create, ECMAScript 6 adds the `Array.of()` and `Array.from()` methods.
+До появи ECMAScript 6 існувало два основних способи створення масивів: конструктор `Array` та синтаксис літералу масиву. Обидва способи вимагають переліку членів масиву та, між тим, є досить обмеженими. Варіанти конвертації подібних до масивів об’єктів (маючи на у вазі, об’єкт з числовими індексами та властивістю `length`) в масиви також були досить обмеженими й потребували додаткового коду. Для того, щоб полегшити створення масивів в JavaScript, ECMAScript 6 додає методи `Array.of()` та `Array.from()`.
 
-### The Array.of() Method
+### Метод Array.of()
 
-One reason ECMAScript 6 adds new creation methods to JavaScript is to help developers avoid a quirk of creating arrays with the `Array` constructor. The `new Array()` constructor actually behaves differently based on the type and number of arguments passed to it. For example:
+Однією з причин додавання ECMAScript 6 нових методів JavaScript є бажання допомогти розробникам уникнути несподіванок при створенні масивів з конструктором `Array`. Конструктор `new Array` поводиться по-різному, залежно від типу й кількості аргументів наданих йому. Наприклад:
 
 ```js
 let items = new Array(2);
@@ -31,9 +31,9 @@ console.log(items[0]);              // 3
 console.log(items[1]);              // "2"
 ```
 
-When the `Array` constructor is passed a single numeric value, the `length` property of the array is set to that value. If a single non-numeric value is passed, then that value becomes the one and only item in the array. If multiple values are passed (numeric or not), then those values become items in the array. This behavior is both confusing and risky, as you may not always be aware of the type of data being passed.
+Коли конструктору `Array` надається один числовий аргумент, то буде встановлено лише властивість масиву `length`, яка відповідатиме значенню наданого аргументу. Якщо буде надано лише один аргумент не числового значення, то його значення стає єдиним членом масиву. Якщо надані кілька значень (числові або ні), тоді ці значення стануть членами масиву. Така поведінка може збентежити і є ризикованою, тому що ви не зажди можете бути певними у тому, який тип даних буде надано конструктору.
 
-ECMAScript 6 introduces `Array.of()` to solve this problem. The `Array.of()` method works similarly to the `Array` constructor but has no special case regarding a single numeric value. The `Array.of()` method always creates an array containing its arguments regardless of the number of arguments or the argument types. Here are some examples that use the `Array.of()` method:
+Щоб вирішити цю проблему ECMAScript 6 представляє метод `Array.of()`. Метод `Array.of()` працює подібно до конструктору `Array`, але не має виключень з єдиним числовим значенням аргументу. Метод `Array.of()` завжди створює масив, який містить надані аргументи незважаючи на тип або кількість наданих аргументів. Ось де-які приклади використання методу `Array.of()`:
 
 ```js
 let items = Array.of(1, 2);
@@ -50,7 +50,7 @@ console.log(items.length);          // 1
 console.log(items[0]);              // "2"
 ```
 
-To create an array with the `Array.of()` method, just pass it the values you want in your array. The first example here creates an array containing two numbers, the second array contains one number, and the last array contains one string. This is similar to using an array literal, and you can use an array literal instead of `Array.of()` for native arrays most of the time. But if you ever need to pass the `Array` constructor into a function, then you might want to pass `Array.of()` instead to ensure consistent behavior. For example:
+Щоб створити масив за допомогою методу `Array.of()`, достатньо просто передати йому значення, які ви бажаєте мати у вашому масиві. Перший приклад тут створює масив, який містить два числа, другий масив містить одне число та останній масив містить рядок. Це схоже на використання літералу об’єкту і ви можете використовувати літерал об’єкту замість `Array.of()` у більшості випадків. Але, якщо вам потрібно передати конструктор `Array` у функцію, то, можливо, ви захочете передати `Array.of()`, щоб переконатися у його відповідній поведінці. Наприклад:
 
 ```js
 function createArray(arrayCreator, value) {
@@ -60,13 +60,13 @@ function createArray(arrayCreator, value) {
 let items = createArray(Array.of, value);
 ```
 
-In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can pass `Array.of()` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
+У цьому коді функція `createArray()` приймає функцію яка створює масив і значення, щоб вставити в масив. Ви можете передати `Array.of()` у якості першого аргументу до `createArray()`, щоб створити новий масив. Буде небезпечно передавати безпосередньо `Array`, якщо ви не можете гарантувати, що другий аргумент не буде числом.
 
-I> The `Array.of()` method does not use the `Symbol.species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this` inside the `of()` method) to determine the correct data type to return.
+I> Метод `Array.of()` не використовує властивість `Symbol.species` (яка обговорювалась у Розділі 9), щоб визначити тип значення що повертається. Замість цього він використовую поточний конструктор (`this` всередині методу `of()`), щоб визначити коректний тип даних які буде повернено.
 
-### The Array.from() Method
+### Метод Array.from()
 
-Converting non-array objects into actual arrays has always been cumbersome in JavaScript. For instance, if you have an `arguments` object (which is array-like) and want to use it like an array, then you'd need to convert it first. To convert an array-like object to an array in ECMAScript 5, you'd write a function like the one in this example:
+Конвертація об’єктів які не є масивами до типових масивів завжди була досить складною в JavaScript. Наприклад, якщо ви маєте об’єкт `arguments` (який подібний до масиву) та хочете використовувати його як масив, то ви маєте спершу конвертувати  його. Щоб конвертувати подібний до масиву об’єкт в масив, у ECMAScript 5 ви мали б написати функцію подібно до тієї, що є в цьому прикладі:
 
 ```js
 function makeArray(arrayLike) {
@@ -82,11 +82,11 @@ function makeArray(arrayLike) {
 function doSomething() {
     var args = makeArray(arguments);
 
-    // use args
+    // використовуємо аргументи
 }
 ```
 
-This approach manually creates a `result` array and copies each item from `arguments` into the new array. That works but takes a decent amount of code to perform a relatively simple operation. Eventually, developers discovered they could reduce the amount of code by calling the native `slice()` method for arrays on array-like objects, like this:
+Цей метод штучно створює масив `result` та копіює кожен член з `arguments` в новий масив. Це працює, але потребує зайвого коду щоб виконати відносно просту операцію. Кінець-кінцем, розробники встановили, що вони можуть зменшити кількість коду, використовуючи природній для масивів та об’єктів схожих на масиви метод `slice()`, як ось:
 
 ```js
 function makeArray(arrayLike) {
@@ -96,31 +96,31 @@ function makeArray(arrayLike) {
 function doSomething() {
     var args = makeArray(arguments);
 
-    // use args
+    // використовуємо аргументи
 }
 ```
 
-This code is functionally equivalent to the previous example, and it works because it sets the `this` value for `slice()` to the array-like object. Since `slice()` needs only numeric indices and a `length` property to function correctly, any array-like object will work.
+Цей код функціонально відповідній до попереднього прикладу та працює, тому що він встановлює значення `this` для `slice()` відповідним до об’єкту схожого на масив. Оскільки `slice()` потребує тільки числові індекси та властивість `length` щоб коректно працювати, будь-який подібний до масиву об’єкт буде працювати.
 
-Even though this technique requires less typing, calling `Array.prototype.slice.call(arrayLike)` doesn't obviously translate to, "Convert `arrayLike` to an array." Fortunately, ECMAScript 6 added the `Array.from()` method as an obvious, yet clean, way to convert objects into arrays.
+Незважаючи на те, що ця техніка потребує меншого написання кода, виклик `Array.prototype.slice.call(arrayLike)` не є повною відповідністю до “Конвертації `arrayLike` до масиву.” На щастя, ECMAScript 6 додав метод `Array.from()` як очевидний, досить чистий, спосіб конвертації об’єктів у масиви.
 
-Given either an iterable or an array-like object as the first argument, the `Array.from()` method returns an array. Here's a simple example:
+Сприймаючи об’єкт, який може буди перебраним або схожий до масиву, як перший аргумент метод `Array.from()` повертає масив. Ось простий приклад:
 
 ```js
 function doSomething() {
     var args = Array.from(arguments);
 
-    // use args
+    // використовуємо аргументи
 }
 ```
 
-The `Array.from()` call creates a new array based on the items in `arguments`. So `args` is an instance of `Array` that contains the same values in the same positions as `arguments`.
+`Array.from()` створює новий масив заснований на членах `arguments`. Таким чином `args` є екземпляром `Array`, який містить ті самі значення й у тих самих позиціях що й `arguments`.
 
-I> The `Array.from()` method also uses `this` to determine the type of array to return.
+I> Метод `Array.from()` також використовує `this`, щоб визначити тип масиву, що повертається.
 
-#### Mapping Conversion
+#### Маповані перетворення
 
-If you want to take array conversion a step further, you can provide `Array.from()` with a mapping function as a second argument. That function operates on each value from the array-like object and converts it to some final form before storing the result at the appropriate index in the final array. For example:
+Якщо ви хочете піди ще далі в конвертуванні масивів, то можете використовувати `Array.from()` з функцією мапування у якості другого аргументу. Ця функція оперує кожним значенням подібного до масиву об'єкту, та конвертує їх до остаточної форми перед тим як зберегти результат з відповідним індексом у кінцевому масиві. Наприклад:
 
 ```js
 function translate() {
@@ -132,7 +132,7 @@ let numbers = translate(1, 2, 3);
 console.log(numbers);               // 2,3,4
 ```
 
-Here, `Array.from()` is passed `(value) => value + 1` as a mapping function, so it adds 1 to each item in the array before storing the item. If the mapping function is on an object, you can also optionally pass a third argument to `Array.from()` that represents the `this` value for the mapping function:
+Тут у якості функції мапування до `Array.from()` додається `(value) => value + 1`, таким чином до кожного члену масиву додається 1 перед його записом. Якщо функція мапування є об’єктом, ви також можете передати до `Array.from()` третій не обов’язковий аргумент, який буде визначати значення `this` для функції мапування:
 
 ```js
 let helper = {
@@ -152,11 +152,10 @@ let numbers = translate(1, 2, 3);
 console.log(numbers);               // 2,3,4
 ```
 
-This example passes `helper.add()` as the mapping function for the conversion. Since `helper.add()` uses the `this.diff` property, you need to provide the third argument to `Array.from()` specifying the value of `this`. Thanks to the third argument, `Array.from()` can easily convert data without calling `bind()` or specifying the `this` value in some other way.
+У цьому прикладі для конвертації у якості функції мапування передається `helper.add()`. Функція `helper.add()` використовує властивість `this.diff`, тому ви маєте впровадити третій аргумент для `Array.from()`, щоб вказати на значення `this`. Завдяки третьому аргументу `Array.from()` може легко конвертувати данні без використання `bind()` або визначення `this` якимось іншим чином.
 
-#### Use on Iterables
-
-The `Array.from()` method works on both array-like objects and iterables. That means the method can convert any object with a `Symbol.iterator` property into an array. For example:
+#### Використання в ітера́бельних об’єктах
+Метод `Array.from()` працює як в схожих до масивів так і в ітера́бельних об’єктах. Це означає, що метод може конвертувати в масив будь-який обʼєкт з властивістю `Symbol.iterator`. Наприклад:
 
 ```js
 let numbers = {
@@ -171,22 +170,21 @@ let numbers2 = Array.from(numbers, (value) => value + 1);
 
 console.log(numbers2);              // 2,3,4
 ```
+Оскільки обʼєкт `numbers` ітера́бельний ви можете передавати `numbers` безпосередньо до `Array.from()`, щоб конвертувати його значення у масив. Функція мапування додає 1 до кожного члену, тому кінцевий масив містить 2, 3, та 4 замість 1, 2, та 3.
 
-Since the `numbers` object is an iterable, you can pass `numbers` directly to `Array.from()` to convert its values into an array. The mapping function adds one to each number so the resulting array contains 2, 3, and 4 instead of 1, 2, and 3.
+I> Якщо обʼєкт і схожих до масиву, і ітера́бельний, тоді ітератор використовується `Array.from()` для визначення значень, які треба конвертувати.
 
-I> If an object is both array-like and iterable, then the iterator is used by `Array.from()` to determine the values to convert.
+## Нові методи для всіх масивів
 
-## New Methods on All Arrays
+Продовжуючи тренд запроваджений ECMAScript 5, ECMAScript 6 додає кілька нових методів до масивів. Методи `find()` та `findIndex()` призначені, щоб допомогти розробникам використовувати масиви з будь-якими значеннями, в той час як `fill()` та `copyWithin()` натхненні використанням *типізованих масивів*, формою масиву введеною в ECMAScript 6, у якій використовуються тільки цифри.
 
-Continuing the trend from ECMAScript 5, ECMAScript 6 adds several new methods to arrays. The `find()` and `findIndex()` methods are meant to aid developers using arrays with any values, while `fill()` and `copyWithin()` are inspired by use cases for *typed arrays*, a form of array introduced in ECMAScript 6 that uses only numbers.
+### Методи find() та findIndex()
 
-### The find() and findIndex() Methods
+До ECMAScript 5 пошук по масивам був досить незграбним, тому що для цього не було вбудованих методів. ECMAScript 5 додав методи `indexOf()` та `lastIndexOf()`, нарешті дозволивши розробникам шикати специфічні значення всередині масиву. Ці два методи були значним покращенням, але вони все ще були досить обмежені, бо ви могли шукати тільки одне значення за раз. Наприклад, якщо ви хотіли відшукати перше парне число в наборі чисел, ви мали б написати власний код для цього. ECMAScript 6 вирішив цю проблему, запропонувавши методи `find()` та `findIndex()`.
 
-Prior to ECMAScript 5, searching through arrays was cumbersome because there were no built-in methods for doing so. ECMAScript 5 added the `indexOf()` and `lastIndexOf()` methods, finally allowing developers to search for specific values inside an array. These two methods were a big improvement, yet they were still fairly limited because you could only search for one value at a time. For example, if you wanted to find the first even number in a series of numbers, you'd need to write your own code to do so. ECMAScript 6 solved that problem by introducing the `find()` and `findIndex()` methods.
+Обидва, `find()` та `findIndex()`, приймають два аргументи: функцію зворотного виклику та не обов’язкове значення для `this` в середині функції зворотного виклику. До функції зворотного виклику передається поточний елемент масиву, індекс поточного елементу в масиві та сам масив — такі ж аргументи передаються до методів `map()` та `forEach()`. Функція зворотного виклику повертає `true`, якщо поточне значення відповідає критеріям які ви визначили. Обидва, `find()` та `findIndex()`, припиняють пошук по масиву, коли функція зворотного виклику вперше повертає `true`.
 
-Both `find()` and `findIndex()` accept two arguments: a callback function and an optional value to use for `this` inside the callback function. The callback function is passed an array element, the index of that element in the array, and the array itself--the same arguments passed to methods like `map()` and `forEach()`. The callback should return `true` if the given value matches some criteria you define. Both `find()` and `findIndex()` also stop searching the array the first time the callback function returns `true`.
-
-The only difference between these methods is that `find()` returns the value whereas `findIndex()` returns the index at which the value was found. Here's an example to demonstrate:
+Єдина відмінність між цими методами в тому, що `find()` повертає значення, в той час як findIndex()` повертає індекс в якому було знайдене значення. Ось приклад для демонстрації:
 
 ```js
 let numbers = [25, 30, 35, 40, 45];
@@ -195,13 +193,13 @@ console.log(numbers.find(n => n > 33));         // 35
 console.log(numbers.findIndex(n => n > 33));    // 2
 ```
 
-This code calls `find()` and `findIndex()` to locate the first value in the `numbers` array that is greater than 33. The call to `find()` returns 35 and `findIndex()` returns 2, the location of 35 in the `numbers` array.
+У цьому коді `find()` та `findIndex()` викликаються щоб визначите перше значення в масиві `numbers`, яке є більшим за 33. Виклик `find()` повертає 35, а `findIndex()` повертає 2, індекс 35 в масиві `numbers`.
 
-Both `find()` and `findIndex()` are useful to find an array element that matches a condition rather than a value. If you only want to find a value, then `indexOf()` and `lastIndexOf()` are better choices.
+Обидва, `find()` та `findIndex()`, корисні, щоб відшукати елемент масиву, який відповідає певній умові, а не його значення. Якщо вам потрібно відшукати значення, то кращим вибором будуть `indexOf()` та `lastIndexOf()`.
 
-### The fill() Method
+### Метод fill()
 
-The `fill()` method fills one or more array elements with a specific value. When passed a value, `fill()` overwrites all of the values in an array with that value. For example:
+Метод `fill()` заповнює один чи більше елементів масиву певним значенням. Коли передається лише значення, метод `fill()` переписує всі елементи масиву наданим значенням. Наприклад:
 
 ```js
 let numbers = [1, 2, 3, 4];
@@ -211,7 +209,7 @@ numbers.fill(1);
 console.log(numbers.toString());    // 1,1,1,1
 ```
 
-Here, the call to `numbers.fill(1)` changes all values in `numbers` to `1`. If you only want to change some of the elements, rather than all of them, you can optionally include a start index and an exclusive end index, like this:
+Тут виклик `numbers.fill(1)` змінює всі значення в `numbers` на `1`. Якщо ви хочете замінити лише певні елементи, радше ніж усі, то ви можете визначити початковий та кінцевий індекси, як ось так:
 
 ```js
 let numbers = [1, 2, 3, 4];
@@ -225,171 +223,170 @@ numbers.fill(0, 1, 3);
 console.log(numbers.toString());    // 1,0,0,1
 ```
 
-In the `numbers.fill(1,2)` call, the `2` indicates to start filling elements at index 2. The exclusive end index isn't specified with a third argument, so `numbers.length` is used as the end index, meaning the last two elements in `numbers` are filled with `1`. The `numbers.fill(0, 1, 3)` operation fills array elements at indices 1 and 2 with `0`. Calling `fill()` with the second and third arguments allows you to fill multiple array elements at once without overwriting the entire array.
+У виклику `numbers.fill(1,2)`, `2` визнає місцем початку заповнення елементів індекс 2. Кінцевий індекс не визначено у якості третього аргументу, тому для кінцевого індексу використано `numbers.length`, це означаю, що останні два елементи у `numbers` будуть заповненні значенням `1`. Операція `numbers.fill(0, 1, 3)` заповнює елементи масиву з індексами 1 та 2 значенням `0`. Виклик `fill()` з другим та третім аргументами дозволяє вам заповнити декілька елементів за один раз без переписування всього масиву.
 
-I> If either the start or end index are negative, then those values are added to the array's length to determine the final location. For instance, a start location of `-1` gives `array.length - 1` as the index, where `array` is the array on which `fill()` is called.
+I> Якщо початковий або кінцевий індекси є негативними, тоді ці значення будуть додані до величини масиву, щоб визначити остаточну локацію. Наприклад, початкове знаходження `-1` дає `array.length — 1` у якості індексу, де `array` є масивом по відношенню до якого було викликано `fill()`.
 
-### The copyWithin() Method
+### Метод copyWithin()
 
-The `copyWithin()` method is similar to `fill()` in that it changes multiple array elements at the same time. However, instead of specifying a single value to assign to array elements, `copyWithin()` lets you copy array element values from the array itself. To accomplish that, you need to pass two arguments to the `copyWithin()` method: the index where the method should start filling values and the index where the values to be copied begin.
+Метод `copyWithin()` схожий до `fill()` в тому, що він зміню декілька членів масиву за раз. Але, замість того, щоб визначати одне значення яке буде надане елементам масиву, `copyWithin()` дозволяю вам скопіювати значення елементів масиву з самого себе. Щоб досягти цього вам потрібно передати два аргумент до методу `copyWithin()`: індекс з якого метод має почати заповнювати значення та індекс з якого почнеться копіювання значень.
 
-For instance, to copy the values from the first two elements in an array to the last two items in the array, you can do the following:
+Наприклад, щоб скопіювати значення перших двох елементів масиву до останніх двох ви можете зробити наступне:
 
 ```js
 let numbers = [1, 2, 3, 4];
 
-// paste values into array starting at index 2
-// copy values from array starting at index 0
+// вставити значення у масив, починаючи з індексу 2
+// скопіювати значення масиву, починаючи з індексу 0
 numbers.copyWithin(2, 0);
 
 console.log(numbers.toString());    // 1,2,1,2
 ```
 
-This code pastes values into `numbers` beginning from index 2, so both indices 2 and 3 will be overwritten. Passing `0` as the second argument to `copyWithin()` indicates to start copying values from index 0 and continue until there are no more elements to copy into.
+Цей код вставляє значення в `numbers`, починаючи з індексу 2, тому обидва індекси, 2 і 3, будуть переписані. Передаючи `0` як другий аргумент до `copyWithin()` ми позначаємо початок, отже значення будуть копіюватися з індексу 0 і доти, поки більше не залишиться елементів для копіювання.
 
-By default, `copyWithin()` always copies values up to the end of the array, but you can provide an optional third argument to limit how many elements will be overwritten. That third argument is an exclusive end index at which copying of values stops. Here's an example:
+За замовчуванням, `copyWithin()` завжди копіює значення аж до кінця масиву, але ви можете надати не обов'язковий третій аргумент, щоб обмежити кількість елементів, які будуть переписані. Цей третій аргумент є кінцевим індексом на якому копіювання значень буду зупинено. Ось приклад:
 
 ```js
 let numbers = [1, 2, 3, 4];
 
-// paste values into array starting at index 2
-// copy values from array starting at index 0
-// stop copying values when you hit index 1
+// вставити значення у масив, починаючи з індексу 2
+// скопіювати значення масиву, починаючи з індексу 0
+// перестати копіювати, коли ви досягнете індексу 1
 numbers.copyWithin(2, 0, 1);
 
 console.log(numbers.toString());    // 1,2,1,4
 ```
+У цьому прикладі тільки значення за індексом 0 скопійоване, бо необовʼязковий кінцевий аргумент встановлено до `1`. Останній елемент в масиві залишається незмінним.
 
-In this example, only the value in index 0 is copied because the optional end index is set to `1`. The last element in the array remains unchanged.
+I> Так само як і з методом `fill()`, якщо ви передасте відʼємне значення до будь-якого аргументу методу `copyWithin()`, то довжина масиву буде автоматично додана до цього значення, щоб визначити індекс який слід використовувати.
 
-I> As with the `fill()` method, if you pass a negative number for any argument to the `copyWithin()` method, the array's length is automatically added to that value to determine the index to use.
+В даний момент вам може бути не зрозумілою доцільність використання `fill()` та `copyWithin()`. Це тому, що методи в першу чергу розроблялись для типізованих масивів та були додані до звичайних масивів для більшої одноманітності. Однак, як ви дізнаєтесь з наступного розділу, якщо ви будете використовувати типізовані масиви для маніпуляцій бітовими числами, ці методи стануть вам дуже корисними.
 
-The use cases for `fill()` and `copyWithin()` may not be obvious to you at this point. That's because these methods originated on typed arrays and were added to regular arrays for consistency. As you'll learn in the next section, however, if you use typed arrays for manipulating the bits of a number, these methods become a lot more useful.
+## Типізовані масиви
 
-## Typed Arrays
+Типізовані масиви є масиви спеціального призначення, розроблені для роботи з числовими типами (маються на у вазі не все названі типи). Походження типізованих масивів можна віднести до WebGL, порту Open GL ES 2.0, призначеного для використання веб-сторінок з елементом `<canvas>`. Типізовані масиви були створені як частина порту, щоб забезпечити швидке побітовое обчислення в JavaScript.
 
-Typed arrays are special-purpose arrays designed to work with numeric types (not all types, as the name might imply). The origin of typed arrays can be traced to WebGL, a port of Open GL ES 2.0 designed for use in web pages with the `<canvas>` element. Typed arrays were created as part of the port to provide fast bitwise arithmetic in JavaScript.
+Обчислення звичайних чисел в JavaScript було занадто повільним для WebGL, тому що числа були збережені у 64-бітному форматі з рухомою комою та перетворювалися у 32-розрядні цілі числа за потребою. Типізовані масиви були введені, щоб обійти це обмеження і забезпечити кращу продуктивність для арифметичних операцій. Концепція в тому, що будь-яке одиничне число може розглядатися як масив бітів і, таким чином, можна використовувати звичні методи, доступні для масивах JavaScript.
 
-Arithmetic on native JavaScript numbers was too slow for WebGL because the numbers were stored in a 64-bit floating-point format and converted to 32-bit integers as needed. Typed arrays were introduced to circumvent this limitation and provide better performance for arithmetic operations. The concept is that any single number can be treated like an array of bits and thus can use the familiar methods available on JavaScript arrays.
+У ECMAScript 6 було прийнято типізовані масиви в якості офіційної частини мови для забезпечення кращої сумісності між рушіями JavaScript та взаємодією з масивами JavaScript. У той час як версія типізованих масивів в ECMAScript 6 не є точно такою ж як версії у WebGL, вони мають багато спільного, щоб зробити версію ECMAScript 6 еволюційною на шляху до версії WebGL, радше ніж використовувати інший підхід.
 
-ECMAScript 6 adopted typed arrays as a formal part of the language to ensure better compatibility across JavaScript engines and interoperability with JavaScript arrays. While the ECMAScript 6 version of typed arrays is not exactly the same as the WebGL version, there are enough similarities to make the ECMAScript 6 version an evolution of the WebGL version rather than a different approach.
+### Числові типи даних
 
-### Numeric Data Types
+Числа в JavaScript зберігаються в форматі IEEE 754, який використовує 64 біта для зберігання репрезентації числа з рухомою комою. Цей формат представляє як цілі числа так і числа з рухомою комою в JavaScript, з перетворенням між двома форматами з частотою зміни чисел. Типізовані масиви дозволяють зберігати і маніпулювати вісьмома різними числовими типами:
 
-JavaScript numbers are stored in IEEE 754 format, which uses 64 bits to store a floating-point representation of the number. This format represents both integers and floats in JavaScript, with conversion between the two formats happening frequently as numbers change. Typed arrays allow the storage and manipulation of eight different numeric types:
+1. Ціле 8-бітове число зі знаком (int8)
+1. Ціле 8-бітове число без знаку (uint8)
+1. Ціле 16-бітове число зі знаком (int16)
+1. Ціле 16-бітове число без знаку (uint16)
+1. Ціле 32-бітове число зі знаком (int32)
+1. Ціле 32-бітове число без знаку (uint32)
+1. 32-бітове число з рухомою комою (float32)
+1. 64-бітове число з рухомою комою (float64)
 
-1. Signed 8-bit integer (int8)
-1. Unsigned 8-bit integer (uint8)
-1. Signed 16-bit integer (int16)
-1. Unsigned 16-bit integer (uint16)
-1. Signed 32-bit integer (int32)
-1. Unsigned 32-bit integer (uint32)
-1. 32-bit float (float32)
-1. 64-bit float (float64)
+Якщо ви представляєте число, яке відповідає int8 як нормальне число в JavaScript, ви будете витрачати 56 біт. Ці біти могли б краще використовувати для зберігання додаткових значень int8 або будь-якого іншого числа, яке вимагає менше, ніж 56 біт. Використання бітів більш ефективно є одним з варіантів використання типізованих масивів.
 
-If you represent a number that fits in an int8 as a normal JavaScript number, you'll waste 56 bits. Those bits might better be used to store additional int8 values or any other number that requires less than 56 bits. Using bits more efficiently is one of the use cases typed arrays address.
+Всі операції та об'єкти, пов'язані з типізованими масивами зосереджені навколо цих восьми типів даних. Але, для того, щоб використовувати їх вам необхідно створити буферний масив для зберігання даних.
 
-All of the operations and objects related to typed arrays are centered around these eight data types. In order to use them, though, you'll need to create an array buffer to store the data.
+I> У цій книзі я буду посилатися на ці типи відповідно до скорочень, які я показав в дужках. Ці скорочення фактично не з'являються в коді JavaScript; це просто скорочення для більш довгих описів.
 
-I> In this book, I will refer to these types by the abbreviations I showed in parentheses. Those abbreviations don't appear in actual JavaScript code; they're just a shorthand for the much longer descriptions.
+### Буферні масиви
 
-### Array Buffers
-
-The foundation for all typed arrays is an *array buffer*, which is a memory location that can contain a specified number of bytes. Creating an array buffer is akin to calling `malloc()` in C to allocate memory without specifying what the memory block contains. You can create an array buffer by using the `ArrayBuffer` constructor as follows:
+Основою для всіх типізованих масивів є *буферний масив*, який являє собою осередок пам'яті, що може містити певну кількість байтів. Створення буферного масиву є чимось на кшталт виклику `malloc()` в C, щоб виділити пам'ять без вказівки того, що блок пам'яті містить. Ви можете створити буферний масив за допомогою конструктору `ArrayBuffer` наступним чином:
 
 ```js
-let buffer = new ArrayBuffer(10);   // allocate 10 bytes
+let buffer = new ArrayBuffer(10);   // виділити 10 байтів
 ```
 
-Just pass the number of bytes the array buffer should contain when you call the constructor. This `let` statement creates an array buffer 10 bytes long. Once an array buffer is created, you can retrieve the number of bytes in it by checking the `byteLength` property:
+Просто передайте число байтів які повинен містити буферний масив при виклику конструктора. Цей оператор `let` створює буферний масив довжиною 10 байт. Після того, як буферний масив створений, ви можете отримати кількість байтів в ньому, перевіряючи властивість `byteLength`:
 
 ```js
-let buffer = new ArrayBuffer(10);   // allocate 10 bytes
+let buffer = new ArrayBuffer(10);   // виділити 10 байтів
 console.log(buffer.byteLength);     // 10
 ```
 
-You can also use the `slice()` method to create a new array buffer that contains part of an existing array buffer. The `slice()` method works like the `slice()` method on arrays: you pass it the start index and end index as arguments, and it returns a new `ArrayBuffer` instance comprised of those elements from the original. For example:
+Ви також можете використовувати метод `slice()`, щоб створити новий буферний масив, який містить частину існуючого буферного масиву. Метод `slice()` працює як і метод `slice()` у масивах: ви передаєте йому початковий і кінцевий індекси в якості аргументів, і він повертає новий екземпляр `ArrayBuffer`, що складається з тих самих елементів оригіналу. Наприклад:
 
 ```js
-let buffer = new ArrayBuffer(10);   // allocate 10 bytes
+let buffer = new ArrayBuffer(10);   // виділити 10 байтів
 
 
 let buffer2 = buffer.slice(4, 6);
 console.log(buffer2.byteLength);    // 2
 ```
 
-In this code, `buffer2` is created by extracting the bytes at indices 4 and 5. Just like when you call the array version of this method, the second argument to `slice()` is exclusive.
+У цьому коді `buffer2` створюється шляхом вилучення байтів за індексами 4 та 5. Так само, як при виклику версії цього методу для масиву, другий аргумент `slice()` є виключаючим.
 
-Of course, creating a storage location isn't very helpful without being able to write data into that location. To do so, you'll need to create a view.
+Звичайно, створення місця для зберігання не дуже корисне, якщо ви не маєте можливості записувати дані в це місце. Для цього вам потрібно створити вид.
 
-I> An array buffer always represents the exact number of bytes specified when it was created. You can change the data contained within an array buffer, but never the size of the array buffer itself.
+I> Буферний масив завжди представляє точне число байтів, зазначених при його створенні. Ви можете змінити дані, що містяться в буферному масиві, але не розмір самого буферного масиву.
 
-### Manipulating Array Buffers with Views
+### Маніпулювання буферними масивами за допомогою видів
 
-Array buffers represent memory locations, and *views* are the interfaces you'll use to manipulate that memory. A view operates on an array buffer or a subset of an array buffer's bytes, reading and writing data in one of the numeric data types. The `DataView` type is a generic view on an array buffer that allows you to operate on all eight numeric data types.
+Буферні масиви представляють осередки пам'яті, а *вид* це інтерфейс, який ви будете використовувати для виконання маніпуляцій з пам'яттю. Вид оперує буферним масивом або підмножиною байтів буферного масиву, зчитуючи і записуючи інформацію в одному з числових типів даних. Тип `DataView` являє собою загальний вигляд буферного масиву, який дозволяє працювати усіма вісьмома типами числових даних.
 
-To use a `DataView`, first create an instance of `ArrayBuffer` and use it to create a new `DataView`. Here's an example:
+Для того, щоб використовувати `DataView`, спочатку потрібно створити екземпляр `ArrayBuffer` та використовувати його, щоб створити новий `DataView`. Ось приклад:
 
 ```js
 let buffer = new ArrayBuffer(10),
     view = new DataView(buffer);
 ```
 
-The `view` object in this example has access to all 10 bytes in `buffer`. You can also create a view over just a portion of a buffer. Just provide a byte offset and, optionally, the number of bytes to include from that offset. When a number of bytes isn't included, the`DataView` will go from the offset to the end of the buffer by default. For example:
+В цьому прикладі об'єкт `view` має доступ до всіх 10 байт в `buffer`. Ви також можете створити вид тільки для частина буфера. Просто вкажіть значення байту для зміщення і, при необхідності, число байтів, які треба взяти починаючи з цього зміщення. Коли число байтів не включене, `DataView` за замовчуванням буде проходити від зміщення до кінця буфера. Наприклад:
 
 ```js
 let buffer = new ArrayBuffer(10),
-    view = new DataView(buffer, 5, 2);      // cover bytes 5 and 6
+    view = new DataView(buffer, 5, 2);      // покриває байти 5 та 6
 ```
 
-Here, `view` operates only on the bytes at indices 5 and 6. This approach allows you to create several views over the same array buffer, which can be useful if you want to use a single memory location for an entire application rather than dynamically allocating space as needed.
+Тут, `view` працює тільки з байтами за індексами 5 і 6. Цей підхід дозволяє створювати кілька видів з тим же самим буферним масивом, що може бути корисним коли ви хочете використовувати одну комірку пам'яті для всієї програми, а не динамічно виділяти простір при необхідності.
 
-#### Retrieving View Information
+#### Отримуємо інформацію з виду
 
-You can retrieve information about a view by fetching the following read-only properties:
+Ви можете отримати інформацію про вид, запитуючи наступні властивості, які доступні тільки для читання:
 
-* `buffer` - The array buffer that the view is tied to
-* `byteOffset` - The second argument to the `DataView` constructor, if provided (0 by default)
-* `byteLength` - The third argument to the `DataView` constructor, if provided (the buffer's `byteLength` by default)
+* `buffer` - буферний масив з яким пов'язаний вид
+* `byteOffset` - другий аргумент конструктору `DataView`, якщо наданий (0 за замовчуванням)
+* `byteLength` - третій аргумент конструктору `DataView`, якщо наданий (властивість  `byteLength` від `buffer` за замовчуванням)
 
-Using these properties, you can inspect exactly where a view is operating, like this:
+Використовуючи ці властивості, ви можете перевірити, де саме працює вид, ось як:
 
 ```js
 let buffer = new ArrayBuffer(10),
-    view1 = new DataView(buffer),           // cover all bytes
-    view2 = new DataView(buffer, 5, 2);     // cover bytes 5 and 6
+    view1 = new DataView(buffer),           // покриває всі байти
+    view2 = new DataView(buffer, 5, 2);     // покриває байти 5 та 6
 
-console.log(view1.buffer === buffer);       // true
-console.log(view2.buffer === buffer);       // true
+console.log(view1.buffer === buffer);       // вірно
+console.log(view2.buffer === buffer);       // вірно
 console.log(view1.byteOffset);              // 0
 console.log(view2.byteOffset);              // 5
 console.log(view1.byteLength);              // 10
 console.log(view2.byteLength);              // 2
 ```
 
-This code creates `view1`, a view over the entire array buffer, and `view2`, which operates on a small section of the array buffer. These views have equivalent `buffer` properties because both work on the same array buffer. The `byteOffset` and `byteLength` are different for each view, however. They reflect the portion of the array buffer where each view operates.
+Цей код створює `view1`, вид для всього буферного масиву і `view2`, який діє на невеликій ділянці буферного масиву. Ці види мають еквівалентні властивості `buffer`, тому що обидва працюють у тому ж самому буферному масиві. Однак, `byteOffset` та `byteLength` різні для кожного виду. Вони відображають частину буферного масиву, якими оперує кожен вид.
 
-Of course, reading information about memory isn't very useful on its own. You need to write data into and read data out of that memory to get any benefit.
+Звичайно, читання інформації про пам'ять саме по собі не дуже корисне. Вам потрібно записати дані і зчитувати дані з пам'яті, щоб отримати будь-яку вигоду.
 
-#### Reading and Writing Data
+#### Зчитування і запис даних
 
-For each of JavaScript's eight numeric data types, the `DataView` prototype has a method to write data and a method to read data from an array buffer. The method names all begin with either "set" or "get" and are followed by the data type abbreviation. For instance, here's a list of the read and write methods that can operate on int8 and uint8 values:
+Для кожного з восьми числових типів даних в JavaScript, прототип `DataView` має метод для запису даних і спосіб зчитування даних з буферного масиву. Назви методів починаються з "set" або "get" і відповідають абревіатурам типів даних. Наприклад, ось список методів читання і запису, які можуть працювати зі значеннями int8 та uint8:
 
-* `getInt8(byteOffset, littleEndian)` - Read an int8 starting at `byteOffset`
-* `setInt8(byteOffset, value, littleEndian)` - Write an int8 starting at `byteOffset`
-* `getUint8(byteOffset, littleEndian)` - Read an uint8 starting at `byteOffset`
-* `setUint8(byteOffset, value, littleEndian)` - Write an uint8 starting at `byteOffset`
+* `getInt8(byteOffset, littleEndian)` - зчитує дані int8, починаючи з `byteOffset`
+* `setInt8(byteOffset, value, littleEndian)` - записує дані int8, починаючи з `byteOffset`
+* `getUint8(byteOffset, littleEndian)` - зчитує дані uint8, починаючи з `byteOffset`
+* `setUint8(byteOffset, value, littleEndian)` - записує дані uint8, починаючи з `byteOffset`
 
-The "get" methods accept two arguments: the byte offset to read from and an optional boolean indicating whether the value should be read as little-endian. (*Little-endian* means the least significant byte is at byte 0, instead of in the last byte.) The "set" methods accept three arguments: the byte offset to write at, the value to write, and an optional boolean indicating whether the value should be stored in little-endian format.
+Методи "get" приймають два аргументи: значення байту зміщення для читання і необов'язкове логічне значення, яке вказує, чи слід зчитувати значення як прямий порядок байтів (*прямий порядок байтів* означає, що молодший байт є в позиції байт 0, замість останнього байту.) Методи "set" приймають три аргументи: значення байту зміщення для запису, значення яке слід записати, і необов'язкове логічне значення, яке вказує, чи повинне значення бути збережене дотримуючись прямого порядку байтів.
 
-Though I've only shown the methods you can use with 8-bit values, the same methods exist for operating on 16- and 32-bit values. Just replace the `8` in each name with `16` or `32`. Alongside all those integer methods, `DataView` also has the following read and write methods for floating point numbers:
+Хоча я тільки показав методи, які ви можете використовувати з 8-бітовими значенями, одні і ті ж методи існують для роботи з 16- і 32-бітними значеннями. Просто замініть `8` в кожному імені на `16` або `32`. Поряд з усіма цими методами для цілих чисел, `DataView` також має наступні методи читання і запису для чисел з рухомою комою:
 
-* `getFloat32(byteOffset, littleEndian)` - Read a float32 starting at `byteOffset`
-* `setFloat32(byteOffset, value, littleEndian)` - Write a float32 starting at `byteOffset`
-* `getFloat64(byteOffset, littleEndian)` - Read a float64 starting at `byteOffset`
-* `setFloat64(byteOffset, value, littleEndian)` - Write a float64 starting at `byteOffset`
+* `getFloat32(byteOffset, littleEndian)` - зчитує дані float32 починаючи з `byteOffset`
+* `setFloat32(byteOffset, value, littleEndian)` - записує дані float32, починаючи з `byteOffset`
+* `getFloat64(byteOffset, littleEndian)` - зчитую дані float64, починаючи з `byteOffset`
+* `setFloat64(byteOffset, value, littleEndian)` - записує дані float64, починаючи з `byteOffset`
 
-To see a "set" and a "get" method in action, consider the following example:
+Щоб побачити методи "set" та "get" в дії, розглянемо наступний приклад:
 
 ```js
 let buffer = new ArrayBuffer(2),
@@ -402,9 +399,9 @@ console.log(view.getInt8(0));       // 5
 console.log(view.getInt8(1));       // -1
 ```
 
-This code uses a two-byte array buffer to store two int8 values. The first value is set at offset 0 and the second is at offset 1, reflecting that each value spans a full byte (8 bits). Those values are later retrieved from their positions with the `getInt8()` method. While this example uses int8 values, you can use any of the eight numeric types with their corresponding methods.
+Цей код використовує буферний масив з двох байтів для зберігання двох значень у форматі int8. Перше значення встановлюється зі зміщенням 0, а друге зі зміщенням 1, вказуючи, що кожне значення охоплює повний байт (8 біт). Ці значення пізніше вилучені зі своїх позицій за допомогою методу `getInt8()`. В той час як в цьому прикладі використовується значення int8, ви можете використовувати будь-який з восьми числових типів з відповідними методами.
 
-Views are interesting because they allow you to read and write in any format at any point in time, regardless of how data was previously stored. For instance, writing two int8 values and reading the buffer with an int16 method works just fine, as in this example:
+Види цікаві тим, що вони дозволяють читати і записувати в будь-якому форматі, в будь-який момент часу, незалежно від того, як дані були попередньо збережені. Наприклад, запис двох значень int8 і зчитування буферу за допомогою методу int16 працює просто відмінно, як в цьому прикладі:
 
 ```js
 let buffer = new ArrayBuffer(2),
@@ -418,9 +415,9 @@ console.log(view.getInt8(0));       // 5
 console.log(view.getInt8(1));       // -1
 ```
 
-The call to `view.getInt16(0)` reads all bytes in the view and interprets those bytes as the number 1535. To understand why this happens, take a look at Figure 10-1, which shows what each `setInt8()` line does to the array buffer.
+Виклик `view.getInt16(0)` зчитує всі байти з виду та інтерпретує ці байти як число 1535. Для того, щоб зрозуміти, чому це відбувається, подивіться на Малюнок 10-1, який показує, що кожна лінія `setInt8()` робить в буферному масиві.
 
-<!--![Figure 10-1: The array buffer after two method calls](images/Ch 10 Graphic.jpg)-->
+<!--![Малюнок 10-1: Буферний масив після виклику двох методів](images/Ch 10 Graphic.jpg)-->
 
 ```
 new ArrayBuffer(2)      0000000000000000
@@ -428,51 +425,50 @@ view.setInt8(0, 5);     0000010100000000
 view.setInt8(1, -1);    0000010111111111
 ```
 
-The array buffer starts with 16 bits that are all zero. Writing `5` to the first byte with `setInt8()` introduces a couple of 1s (in 8-bit representation, 5 is 00000101). Writing -1 to the second byte sets all bits in that byte to 1, which is the two's complement representation of -1. After the second `setInt8()` call, the array buffer contains 16 bits, and `getInt16()` reads those bits as a single 16-bit integer, which is 1535 in decimal.
+Буферний масив починається 16 бітами, які всі рівні нулю. Запис `5` у перший байт з `setInt8()` вводить пару 1s (у 8-бітовій репрезентації, 5 — це 00000101). Запис -1 до другого байту встановлює всі біти в цьому байті у 1, що відповідає репрезентації -1 в байт-коді. Після другого виклику `setInt8()` буферний масив містить 16 біт, і `getInt16()` зчитує ці біти у вигляді одного 16-розрядного цілого числа, яке має значення 1535 в десятковій системі числення.
 
-The `DataView` object is perfect for use cases that mix different data types in this way. However, if you're only using one specific data type, then the type-specific views are a better choice.
+Об'єкт `DataView` ідеально підходить для випадків використання, що змішують різні типи даних. Однак, якщо ви використовуєте тільки один конкретний тип даних, то види конкретного типу є кращим вибором.
 
-#### Typed Arrays Are Views
+#### Типізовані масиви — це види
 
-ECMAScript 6 typed arrays are actually type-specific views for array buffers. Instead of using a generic `DataView` object to operate on an array buffer, you can use objects that enforce specific data types. There are eight type-specific views corresponding to the eight numeric data types, plus an additional option for `uint8` values.
+Типізовані масиви ECMAScript 6 фактично є специфічними до типу даних видами буферного масиву. Замість того щоб використовувати універсальний об'єкт `DataView` для роботи з буферним масивом, ви можете використовувати об'єкти, які будуть застосовувати особливі типи даних. Є вісім специфічних до конкретного типу даних виду, відповідно до восьми числових типів даних, плюс додаткова опція для значень `uint8`.
 
-Table 10-1 shows an abbreviated version of the complete list of type-specific views from section 22.2 of the ECMAScript 6 specification.
+Таблиця 10-1 показує скорочений варіант повного списку видів специфічних до типу даних з розділу 22.2 специфікації ECMAScript 6.
 
-<!--{ title="Table 10-1: Some Type-Specific Views in ECMAScript 6" }-->
+<!--{ title="Таблиця 10-1: Деякі специфічні до типу даних види в ECMAScript 6" }-->
 <!-- @Nicholas: I noticed the table title was throwing off the markdown preview
      output somehow, so I commented it out for now. /JG -->
 
-|Constructor Name|Element Size (in bytes)|Description                        |Equivalent C Type|
+|Ім’я конструктора|Розмір елементу (в байтах)|Опис                        |Еквівалентний тип в C|
 |----------------|------------|-----------------------------------|-----------------|
-|`Int8Array`     |1           |8-bit two's complement signed integer|`signed char`|
-|`Uint8Array`    |1           |8-bit unsigned integer             |`unsigned char`|
-|`Uint8ClampedArray`|1        |8-bit unsigned integer (clamped conversion)|`unsigned char`|
-|`Int16Array`    |2           |16-bit two's complement signed integer|`short`|
-|`Uint16Array`   |2           |16-bit unsigned integer             |`unsigned short`|
-|`Int32Array`    |4           |32-bit two's complement signed integer|`int`|
-|`Uint32Array`   |4           |32-bit unsigned integer    |`int`|
-|`Float32Array`  |4           |32-bit IEEE floating point          |`float`|
-|`Float64Array`  |8           |64-bit IEEE floating point          |`double`|
+|`Int8Array`     |1           |8-бітний код цілого числа зі знаком|`signed char`|
+|`Uint8Array`    |1           |8-бітний код цілого числа без знаку|`unsigned char`|
+|`Uint8ClampedArray`|1        |8-бітний код цілого числа без знака (зтисле перетворення)|`unsigned char`|
+|`Int16Array`    |2           |16-бітний код цілого числа зі знаком|`short`|
+|`Uint16Array`   |2           |16-бітний код цілого числа без знаку             |`unsigned short`|
+|`Int32Array`    |4           |32-бітний доповняльний код числа зі знаком|`int`|
+|`Uint32Array`   |4           |32-бітний доповняльний код числа без знаку    |`int`|
+|`Float32Array`  |4           |32-бітне IEEE число з рухомою комою          |`float`|
+|`Float64Array`  |8           |64-бітне IEEE число з рухомою комою          |`double`|
 
-The left column lists the typed array constructors, and the other columns describe the data each typed array can contain. A `Uint8ClampedArray` is the same as a `Uint8Array` unless values in the array buffer are less than 0 or greater than 255. A `Uint8ClampedArray` converts values lower than 0 to 0 (-1 becomes 0, for instance) and converts values higher than 255 to 255 (so 300 becomes 255).
+У лівій колонці перераховані конструктори типізованих масивів, а решта стовпців описують дані які може містити кожний типізований масив.  `Uint8ClampedArray` те ж саме, що й `Uint8Array`, якщо значення в буферному масиві менше 0 або більше ніж 255. `Uint8ClampedArray` перетворює значення менше від 0 до 0 (наприклад, -1 стає рівним 0) і перетворює значення вище ніж 255 до 255 (так 300 стає рівним 255).
 
-Typed array operations only work on a particular type of data. For example, all operations on `Int8Array` use `int8` values. The size of an element in a typed array also depends on the type of array. While an element in an `Int8Array` is a single byte long, `Float64Array` uses eight bytes per element. Fortunately, the elements are accessed using numeric indices just like regular arrays, allowing you to avoid the somewhat awkward calls to the "set" and "get" methods of `DataView`.
+Операції з типізованими масивами працюють тільки з певним типом даних. Наприклад, всі операції з `Int8Array` використовують значення `int8`. Розмір елемента в типізованому масиві також залежить від типу масиву. В той час як елемент в `Int8Array` має довжину в один байт, `Float64Array` використовує вісім байт для кожного елемента. На щастя, доступ до елементів здійснюється за допомогою числових індексів, як і в звичайних масивах, що дозволяє уникнути кількох незручних викликів методів "set" і "get" в `DataView`.
 
-A> ### Element Size
-A>
-A> Each typed array is made up of a number of elements, and the element size is the number of bytes each element represents. This value is stored on a `BYTES_PER_ELEMENT` property on each constructor and each instance, so you can easily query the element size:
-A>
-A> ```js
-A> console.log(UInt8Array.BYTES_PER_ELEMENT);      // 1
-A> console.log(UInt16Array.BYTES_PER_ELEMENT);     // 2
-A>
-A> let ints = new Int8Array(5);
-A> console.log(ints.BYTES_PER_ELEMENT);            // 1
-A> ```
+A> ### Розмір елементу
 
-#### Creating Type-Specific Views
+A> Кожен типізований масив складається з ряду елементів, а розміром елементу є кількість байтів, яку представляє кожен елемент. Це значення зберігається у властивості `BYTES_PER_ELEMENT` кожного конструктора і кожного примірника, так що ви можете легко запросити розмір елемента:
 
-Typed array constructors accept multiple types of arguments, so there are a few ways to create typed arrays. First, you can create a new typed array by passing the same arguments `DataView` takes (an array buffer, an optional byte offset, and an optional byte length). For example:
+```js
+console.log(UInt8Array.BYTES_PER_ELEMENT);      // 1
+console.log(UInt16Array.BYTES_PER_ELEMENT);     // 2
+
+let ints = new Int8Array(5);
+console.log(ints.BYTES_PER_ELEMENT);            // 1
+```
+#### Створення видів специфічних до типу даних
+
+Конструктори типізованого масиву приймають кілька типів аргументів, тому існує кілька способів створення типізованих масивів. По-перше, ви можете створити новий типізований масив, передаючи ті ж аргументи, що приймає `DataView` (буферний масив, не обовʼязковий байт зміщення, та необов'язкове значення довжини байтів). Наприклад:
 
 ```js
 let buffer = new ArrayBuffer(10),
@@ -487,9 +483,9 @@ console.log(view1.byteLength);              // 10
 console.log(view2.byteLength);              // 2
 ```
 
-In this code, the two views are both `Int8Array` instances that use `buffer`. Both `view1` and `view2` have the same `buffer`, `byteOffset`, and `byteLength` properties that exist on `DataView` instances. It's easy to switch to using a typed array wherever you use a `DataView` so long as you only work with one numeric type.
+У цьому коді обидва види є екземплярами `Int8Array`, що використовує `buffer`. Обидва `view1` та ` view2` мають той же `buffer`, `byteOffset` та `byteLength` властивості, які існують в примірниках `DataView`. Досить легко перейти до використання типізованого масиву всюди, де ви використовуєте `DataView` до тих пір, поки ви працюєте тільки з даними одного числового типу.
 
-The second way to create a typed array is to pass a single number to the constructor. That number represents the number of elements (not bytes) to allocate to the array. The constructor will create a new buffer with the correct number of bytes to represent that number of array elements, and you can access the number of elements in the array by using the `length` property. For example:
+Другим способом створення типізованого масиву є надання єдиного числового значення до конструктору. Це число є число елементів (не байт), які слід зарезервувати в масиві. Конструктор створить новий буфер з правильною кількістю байтів щоб репрезентувати відповідну кількість елементів масиву, і ви можете отримати доступ до кількості елементів у масиві за допомогою властивості `length`. Наприклад:
 
 ```js
 let ints = new Int16Array(2),
@@ -502,18 +498,18 @@ console.log(floats.byteLength);     // 20
 console.log(floats.length);         // 5
 ```
 
-The `ints` array is created with space for two elements. Each 16-bit integer requires two bytes per value, so the array is allocated four bytes. The `floats` array is created to hold five elements, so the number of bytes required is 20 (four bytes per element). In both cases, a new buffer is created and can be accessed using the `buffer` property if necessary.
+Масив `ints` масив створюється з місцем для двох елементів. Кожному 16-бітному цілому числу потрібно два байти на значення, тому масиву виділяється чотири байти. Масив `floats` створений, щоб вміщувати п'ять елементів, таким чином, кількість необхідних байтів 20 (чотири байти на елемент). В обох випадках створюється новий буфер який може бути доступний за допомогою властивості `buffer` у разі необхідності.
 
-W> If no argument is passed to a typed array constructor, the constructor acts as if `0` was passed. This creates a typed array that cannot hold data because zero bytes are allocated to the buffer.
+W> Якщо до конструктору типізованого масиву не передається жодного аргументу, конструктор діє, як ніби було отримано `0`. Таким чином створюється типізований масив, який не може містити дані, так як у буфері було розмічено нуль байтів.
 
-The third way to create a typed array is to pass an object as the only argument to the constructor. The object can be any of the following:
+Третім способом створення типізованого масиву передача обʼєкту, як єдиного аргументу конструктора. Обʼєкт може бути одним з перехованого нижче:
 
-* **A Typed Array** - Each element is copied into a new element on the new typed array. For example, if you pass an int8 to the `Int16Array` constructor, the int8 values would be copied into an int16 array. The new typed array has a different array buffer than the one that was passed in.
-* **An Iterable** - The object's iterator is called to retrieve the items to insert into the typed array. The constructor will throw an error if any elements are invalid for the view type.
-* **An Array** - The elements of the array are copied into a new typed array. The constructor will throw an error if any elements are invalid for the type.
-* **An Array-Like Object** - Behaves the same as an array.
+* **Типізований масив** - Кожен елемент копіюється до нового елементу в типізованому масиві. Наприклад, якщо ви передасте int8 до конструктору `Int16Array`, значення int8 буде скопійоване до масиву int16. Новий типізований масив матимете інший буфер, ніж той, що був переданий.
+* **Ітерабельне** - Викликається обʼєкт-ітератор щоб отримати члени, які будуть вставлені у типізований масив. Конструктор буде викликати помилку, якщо будь-який елемент не буде відповідати типу поточного виду.
+* **Масив** - Елементи масиву будуть скопійовані до нового типізованого масиву. Конструктор буде викликати помилку, якщо будь-який елемент не буде відповідати поточному типу.
+* **Обʼєкт подібний до масиву** - Поводиться так само як і масив.
 
-In each of these cases, a new typed array is created with the data from the source object. This can be especially useful when you want to initialize a typed array with some values, like this:
+У кожному з цих випадків, новий типізований масив створюється з даними з вихідного об'єкту. Це може бути особливо корисно, коли ви хочете ініціювати типізований масив з деякими значеннями, наприклад:
 
 ```js
 let ints1 = new Int16Array([25, 50]),
@@ -532,11 +528,11 @@ console.log(ints2[0]);              // 25
 console.log(ints2[1]);              // 50
 ```
 
-This example creates an `Int16Array` and initializes it with an array of two values. Then, an `Int32Array` is created and passed the `Int16Array`. The values 25 and 50 are copied from `ints1` into `ints2` as the two typed arrays have completely separate buffers. The same numbers are represented in both typed arrays, but `ints2` has eight bytes to represent the data while `ints1` has only four.
+У цьому прикладі створюємо `Int16Array` та ініціалізуємо його з масивом з двох значень. Потім створюється `Int32Array` якому передається `Int16Array`. Значення 25 і 50 копіюються з `ints1` до `ints2` тому два типізованих масиви мають абсолютно окремі буфери. Одні і ті ж числа представлені в обох типізованих масивів, але `ints2` має вісім байт для представлення даних в той час як `ints1` має тільки чотири.
 
-## Similarities Between Typed and Regular Arrays
+## Спільні риси у типізованих та звичайних масивів
 
-Typed arrays and regular arrays are similar in several ways, and as you've already seen in this chapter, typed arrays can be used like regular arrays in many situations. For instance, you can check how many elements are in a typed array using the `length` property, and you can access a typed array's elements directly using numeric indices. For example:
+Типізовані та звичайні масиви схожі мають декілька спільних рис, і, як ви вже бачили в цьому розділі, типізовані масиви можуть бути використані як звичайні масиви у багатьох ситуаціях. Наприклад, ви можете перевірити, скільки елементів містить типізований масив за допомогою властивості `length`, і ви можете дістатися елементу типізованого масиву безпосередньо за допомогою цифрових індексів. Наприклад:
 
 ```js
 let ints = new Int16Array([25, 50]);
@@ -552,13 +548,13 @@ console.log(ints[0]);              // 1
 console.log(ints[1]);              // 2
 ```
 
-In this code, a new `Int16Array` with two items is created. The items are read from and written to using their numeric indices, and those values are automatically stored and converted into int16 values as part of the operation. The similarities don't end there, though.
+У цьому коді створюється новий `Int16Array` з двома елементами. Елементи зчитуються і записуються з використанням їх числових індексів, і ці символи будуть автоматично зберігатися і перетворюватися в int16 значення, як частина операції. Однак, на цьому схожість не закінчуються.
 
-I> Unlike regular arrays, you cannot change the size of a typed array using the `length` property. The `length` property is not writable, so any attempt to change it is ignored in non-strict mode and throws an error in strict mode.
+I> На відміну від звичайних масивів, ви не можете змінити розмір типізованого масиву за допомогою властивості `length`. Властивість `length` не доступна для запису, так що будь-яка спроба змінити її ігнорується в несуворому режимі і видає помилку в суворому режимі.
 
-### Common Methods
+### Базові методи
 
-Typed arrays also include a large number of methods that are functionally equivalent to regular array methods. You can use the following array methods on typed arrays:
+Типізовані масиви також включають в себе велику кількість методів, які функціонально еквівалентні до методів звичайних масивів. Ви можете використовувати наступні методи звичайного масиву у типізованому масиві:
 
 * `copyWithin()`
 * `entries()`
@@ -580,7 +576,7 @@ Typed arrays also include a large number of methods that are functionally equiva
 * `sort()`
 * `values()`
 
-Keep in mind that while these methods act like their counterparts on `Array.prototype`, they are not exactly the same. The typed array methods have additional checks for numeric type safety and, when an array is returned, will return a typed array instead of a regular array (due to `Symbol.species`). Here's a simple example to demonstrate the difference:
+Майте на увазі, що в той час як ці методи діють як і їх колеги на `Array.prototype`, вони не повністю однакові. Методи типізованого масиву мають додаткові перевірки для безпеки числового типу і, коли масив повертається, буде повернено типізований масив замість звичайного масиву (через `Symbol.species`). Ось простий приклад, щоб продемонструвати різницю:
 
 ```js
 let ints = new Int16Array([25, 50]),
@@ -593,11 +589,11 @@ console.log(mapped[1]);            // 100
 console.log(mapped instanceof Int16Array);  // true
 ```
 
-This code uses the `map()` method to create a new array based on the values in `ints`. The mapping function doubles each value in the array and returns a new `Int16Array`.
+Цей код використовую метод `map()`, щоб створити масив зі значень в `ints`. Функція мапування подвоює кожне значення в масиві і повертає новий `Int16Array`.
 
-### The Same Iterators
+### Однакові ітератори
 
-Typed arrays have the same three iterators as regular arrays, too. Those are the `entries()` method, the `keys()` method, and the `values()` method. That means you can use the spread operator and `for-of` loops with typed arrays just like you would with regular arrays. For example:
+Типізовані масиви мають ті ж три ітератори, що й звичайні масиви. Це метод `entries()`, метод `keys()` та метод `values()`. Це означає, що ви можете використовувати оператор розширення та `for-of` цикли з типізованими масивами так само, як і при роботі зі звичайними масивами. Наприклад:
 
 ```js
 let ints = new Int16Array([25, 50]),
@@ -608,11 +604,11 @@ console.log(intsArray[0]);                  // 25
 console.log(intsArray[1]);                  // 50
 ```
 
-This code creates a new array called `intsArray` containing the same data as the typed array `ints`. As with other iterables, the spread operator makes converting typed arrays into regular arrays easy.
+Цей код створює новий масив з ім'ям `intsArray`, що містить ті самі дані, що і типізований масив `ints`. Як і з іншими ітерабельними, оператор розширення робить легкою конвертацію типізованих масивів в звичайні.
 
-### of() and from() Methods
+### Методи of() та from()
 
-Lastly, all typed arrays have static `of()` and `from()` methods that work like the `Array.of()` and `Array.from()` methods. The difference is that the methods on typed arrays return a typed array instead of a regular array. Here are some examples that use these methods to create typed arrays:
+І нарешті, всі типізовані масиви мають статичні методи `of()` та `from()`, які працюють як методи `Array.of()` та `Array.from()`. Різниця полягає в тому, що методи типізованих масивів повертають типізований масив замість звичайного масиву. Ось деякі приклади, які використовують ці методи для створення типізованих масивів:
 
 ```js
 let ints = Int16Array.of(25, 50),
@@ -630,11 +626,11 @@ console.log(floats[0]);         // 1.5
 console.log(floats[1]);         // 2.5
 ```
 
-The `of()` and `from()` methods in this example are used to create an `Int16Array` and a `Float32Array`, respectively. These methods ensure that typed arrays can be created just as easily as regular arrays.
+В цьому прикладі методи `of()` та `from()` використовуються, щоб створити `Int16Array` та `Float32Array`, відповідно. Ці методи переконують, що типізовані масиви можуть бути створені так само легко, як і звичайні масиви.
 
-## Differences Between Typed and Regular Arrays
+## Відмінності між типізованими та звичайними масивами
 
-The most importance difference between typed arrays and regular arrays is that typed arrays are not regular arrays. Typed arrays don't inherit from `Array` and `Array.isArray()` returns `false` when passed a typed array. For example:
+Найбільша різниця між типізованими та звичайними масивами полягає у тому, що типізовані масиви не є звичайними масивами. Типізовані масиви не успадкуються від `Array`, тому `Array.isArray()` повертає `false` при передачі типізованого масиву. Наприклад:
 
 ```js
 let ints = new Int16Array([25, 50]);
@@ -643,11 +639,11 @@ console.log(ints instanceof Array);     // false
 console.log(Array.isArray(ints));       // false
 ```
 
-Since the `ints` variable is a typed array, it isn't an instance of `Array` and cannot otherwise be identified as an array. This distinction is important because while typed arrays and regular arrays are similar, there are many ways in which typed arrays behave differently.
+Оскільки змінна `ints` є типізованим масивом, вона не є екземпляром `Array` і так само не може бути ідентифікована як масив. Ця відмінність важлива, тому що в той час як типізовані і звичайні масиви є схожими, існує багато способів, в яких типізовані масиви поводяться по-різному.
 
-### Behavioral Differences
+### Відмінності у поведінці
 
-While regular arrays can grow and shrink as you interact with them, typed arrays always remain the same size. You cannot assign a value to a nonexistent numeric index in a typed array like you can with regular arrays, as typed arrays ignore the operation. Here's an example:
+У той час як звичайні масиви можуть збільшуватися і зменшуватися, у той час як ви взаємодієте з ними, типізовані масиви завжди залишаються того ж розміру. Ви не можете привласнити значення неіснуючому числовому індексу у типізованому масиві, як ви можете зробити у звичайному масиві, тому що типізовані масиви ігнорують таку операцію. Ось приклад:
 
 ```js
 let ints = new Int16Array([25, 50]);
@@ -662,9 +658,9 @@ console.log(ints.length);          // 2
 console.log(ints[2]);              // undefined
 ```
 
-Despite assigning `5` to the numeric index `2` in this example, the `ints` array does not grow at all. The `length` remains the same and the value is thrown away.
+Не зважаючи на присвоєння `5` числовому індексу `2` в цьому прикладі, масив `ints` не збільшується. Властивість `length` залишається незмінною, а значення відкидається.
 
-Typed arrays also have checks to ensure that only valid data types are used. Zero is used in place of any invalid values. For example:
+Типізовані масиви також мають перевірку, щоб переконатися, що використовуються тільки відповідні типи даних. Нуль використовується замість будь-яких невідповідних типів даних. Наприклад:
 
 ```js
 let ints = new Int16Array(["hi"]);
@@ -673,9 +669,9 @@ console.log(ints.length);       // 1
 console.log(ints[0]);           // 0
 ```
 
-This code attempts to use the string value `"hi"` in an `Int16Array`. Of course, strings are invalid data types in typed arrays, so the value is inserted as `0` instead. The `length` of the array is still one, and even though the `ints[0]` slot exists, it just contains `0`.
+Цей код намагається використовувати рядкове значення `"привіт"` в `Int16Array`. Звичайно, рядки є неприпустимими типами даних в типізованих масивах, тому  замість цього вставляється значення `0`. Властивість `length` масиву все ще один, і навіть не дивлячись на те, що слот `ints[0]` існує, він містить тільки `0`.
 
-All methods that modify values in a typed array enforce the same restriction. For example, if the function passed to `map()` returns an invalid value for the type array, then `0` is used instead:
+Всі методи, які змінюють значення у типізованому масиві застосовують одні й ті ж обмеження. Наприклад, якщо функція надана до `map()` повертає невірне для типу масиву значення, то натомість використовується `0`:
 
 ```js
 let ints = new Int16Array([25, 50]),
@@ -689,11 +685,11 @@ console.log(mapped instanceof Int16Array);  // true
 console.log(mapped instanceof Array);       // false
 ```
 
-Since the string value `"hi"` isn't a 16-bit integer, it's replaced with `0` in the resulting array. Thanks to this error correction behavior, typed array methods don't have to worry about throwing errors when invalid data is present, because there will never be invalid data in the array.
+Так як рядкове значення `"привіт"` не 16-бітове ціле число, воно замінюється на `0` в отриманому масиві. Завдяки цій поведінці з виправленням помилок, методам типізованого масиву не доведеться турбуватися про збудження помилок при введенні неправильних даних, тому що в масиві ніколи не буде невідповідних даних.
 
-### Missing Methods
+### Відсутні методи
 
-While typed arrays do have many of the same methods as regular arrays, they also lack several array methods. The following methods are not available on typed arrays:
+У той час як типізовані масиви дійсно мають багато тих же методів, що і звичайні масиви, все ж таки їм не вистачає декількох методів звичайних масивів. Наступні методи не доступні для типізованих масивів:
 
 * `concat()`
 * `pop()`
@@ -702,13 +698,13 @@ While typed arrays do have many of the same methods as regular arrays, they also
 * `splice()`
 * `unshift()`
 
-Except for the `concat()` method, the methods in this list can change the size of an array. Typed arrays can't change size, which is why these aren't available for typed arrays. The `concat()` method isn't available because the result of concatenating two typed arrays (especially if they deal with different data types) would be uncertain, and that would go against the reason for using typed arrays in the first place.
+За винятком методу `concat()`, методи в цьому списку можуть змінювати розмір масиву. Типізовані масиви не можуть змінювати розмір, тому вони не доступні для типізованих масивів. Метод `concat()` не доступний, так як результат конкатенації двох типізованих масивів (особливо, якщо вони мають справу з різними типами даних) буде невизначеним, і це, в першу чергу, буде суперечити сенсу використання типізованих масивів.
 
-### Additional Methods
+### Додаткові методи
 
-Finally, typed arrays methods have two methods not present on regular arrays: the `set()` and `subarray()` methods. These two methods are opposites in that `set()` copies another array into an existing typed array, whereas `subarray()` extracts part of an existing typed array into a new typed array.
+Нарешті, перелік методів типізованих масивів містить два методи не присутніх у звичайних масивах: методи `set()` та `subarray()`. Ці два методи є протилежностями в тому, що `set()` копіює інший масив в існуючий типізований масив, в той час як `subarray()` витягує частину існуючого типізованого масиву в новий типізований масив.
 
-The `set()` method accepts an array (either typed or regular) and an optional offset at which to insert the data; if you pass nothing, the offset defaults to zero. The data from the array argument is copied into the destination typed array while ensuring only valid data types are used. Here's an example:
+Метод `set()` приймає масив (типізований чи звичайний) і необовʼязковий аргумент зміщення з якого почати вставляти дані; якщо ви не передаєте нічого, зміщення за замовчуванням дорівнює нулю. Дані з масиву аргументу копіюються до цільового типізованого масиву, забезпечуючи при цьому використання тільки дійсних типів даних. Ось приклад:
 
 ```js
 let ints = new Int16Array(4);
@@ -719,9 +715,9 @@ ints.set([75, 100], 2);
 console.log(ints.toString());   // 25,50,75,100
 ```
 
-This code creates an `Int16Array` with four elements. The first call to `set()` copies two values to the first and second elements in the array. The second call to `set()` uses an offset of `2` to indicate that the values should be placed in the array starting at the third element.
+Цей код створює `Int16Array` з чотирма елементами. Перший виклик `set()` копіює два значення в першій і другій елементи в масиві. Другий виклик `set()` використовує зсув `2`, щоб вказати, що значення повинні бути поміщені в масив, починаючи з третього елемента.
 
-The `subarray()` method accepts an optional start and end index (the end index is exclusive, as in the `slice()` method) and returns a new typed array. You can also omit both arguments to create a clone of the typed array. For example:
+Метод `subarray()` приймає необов'язковий початковий і кінцевий індекс (кінець індексу є винятковим, як в методі `slice()`) і повертає новий типізований масив. Ви також можете опустити обидва аргументи, щоб створити клон типізованого масиву. Наприклад:
 
 ```js
 let ints = new Int16Array([25, 50, 75, 100]),
@@ -734,12 +730,12 @@ console.log(subints2.toString());   // 75,100
 console.log(subints3.toString());   // 50,75
 ```
 
-Three typed arrays are created from the original `ints` array in this example. The `subints1` array is a clone of `ints` that contains the same information. Since the `subints2` array copies data starting from index 2, it only contains the last two elements of the `ints` array (75 and 100). The `subints3` array contains only the middle two elements of the `ints` array, as `subarray()` was called with both a start and an end index.
+У цьому прикладі з оригінального масиву `ints` створюються три типізовані масиви. Масив `subints1` являє собою клон `ints`, який містить ту ж інформацію. Оскільки масив `subints2` копіює дані, починаючи з індексу 2, він містить тільки останні два елементи масиву `ints` (75 та 100). Масив `subints3` містить тільки два середні елементи масиву `ints`, так як `subarray()` був викликаний як з початковим так і  кінцевим індексами.
 
-## Summary
+## Підсумок
 
-ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and use the `Symbol.species` property to determine what type of value should be returned (other inherited methods also use `Symbol.species` when returning an array).
+ECMAScript 6 продовжує роботу ECMAScript 5, роблячи масиви більш корисним. Є ще два способи створення масивів: методи `Array.of()` та `Array.from()`. Метод `Array.from()` також може конвертувати ітерабельні і подібні до масивів об'єкти в масиви. Обидва методи успадковуються похідними класами масиву і використовують властивість `Symbol.species`, щоб визначити, який тип значення має бути повернено (інші успадковані методи також використовують `Symbol.species` при поверненні масиву).
 
-There are also several new methods on arrays. The `fill()` and `copyWithin()` methods allow you to alter array elements in-place. The `find()` and `findIndex()` methods are useful for finding the first element in an array that matches some criteria. The former returns the first element that fits the criteria, and the latter returns the element's index.
+Є також кілька нових методів для масивів. Методи `fill()` та `copyWithin()` дозволяють змінювати елементи масиву на місці. Методи `find()` та `findIndex()` корисні для знаходження першого елемента в масиві, який відповідає певним критеріям. Перший повертає перший елемент, який відповідає критеріям, а останній повертає індекс елемента.
 
-Typed arrays are not technically arrays, as they do not inherit from `Array`, but they do look and behave a lot like arrays. Typed arrays contain one of eight different numeric data types and are built upon `ArrayBuffer` objects that represent the underlying bits of a number or series of numbers. Typed arrays are a more efficient way of doing bitwise arithmetic because the values are not converted back and forth between formats, as is the case with the JavaScript number type.
+Типізовані масиви технічно не є масивами, оскільки вони не успадковуються від `Array`, але вони виглядають і поводяться дуже схоже до масивів. Типізовані масиви містять один з восьми різних типів числових даних і побудовані на обʼєктах `ArrayBuffer`, які репрезентують бітові дані числа або послідовності чисел. Типізовані масиви є більш ефективним способом виконувати побітову арифметику, оскільки значення не перетворюються туди й назад між форматами, як у випадку числовим типом у JavaScript.
