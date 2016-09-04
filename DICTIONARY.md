@@ -141,20 +141,17 @@
 
 ## S
 
+* **strict mode** — строгий режим
 * **scope** — область видимості
 * **set** — множина
-* **setter** — сетер
 * **single-threaded** — однопоточний 
-* **singletone** — синглтон
 * **source** — джерело
     * **source code** - початковий, джерельний код
 * **spread operator** — оператор розкладу
-* **state** — стан
 * **statement** — оператор, (інструкція)
-* **strict mode** — строгий режим
 * **subclasses** — підкласи, субкласи
 * **substitutions** — підстановки
-* **supplementary plane** — додаткова матриця, додаткова площина
+* **supplementary plane** — додаткова матриця
 * **surrogate pair** — сурогатна пара
 
 ## T
