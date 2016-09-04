@@ -68,7 +68,7 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 ## Ліцензія
 
-[CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com) and [Terry Sahaidak](https://github.com/terrysahaidak)
+[CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com)
 
 <!-- Download links -->
 
