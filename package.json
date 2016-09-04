@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "Ukrainian translation of “Understanding ES6”",
   "scripts": {
-    "start": "gitbook install",
-    "serve": "npm start && gitbook serve",
-    "build": "npm start && gitbook build",
+    "install": "gitbook install",
+    "start": "npm run install && gitbook serve",
+    "build": "npm run install && gitbook build",
     "deploy": "npm run build && gh-pages -d _book -m \"Updated at $(date +'%a, %d %b %Y, %T, %Z')\" --add"
   },
   "repository": {
