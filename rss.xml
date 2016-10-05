@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Mon, 05 Sep 2016 16:18:26 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 05 Oct 2016 19:14:17 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -75,6 +75,13 @@ Stars]]></description>
             <description><![CDATA[Пропозиція приватних імен, в кінцевому випадку, вилилась у символи в ECMAScript 6, а ця глава навчить вас як працювати з символами ефективно. Тоді як деталі реалізації залишились тими ж самими (вони додають нерядкові значення для імен властивостей), приватності, як мету, було відкинуто. Замість цього, символьні властивості зберігаються окремо від інших властивостей об’єкту.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/06-Symbols.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/06-Symbols.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Множини та мапи]]></title>
+            <description><![CDATA[Більшу частину своєї історії JavaScript мав лише один тип колекцій — тип Array (хоча дехто може стверджувати, що всі об’єкти–немасиви є просто колекціями пар “ключ–значення”, їх планували використовувати зовсім іншим чином). Масиви використовуються в JavaScript точно так само, як і масиви в інших мовах, проте недоліком масивів, порівняно з іншими колекціями, була в тому, що вони часто використовувались в якості черг (queues) та стеків (stacks). Оскільки масиви мають лише числову індексацію, розробники використовували об’єкти–немасиви тоді, коли були необхідні нечислові індекси. Такий підхід породив власні реалізації множин (sets) та мап (maps) з допомогою об’єктів–немасивів.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/07-Sets-And-Maps.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/07-Sets-And-Maps.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
