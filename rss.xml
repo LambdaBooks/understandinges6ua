@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Wed, 05 Oct 2016 19:14:17 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 14 Nov 2016 15:15:39 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -82,6 +82,13 @@ Stars]]></description>
             <description><![CDATA[Більшу частину своєї історії JavaScript мав лише один тип колекцій — тип Array (хоча дехто може стверджувати, що всі об’єкти–немасиви є просто колекціями пар “ключ–значення”, їх планували використовувати зовсім іншим чином). Масиви використовуються в JavaScript точно так само, як і масиви в інших мовах, проте недоліком масивів, порівняно з іншими колекціями, була в тому, що вони часто використовувались в якості черг (queues) та стеків (stacks). Оскільки масиви мають лише числову індексацію, розробники використовували об’єкти–немасиви тоді, коли були необхідні нечислові індекси. Такий підхід породив власні реалізації множин (sets) та мап (maps) з допомогою об’єктів–немасивів.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/07-Sets-And-Maps.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/07-Sets-And-Maps.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Ітератори та генератори]]></title>
+            <description><![CDATA[Багато мов програмування відмовились від ітерування по даних з допомогою циклу for, який потребує ініціалізації змінної для відслідковування позиції у колекції, на користь об’єктів–ітераторів, котрі програмно повертають наступний елемент у колекції. Ітератори роблять роботу з колекціями даних легшою, а ECMAScript 6 додає ітератори у JavaScript. Разом з новими методами масивів та новими типами колекцій (як от множини та мапи), ітератори є ключем до ефективної обробки даних, і саме тому ви знайдете їх у багатьох частинах мови. Новий цикл for-of працює з ітераторами, оператор розкладу (...) використовує ітератори, ітератори навіть роблять асинхронне програмування простішим.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/08-Iterators-And-Generators.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/08-Iterators-And-Generators.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
