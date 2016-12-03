@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 03 Dec 2016 11:33:16 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 03 Dec 2016 11:34:27 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -89,6 +89,13 @@ Stars]]></description>
             <description><![CDATA[Багато мов програмування відмовились від ітерування по даних з допомогою циклу for, який потребує ініціалізації змінної для відслідковування позиції у колекції, на користь об’єктів–ітераторів, котрі програмно повертають наступний елемент у колекції. Ітератори роблять роботу з колекціями даних легшою, а ECMAScript 6 додає ітератори у JavaScript. Разом з новими методами масивів та новими типами колекцій (як от множини та мапи), ітератори є ключем до ефективної обробки даних, і саме тому ви знайдете їх у багатьох частинах мови. Новий цикл for-of працює з ітераторами, оператор розкладу (...) використовує ітератори, ітератори навіть роблять асинхронне програмування простішим.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/08-Iterators-And-Generators.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/08-Iterators-And-Generators.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Знайомство з класами у JavaScript]]></title>
+            <description><![CDATA[На відміну від більшості формально об’єктно-орієнтованих мов програмування, JavaScript не підтримував класи і класичне наслідування в якості основного засобу визначення подібних і пов'язаних об'єктів, коли його було створено. Це спантеличило багато розробників, і починаючи з pre-ECMAScript 1, весь час до ECMAScript 5 включно, багато бібліотек створювали утиліти, щоб імітувати підтримку класів в JavaScript. У той час, коли деякі JavaScript розробники булі впевнені, що мова не потребує класів, велика кількість бібліотек, створених спеціально для цієї мети призвела до включення класів в ECMAScript 6.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/09-Classes.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/09-Classes.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
