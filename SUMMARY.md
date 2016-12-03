@@ -2,10 +2,10 @@
 
 * [Рoзуміння ECMAScript 6](/README.md)
 * [Вступ](/manuscript/00-Introduction.md)
-* [Глава 1: Як працює блочне зв’язування](/manuscript/01-Block-Bindings.md)
+* [Глава 1: Блочне зв’язування](/manuscript/01-Block-Bindings.md)
 * [Глава 2: Рядки та регулярні вирази](/manuscript/02-Strings-and-Regular-Expressions.md)
-* [Глава 3: Функції у ECMAScript 6](/manuscript/03-Functions.md)
-* [Глава 4: Розширений функціонал об’єктів](/manuscript/04-Objects.md)
+* [Глава 3: Функції](/manuscript/03-Functions.md)
+* [Глава 4: Розширена функціональність об’єктів](/manuscript/04-Objects.md)
 * [Глава 5: Деструктурування для легшого доступу до даних](/manuscript/05-Destructuring.md)
 * [Глава 6: Символи та їх властивості](/manuscript/06-Symbols.md)
 * [Глава 7: Множини та мапи](/manuscript/07-Sets-And-Maps.md)
