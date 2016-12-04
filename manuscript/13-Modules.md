@@ -1,36 +1,36 @@
-# Encapsulating Code With Modules
+# Інкапсуляція Коду за допомогою Модулiв
 
-JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the language. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope. As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
+Підхід "роздавати все" в JavaScript для завантаження коду є одним з найбільш схильних до помилок і заплутаних аспектів мови. Інші мови використовують такі поняття, як пакети, щоб визначити область видимості, але до ECMAScript 6, все оголошене в кожному файлі JavaScript мало один загальну глобальну область видимості. Як веб-додатки стали більш складними і почали використовувати ще більше коду JavaScript, такий почав викликати проблеми, такі як конфлікти імен та проблем безпеки. Одна з цілей ECMAScript 6 було вирішити проблему з областями видимості і навести порядок до додатків JavaScript. І тут за справу беруться модулі.
 
-## What are Modules?
+## Що таке модулі?
 
-*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). This different mode is necessary because modules have very different semantics than scripts:
+*Модулі* цє JavaScript файли, які завантажуються в іншому режимі (на відміну від *скриптів*, які завантажуються першоджерельним чином як JavaScript завжди працював). Цей інший режим необхідний, оскільки модулі мають дуже різну семантику, ніж скрипти:
 
-1. Module code automatically runs in strict mode, and there's no way to opt-out of strict mode.
-1. Variables created in the top level of a module aren't automatically added to the shared global scope. They exist only within the top-level scope of the module.
-1. The value of `this` in the top level of a module is `undefined`.
-1. Modules don't allow HTML-style comments within code (a leftover feature from JavaScript's early browser days).
-1. Modules must export anything that should be available to code outside of the module.
-1. Modules may import bindings from other modules.
+1. Модуль коду автоматично запускається в строгому режимі, і немає ніякого способу, щоб відмовитися від строгого режиму.
+1. Змінні, створені в верхньому рівні модуля не додаються автоматично в загальну глобальну область видимості. Вони існують тільки в межах верхньої області видимості модуля.
+1. Значення `this` в верхньої області видимості модуля дорівнює `undefined`.
+1. Модулі не дозволяють коментарі у HTML-стилі в коді (пережиточна риса JavaScript з ранніх днів браузерів).
+1. Модулі повинні експортувати все, що повинно бути доступно коду поза модуля.
+1. Модулі можуть імпортувати зв’язування з інших модулів.
 
-These differences may seem small at first glance, but they represent a significant change in how JavaScript code is loaded and evaluated, which I will discuss over the course of this chapter. The real power of modules is the ability to export and import only bindings you need, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
+Ці відмінності можуть здатися незначними на перший погляд, але вони являють собою значну зміну в тому, як завантажується JavaScript код і оцінку, яку я буду обговорювати протягом цієї глави. Реальна сила модулів є можливість експортувати і імпортувати тільки зв’язування яке вам потрібно, а не все в файлі. Добре розуміння експорту та імпорту має фундаментальне значення для розуміння того, як модулі відрізняються від скриптів.
 
-## Basic Exporting
+## Базовий Експорт
 
-You can use the `export` keyword to expose parts of published code to other modules. In the simplest case, you can place `export` in front of any variable, function, or class declaration to export it from the module, like this:
+Ви можете використовувати ключове слово `export`, щоб виставити частини опублікованого коду до інших модулів. У найпростішому випадку, ви можете помістити `export` перед будь-якою змінною, функціэю або декларації класу щоб експортувати його з модуля, наприклад так:
 
 ```js
-// export data
+// експорт даних
 export var color = "red";
 export let name = "Nicholas";
 export const magicNumber = 7;
 
-// export function
+// експорт функції 
 export function sum(num1, num2) {
     return num1 + num1;
 }
 
-// export class
+// експорт класа
 export class Rectangle {
     constructor(length, width) {
         this.length = length;
@@ -38,74 +38,74 @@ export class Rectangle {
     }
 }
 
-// this function is private to the module
+// ця функція є приватною для модуля
 function subtract(num1, num2) {
     return num1 - num2;
 }
 
-// define a function...
+// оголошуємо функцїю…
 function multiply(num1, num2) {
     return num1 * num2;
 }
 
-// ...and then export it later
+// …а потім експортумо її пізніше
 export { multiply };
 ```
 
-There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported function or class also has a name; that's because exported function and class declarations require a name. You can't export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail in the "Default Values in Modules" section).
+Є кілька речей, що помітні в цьому прикладі. По-перше, крім ключового слова `export`, кожне оголошення точно так же, як це було б в іншому випадку. Кожна експортована функція або клас також мають ім'я; це тому що для експорту функції або класу слід вказувати ім’я. Ви не можете експортувати анонімні функції або класи, використовуючи цей синтаксис, якщо ви не використовуєте ключове слово `default`  (детально обговорюється в розділі "Значення за замовчуванням в Модулях").
 
-Next, consider the `multiply()` function, which isn't exported when it's defined. That works because you need not always export a declaration: you can also export references. Finally, notice that this example doesn't export the `subtract()` function. That function won't be accessible from outside this module because any variables, functions, or classes that are not explicitly exported remain private to the module.
+Далі, розглянемо функцію `multiply()`, що не експортується, коли вона визначена. Це працює, тому що вам не потрібно завжди експортувати об’явлене: ви можете також експортувати посилання. Нарешті, зверніть увагу, що цей приклад не експортує функцію `subtract()`. Ця функція не буде доступна з-за меж цього модуля, тому що будь-які змінні, функції або класи, які явно не експортуються залишаються приватними для модуля.
 
-## Basic Importing
+## Базовій Імпорт
 
-Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. The two parts of an `import` statement are the identifiers you're importing and the module from which those identifiers should be imported. This is the statement's basic form:
+Після того, як у вас є модуль з експортом, ви можете отримати доступ до його функціоналу в іншому модулі за допомогою ключового слова `import`. Дві частини в операторі `import` це ідентифікатори які ви імпортуєте і модуль, з якого слід імпортувати ці ідентифікатори. Це базовій вигляд  оператора:
 
 ```js
 import { identifier1, identifier2 } from "./example.js";
 ```
 
-The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module (called the *module specifier*). Browsers use the same path format you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix. For example, `example` would be a package and `./example.js` would be a local file.
+Фігурні дужки після `import` вказують зв’язуванню для імпорту з даного модуля. Ключове слово `from` вказує на модуль, з якого імпортувати дане зв’язування. Модуль визначаэться строкою, що представляє шлях до модуля (так званий модуль до *специфікатора модуля*). Браузери використовують той самий формат шляху, який ви могли б пройти до елементу `<script>`, що означає, що ви повинні включати в розширення файлу. Node.js, з іншого боку, слідкуэ своэму традиційному договору відмінностей між локальними файлами і пакетами, заснованих на префіксах файлової системи. Наприклад, `example` буде пакет, а `./example.js` буде локальний файл.
 
-I> The list of bindings to import looks similar to a destructured object, but it isn't one.
+I> Список зв’язувань для імпорту схожий на деструктований об'єкт, але це не він.
 
-When importing a binding from a module, the binding acts as if it were defined using `const`. That means you can't define another variable with the same name (including importing another binding of the same name), use the identifier before the `import` statement, or change its value.
+При імпорті зв’язувань з модуля, зв’язування веде себе так, як якщо б воно було визначено за допомогою `const`. Це означає, що ви не можете визначити іншу змінну з таким же ім'ям (в тому числі імпорту іншого зв’язування з тим же ім’ям), використовуйте ідентифікатор `import` перед об’явою, або змініть його значення.
 
-### Importing a Single Binding
+### Імпорт Importing a Одиночного Зв’язування
 
-Suppose that the first example in the "Basic Exporting" section is in a module with the filename `example.js`. You can import and use bindings from that module in a number of ways. For instance, you can just import one identifier:
+Припустимо, що перший приклад в розділі "Базовий Експорт" знаходиться в модулі з ім'ям файлу `example.js`. Ви можете імпортувати і використовувати зв’язування з цього модуля в ряді напрямків. Наприклад, ви можете просто імпортувати один ідентифікатор:
 
 ```js
-// import just one
+// імпорт тільки одного
 import { sum } from "./example.js";
 
 console.log(sum(1, 2));     // 3
 
-sum = 1;        // error
+sum = 1;        // помилка
 ```
 
-Even though `example.js` exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you can't reassign imported bindings.
+Незважаючи на те, що `example.js` більше, ніж просто, одна функція цей приклад імпортує тільки функцію `sum()`. При спробі привласнити нове значення `sum`, результатом є помилкою, так як ви не можете перепризначити імпортовані зв’язування.
 
-W> Make sure to include `/`, `./`, or `../` at the beginning of the file you're importing for best compatibility across browsers and Node.js.
+W> Переконайтеся в тому, щоб включити `/`, `./`, чи `../` на початку файлу який ви імпортуєте для кращої сумісності в різних браузерах і Node.js.
 
-### Importing Multiple Bindings
+### Імпорт Кількох Зв’язувань
 
-If you want to import multiple bindings from the example module, you can explicitly list them out as follows:
+Якщо ви хочете імпортувати кілька зв’язувань з модуля, ви можете явно перерахувати їх в такий спосіб:
 
 ```js
-// import multiple
+// імпортуємо декілька
 import { sum, multiply, magicNumber } from "./example.js";
 console.log(sum(1, magicNumber));   // 8
 console.log(multiply(1, 2));        // 2
 ```
 
-Here, three bindings are imported from the example module: `sum`, `multiply`, and `magicNumber`. They are then used as if they were locally defined.
+Тут три зв’язування імпортуються з модуля: `sum`, `multiply` та `magicNumber`. Потім вони використовуються так, як якщо б вони були локально визначені.
 
-### Importing All of a Module
+### Імпорт Всього з Модуля
 
-There's also a special case that allows you to import the entire module as a single object. All of the exports are then available on that object as properties. For example:
+Є також особливий випадок, який дозволяє імпортувати весь модуль як єдиний об'єкт. Все експортоване буде доступно у цьому об'єкті в якості властивостей. Наприклад:
 
 ```js
-// import everything
+// імпортувати все
 import * as example from "./example.js";
 console.log(example.sum(1,
         example.magicNumber));          // 8
@@ -114,7 +114,7 @@ console.log(example.multiply(1, 2));    // 2
 
 In this code, all exported bindings in `example.js` are loaded into an object called `example`. The named exports (the `sum()` function, the `multiple()` function, and `magicNumber`) are then accessible as properties on `example`. This import format is called a *namespace import* because the `example` object doesn't exist inside of the `example.js` file and is instead created to be used as a namespace object for all of the exported members of `example.js`.
 
-Keep in mind, however, that no matter how many times you use a module in `import` statements, the module will only be executed once. After the code to import the module executes, the instantiated module is kept in memory and reused whenever another `import` statement references it. Consider the following:
+Однак, майте на увазі, що незалежно від того, скільки разів ви використовуєте модуль в операторі `import`, модуль буде виконуватися тільки один раз. Після того, як код виконує імпорт модуля, інстанційований модуль зберігається в пам'яті і повторно використовуватися завжди, коли `import` знову буде звертатися до нього. Зверніть увагу на таке:
 
 ```js
 import { sum } from "./example.js";
@@ -122,28 +122,29 @@ import { multiply } from "./example.js";
 import { magicNumber } from "./example.js";
 ```
 
-Even though there are three `import` statements in this module, `example.js` will only be executed once. If other modules in the same application were to import bindings from `example.js`, those modules would use the same module instance this code uses.
+Незважаючи на те, є три оператори `import`, що містяться в даному модулі, `example.js` буде виконуватися тільки один раз. Якщо інші модулі в одному додатку повинні були імпортувати зв’язування з `example.js`, ці модулі будуть використовувати один і той же екземпляр модуля що цей код використовує.
 
-A> ### Module Syntax Limitations
+A> ### Обмеження Синтаксису Модуля
 A>
-A> An important limitation of both `export` and `import` is that they must be used outside other statements and functions. For instance, this code will give a syntax error:
+A> 
+Важливим обмеженням як `export` так і `import` є те, що вони повинні бути використані за межами інших операторів і функцій. Наприклад, цей код буде давати помилку синтаксису:
 A>
 A> ```js
 A> if (flag) {
-A>     export flag;    // syntax error
+A>     export flag;    // синтаксична помилка
 A> }
 A> ```
 A>The `export` statement is inside an `if` statement, which isn't allowed. Exports cannot be conditional or done dynamically in any way. One reason module syntax exists is to let the JavaScript engine staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
 A>
-A> Similarly, you can't use `import` inside of a statement; you can only use it at the top-level. That means this code also gives a syntax error:
+A> Крім того, ви не можете використовувати `import` всередині виразу; ви можете використовувати його тільки на верхньому рівні. Це означає, що цей код також дає помилку синтаксису:
 A>
 A> ```js
 A> function tryImport() {
-A>     import flag from "./example.js";    // syntax error
+A>     import flag from "./example.js";    // синтаксична помилка
 A> }
 A> ```
 A>
-A> You can't dynamically import bindings for the same reason you can't dynamically export bindings. The `export` and `import` keywords are designed to be static so that tools like text editors can easily tell what information is available from a module.
+A> Ви не можете динамічно імпортувати зв’язування з тієї ж причини з якої ви не можете динамічно експортувати зв’язування. `export` і `import` ключові слова призначені бути статичними, так що інструменти, такі як текстові редактори можуть легко сказати, яка інформація доступна з модуля.
 
 ### A Subtle Quirk of Imported Bindings
 
