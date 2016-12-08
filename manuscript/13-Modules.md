@@ -1,4 +1,4 @@
-# Інкапсуляція Коду за допомогою Модулiв
+# Інкапсуляція Коду за Допомогою Модулiв
 
 Підхід "роздавати все" в JavaScript для завантаження коду є одним з найбільш схильних до помилок і заплутаних аспектів мови. Інші мови використовують такі поняття, як пакети, щоб визначити область видимості, але до ECMAScript 6, все оголошене в кожному файлі JavaScript мало один загальну глобальну область видимості. Як веб-додатки стали більш складними і почали використовувати ще більше коду JavaScript, такий почав викликати проблеми, такі як конфлікти імен та проблем безпеки. Одна з цілей ECMAScript 6 було вирішити проблему з областями видимості і навести порядок до додатків JavaScript. І тут за справу беруться модулі.
 
@@ -403,52 +403,52 @@ let result = sum(1, 2);
 
 I> Можливо, ви помітили, що `"module"` не є типом контенту, як тип `"text/javascript"`. Файли модуля JavaScript будуть обслуговуватися з тим же типом контенту у вигляді файлів скриптів JavaScript, так що це не представляється можливим диференціювати виключно на основі типу контенту. Крім того, браузери ігнорують елементи `<script>`, коли `type` незрозумілий, тому браузери, які не підтримують модулі будуть автоматично ігнорювати лінію `<script type="module">`, забезпечуючи хорошу зворотну сумісність.
 
-#### Module Loading Sequence in Web Browsers
+#### Послідовність Завантаження Модулыв в Веб-браузері
 
-Modules are unique in that, unlike scripts, they may use `import` to specify that other files must be loaded to execute correctly. To support that functionality, `<script type="module">` always acts as if the `defer` attribute is applied.
+Модулі є унікальними в тому, що, на відміну від скриптів, вони можуть використовувати `import`, щоб вказати, що інші файли повинні бути завантажені, щоб правильно виконати скрипт. Для підтримки цієї функціональності, `<script type="module">` завжди діє як якщо застосовується атрибут `defer`.
 
-The `defer` attribute is optional for loading script files but is always applied for loading module files. The module file begins downloading as soon as the HTML parser encounters `<script type="module">` with a `src` attribute but doesn't execute until after the document has been completely parsed. Modules are also executed in the order in which they appear in the HTML file. That means the first `<script type="module">` is always guaranteed to execute before the second, even if one module contains inline code instead of specifying `src`. For example:
+Атрибут `defer` не є обов'язковим для завантаження скриптів, але завжди застосовується для завантаження файлів модуля. Файл модуля почне завантажуватися, як тільки HTML парсер зустріне `<script type="module">` з атрибутом `src`, але не буде виконуватися до тих пір, поки документ не буде повністю розпарсен. Модулі також виконуються в тому порядку, в якому вони з'являються в HTML-файлі. Це означає, що перший `<script type="module">` завжди гарантовано буде виконаний перед другим, навіть якщо один модуль містить вбудований код замість вказаного `src`. Наприклад:
 
 ```html
-<!-- this will execute first -->
+<!-- це буде виконуватися першим -->
 <script type="module" src="module1.js"></script>
 
-<!-- this will execute second -->
+<!-- це буде виконане другим -->
 <script type="module">
 import { sum } from "./example.js";
 
 let result = sum(1, 2);
 </script>
 
-<!-- this will execute third -->
+<!-- це буде виконуватися третім -->
 <script type="module" src="module2.js"></script>
 ```
 
-These three `<script>` elements execute in the order they are specified, so `module1.js` is guaranteed to execute before the inline module, and the inline module is guaranteed to execute before `module2.js`.
+Ці три `<script>` елементи виконуються в порядку, вони вказані, тому `module1.js` буде гарантовано виконан до інлайнового модуля, а інлайновий модуль гарантовано буде виконан до `module2.js`.
 
-Each module may `import` from one or more other modules, which complicates matters. That's why modules are parsed completely first to identify all `import` statements. Each `import` statement then triggers a fetch (either from the network or from the cache), and no module is executed until all `import` resources have first been loaded and executed.
+Кожен модуль може импортувати через `import` з одного або декількох інших модулів, що ускладнює справу. Тому модулі обробляються повністю, спочатку щоб ідентифікувати всі оператори `import`. Кожен оператор `import` потім запускає вибірку (з мережі або з кешу), і жоден модуль не виконується до тих пір, поки не будуть завантажені і розпарсені всі ресурси `import`.
 
-All modules, both those explicitly included using `<script type="module">` and those implicitly included using `import`, are loaded and executed in order. In the preceding example, the complete loading sequence is:
+Всі модулі, ті що явно включені за допомогою `<script type="module">` і ті, що неявно включені за допомогою `import`, завантажуються і виконуються в заданному порядку. У попередньому прикладі, повна послідовність завантаження:
 
-1. Download and parse `module1.js`.
-1. Recursively download and parse `import` resources in `module1.js`.
-1. Parse the inline module.
-1. Recursively download and parse `import` resources in the inline module.
-1. Download and parse `module2.js`.
-1. Recursively download and parse `import` resources in `module2.js`
+1. Скачайте і розібрати `module1.js`.
+1. Рекурсивно завантажити і розпарсити `import` ресурс в `module1.js`.
+1. Проаналізувати інлайноий модуль.
+1. Рекурсивно завантажити і розпарсити `import` ресурс в інлайн модулі.
+1. Скачайте і розібрати `module2.js`.
+1. Рекурсивний завантаження і розбір `import` ресурсів в `module2.js`
 
-Once loading is complete, nothing is executed until after the document has been completely parsed. After document parsing completes, the following actions happen:
+Після завершення завантаження, нічого не виконується до тих пір, як документ не буде повністю розібраний. Після завершення синтаксичного аналізу документа, відбувається таке:
 
-1. Recursively execute `import` resources for `module1.js`.
-1. Execute `module1.js`.
-1. Recursively execute `import` resources for the inline module.
-1. Execute the inline module.
-1. Recursively execute `import` resources for `module2.js`.
-1. Execute `module2.js`.
+1. Рекурсивно виконати `import` ресурсів для `module1.js`.
+1. Виконання `module1.js`.
+1. Рекурсивно виконати `import` ресурсів для вбудованого модуля.
+1. Виконайте інлайновий модуль.
+1. Рекурсивно виконати `import` ресурсів для `module2.js`.
+1. Виконати `module2.js`.
 
-Notice that the inline module acts like the other two modules except that the code doesn't have to be downloaded first. Otherwise, the sequence of loading `import` resources and executing modules is exactly the same.
+Зверніть увагу на те, що вбудований модуль діє, як і інші два модуля, за винятком, що код не повинен бути завантажений в першу чергу. В іншому випадку, послідовність завантаження `import` ресурсів і виконання модулів така сама.
 
-I> The `defer` attribute is ignored on `<script type="module">` because it already behaves as if `defer` is applied.
+I> Атрибут `defer` ігнорується під час `<script type="module">`, тому що він вже веде себе так наче, `defer` вже застосовується.
 
 #### Asynchronous Module Loading in Web Browsers
 
