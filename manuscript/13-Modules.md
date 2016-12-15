@@ -375,7 +375,7 @@ I> Imports without bindings are most likely to be used to create polyfills and s
 
 1. Завантаження файлів коду JavaScript за допомогою елемента `<script>` з атрибутом `src`, що вказує місце розташування, з якого завантажується код.
 1. Вбудовування коду JavaScript інлайново за допомогою елемента `<script>` без атрибута `src`.
-1. Завантаження файлів JavaScript коду для виконання в якості працівників (наприклад, веб-працівника або сервысного працівника).
+1. Завантаження файлів JavaScript коду для виконання в якості робітника (наприклад, веб-робітника або сервісного робітника).
 
 Для того, щоб повною мірою підтримувати модулі, веб-браузери повинні були оновити кожен з цих механізмів. Ці деталы визначены в HTML специфікації, і я буду підсумовувати їх в цьому розділі.
 
@@ -450,84 +450,85 @@ let result = sum(1, 2);
 
 I> Атрибут `defer` ігнорується під час `<script type="module">`, тому що він вже веде себе так наче, `defer` вже застосовується.
 
-#### Asynchronous Module Loading in Web Browsers
+#### Асинхронне Завантаження Модулів в Веб-браузерах
 
-You may already be familiar with the `async` attribute on the `<script>` element. When used with scripts, `async` causes the script file to be executed as soon as the file is completely downloaded and parsed. The order of `async` scripts in the document doesn't affect the order in which the scripts are executed, though. The scripts are always executed as soon as they finish downloading without waiting for the containing document to finish parsing.
+Можливо, ви вже знайомі з `async` атрибутом на єлементі `<script>`. При використанні скриптів, `async` викликає файл сценарію буде виконуватися, як тільки файл повністю завантажений і розібраний. Порядок `async` скриптів в документі не впливає на порядок, в якому виконуються сценарії, хоча. Сценарії завжди виконуються, як тільки вони закінчують завантаження, не чекаючи документа, що містить закінчити розбір.
 
-The `async` attribute can be applied to modules as well. Using `async` on `<script type="module">` causes the module to execute in a manner similar to a script. The only difference is that all `import` resources for the module are downloaded before the module itself is executed. That guarantees all resources the module needs to function will be downloaded before the module executes; you just can't guarantee *when* the module will execute. Consider the following code:
+Атрибут `async` може бути застосований і до модулів також. Використання `async` на `<script type="module">` змушує модуль вести себе аналогічно скрипту. Єдина відмінність полягає в тому, що всі ресурси з `import` у модулі завантажуються до того, як сам модуль будє виконаний. Це гарантує, що всі ресурси модуля які потрібні йому щоб функціонувати будуть завантажені до того, як сам модуль буде виконан; ви просто не можете гарантувати *коли* модуль буде виконуватися. Розглянемо наступний код:
 
 ```html
-<!-- no guarantee which one of these will execute first -->
+<!-- немає ніякої гарантії, який з них буде виконаний першим -->
 <script type="module" async src="module1.js"></script>
 <script type="module" async src="module2.js"></script>
 ```
 
-In this example, there are two module files loaded asynchronously. It's not possible to tell which module will execute first simply by looking at this code. If `module1.js` finishes downloading first (including all of its `import` resources), then it will execute first. If `module2.js` finishes downloading first, then that module will execute first instead.
+У цьому прикладі є два файли модулів, завантажені в асинхронному режимі. Неможливо сказати, який модуль буде виконуватися першим, просто подивившись на цей код. Якщо `module1.js` закінчить завантаження першим (включаючи всі його ресурси `import`), то він буде виконуватись в першу чергу. Якщо `module2.js` закінчить завантаження першим, то цей модуль буде виконуватися в першу чергу.
 
-#### Loading Modules as Workers
+#### Завантаження Модулів як Робітників
 
-Workers, such as web workers and service workers, execute JavaScript code outside of the web page context. Creating a new worker involves creating a new instance `Worker` (or another class) and passing in the location of JavaScript file. The default loading mechanism is to load files as scripts, like this:
+Робітники, такі як веб-робітники і сервіс робітники, виконують код JavaScript поза контекстом веб-сторінки. Створення нового робітника включає в себе створення нового екземпляра `Worker` (або інший клас) і передача його в файл JavaScript. Механізм завантаження за замовчуванням для завантаження файлів у вигляді скриптів, виглядає так:
 
 ```js
-// load script.js as a script
+// завантажити script.js як скрипт
 let worker = new Worker("script.js");
 ```
 
-To support loading modules, the developers of the HTML standard added a second argument to these constructors. The second argument is an object with a `type` property with a default value of `"script"`. You can set `type` to `"module"` in order to load module files:
+Для підтримки завантаження модулів, розробники стандарту HTML додали другий аргумент для цих конструкторів. Другим аргументом є об'єкт з власимвостью `type` зі значенням за замовчуванням `"script"`. Ви можете встановити `type` в `"module"` для того, щоб завантажити файли модулів:
 
 ```js
-// load module.js as a module
+// завантажити module.js як модуль
 let worker = new Worker("module.js", { type: "module" });
 ```
 
-This example loads `module.js` as a module instead of a script by passing a second argument with `"module"` as the `type` property's value. (The `type` property is meant to mimic how the `type` attribute of `<script>` differentiates modules and scripts.) The second argument is supported for all worker types in the browser.
+Цей приклад завантажує `module.js` як модуль замість скрипту, передавши другий аргумент, за `"module"` як значенія `type` майна. (The `type` властивість призначений для імітації як` type` атрибут` <скрипт> `диференціює модулі і скрипти.) Другий аргумент підтримується для всіх типів робочих в браузері.
 
-Worker modules are generally the same as worker scripts, but there are a couple of exceptions. First, worker scripts are limited to being loaded from the same origin as the web page in which they are referenced, but worker modules aren't quite as limited. Although worker modules have the same default restriction, they can also load files that have appropriate Cross-Origin Resource Sharing (CORS) headers to allow access. Second, while a worker script can use the `self.importScripts()` method to load additional scripts into the worker, `self.importScripts()` always fails on worker modules because you should use `import` instead.
+Цей приклад завантажуэ `module.js` як модуль, а не як скрипт, передаючи другий аргумент з властивістю `type` виставленою в значення `"module"`. (Властивість `type` тут призначена імітувати атрибут `type` елементу `<script>` який диференціює модулі і скрипти.) Другий аргумент підтримується для всіх типів робітників в браузері.
 
-### Browser Module Specifier Resolution
+Модулі робітників, як правило, такі самі, як скрипти робітників, але є кілька винятків. По-перше, скрипти робітників обмежені завантаженням з того ж походження, що і веб-сторінка, на яку вони посилаються, але модулі робітників не настільки обмежені. Хоча модулі робітників мають однакові обмеження за замовчуванням, вони можуть також завантажувати файли, які мають відповідні Cross-Origin Resource Sharing (CORS) заголовки, щоб дозволити собі доступ. По-друге, в той час як скрипт робітника може використовувати метод `self.importScripts()` для завантаження додаткових скриптів в робітника, `self.importScripts()` завжди зазнає невдачі у модулях робітників, тому що ви повинні використовувати `import` натомість.
 
-All of the examples to this point in the chapter have used a relative module specifier path such as `"./example.js"`. Browsers require module specifiers to be in one of the following formats:
+### Спеціфікація Підключення Браузерних Модулів
 
-* Begin with `/` to resolve from the root directory
-* Begin with `./` to resolve from the current directory
-* Begin with `../` to resolve from the parent directory
-* URL format
+Всі приклади до цього часу в розділі використовували відносний специфікатор шляху модуля, такий як `"./example.js"`. Браузери вимагають щоб специфікатори шляху модуля були в одному з наступних форматів:
 
-For example, suppose you have a module file located at `https://www.example.com/modules/module.js` that contains the following code:
+* Починати з `/` щоб підключити модуль з кореневого каталогу
+* Починати з `./` щоб підключити модуль з поточного каталогу
+* Починати з `../` щоб підключити модуль з батьківського каталогу
+* Формат URL
+
+Наприклад, припустимо, що у вас є файл модуля, розташований в `https://www.example.com/modules/module.js` який містить наступний код:
 
 ```js
-// imports from https://www.example.com/modules/example1.js
+// імпорт з https://www.example.com/modules/example1.js
 import { first } from "./example1.js";
 
-// imports from https://www.example.com/example2.js
+// імпорт з https://www.example.com/example2.js
 import { second } from "../example2.js";
 
-// imports from https://www.example.com/example3.js
+// імпорт з https://www.example.com/example3.js
 import { third } from "/example3.js";
 
-// imports from https://www2.example.com/example4.js
+// імпорт з https://www2.example.com/example4.js
 import { fourth } from "https://www2.example.com/example4.js";
 ```
 
-Each of the module specifiers in this example is valid for use in a browser, including the complete URL in the final line (you'd need to be sure `ww2.example.com` has properly configured its Cross-Origin Resource Sharing (CORS) headers to allow cross-domain loading). These are the only module specifier formats that browsers can resolve by default (though the not-yet-complete module loader specification will provide ways to resolve other formats). That means some normal looking module specifiers are actually invalid in browsers and will result in an error, such as:
+Кожен з специфікаторів модулів в даному прикладі є валідними для використання в браузері, в тому числі повний URL в останньому рядку (ви повинні бути впевнені, що `ww2.example.com` має належним чином налаштований свій Cross-Origin Resource Sharing (CORS) заголовок, щоб дозволити міждоменні завантаження). Це єдиний специфікатор форматів модулів, що браузери можуть виконати за замовчуванням (хоча поки ще не повна специфікація завантаження модулів забезпечить інщі шляхи завантаження також інших форматів). Це означає, що деякі на перший погляд нормальні специфікатори модулів насправді є недійсними в браузерах і призведуть до помилки, наприклад:
 
 ```js
-// invalid - doesn't begin with /, ./, or ../
+// недійсний - не починається з /, ./, чи ../
 import { first } from "example.js";
 
-// invalid - doesn't begin with /, ./, or ../
+// недійсний - не починається з  /, ./, чи ../
 import { second } from "example/index.js";
 ```
 
-Each of these module specifiers cannot be loaded by the browser. The two module specifiers are in an invalid format (missing the correct beginning characters) even though both will work when used as the value of `src` in a `<script>` tag. This is an intentional difference in behavior between `<script>` and `import`.
+Кожен з цих специфікаторів модулів не може бути завантажений браузером. Два специфікатори модуля в невірному форматі (немає правильних перших символів) незважаючи навіть на те, що обидва будуть працювати, коли удуть використані в якості значення для `src` в елементі `<script>`. Це навмисна різниця в поведінці між `<script> і `import`.
 
+## Підсумок
 
-## Summary
+ECMAScript 6 додає модулі до мови як спосіб упакувати і інкапсулювати функціональність. Модулі поводяться інакше, ніж скрипти, так як вони не змінюють глобальну область видимості з їх змінними верхнього рівня, функціями і класами, і `this` є `undefined`. Для досягнення такої поведінки, модулі завантажуються з використанням іншого режиму.
 
-ECMAScript 6 adds modules to the language as a way to package up and encapsulate functionality. Modules behave differently than scripts, as they don't modify the global scope with their top-level variables, functions, and classes, and `this` is `undefined`. To achieve that behavior, modules are loaded using a different mode.
+Ви повинні експортувати будь-який функціонал який би ви хотіли б зробити доступними для споживачів модуля. Змінні, функції і класи можуть бути експортовані, і є також один експорт за замовчуванням який допускається для кожного модуля. Після експорту, інший модуль може імпортувати всі або деякі з експортованих імен. Ці імена діють так, як якщо б вони були визначені `let` і діють як блочні зв'язування, які не можуть бути повторно оголошений в тому ж модулі.
 
-You must export any functionality you'd like to make available to consumers of a module. Variables, functions, and classes can all be exported, and there is also one default export allowed per module. After exporting, another module can import all or some of the exported names. These names act as if defined by `let` and operate as block bindings that can't be redeclared in the same module.
+Модулі не повинні нічого експортувати, якщо вони управляють чимось в глобальній області видимості. Ви можете фактично імпортувати з такого модуля будь що, без введення будь-яких зв'язувань до області модуля.
 
-Modules need not export anything if they are manipulating something in the global scope. You can actually import from such a module without introducing any bindings into the module scope.
-
-Because modules must run in a different mode, browsers introduced `<script type="module">` to signal that the source file or inline code should be executed as a module. Module files loaded with `<script type="module">` are loaded as if the `defer` attribute is applied to them. Modules are also executed in the order in which they appear in the containing document once the document is fully parsed.
+Оскільки модулі повинні працювати в іншому режимі, браузери ввели `<script type="module">` щоб сигналізувати, що початковий файл або інлайновий код повинен бути виконаний у вигляді модуля. Файли модулів завантажені за допомогою `<script type="module">` завантажуються як якщо атрибут `defer` був застосований до них. Модулі також виконуються в тому порядку, в якому вони з'являються в документі, як тільки документ буде повністю розібраний.
