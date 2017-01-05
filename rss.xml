@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Thu, 05 Jan 2017 10:23:20 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 05 Jan 2017 20:08:18 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -30,7 +30,7 @@ Stars]]></description>
         </item>
         <item>
             <title><![CDATA[Вступ]]></title>
-            <description><![CDATA[Особливості ядра мови JavaScript визначені у стандарті під назвою ECMA-262. Мова, яку визначає цей стандарт, називається ECMAScript, з якої JavaScript у браузерах та оточенні Node.js є надбудовою. У той час, коли браузери та Node.js можуть розширювати можливості за допомогою додаткових об’єктів та методів, ядро мови залишається таким, яким воно визначене у ECMAScript, тому розвиток ECMA-262 є життєво важливим для успіху JavaScript в цілому.]]></description>
+            <description><![CDATA[Особливості ядра мови JavaScript визначені у стандарті під назвою ECMA-262. Мова, яку визначає цей стандарт, називається ECMAScript. Те, що відомо всьому світові як JavaScript, фактично є надбудовою ECMAScript. У той час, як браузери та Node.js розширюють можливості за допомогою додаткових об’єктів та методів, ядро мови залишається таким, яким воно визначене у ECMAScript, тому розвиток ECMA-262 є життєво важливим для успіху JavaScript загалом.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/00-Introduction.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
