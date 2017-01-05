@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Thu, 05 Jan 2017 10:17:53 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 05 Jan 2017 10:22:28 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -110,6 +110,13 @@ Stars]]></description>
             <description><![CDATA[Одним з найбільш потужних аспектів JavaScript є те, як легко він працює з асинхронним програмуванням. Як мова, яка була розроблена для Web, JavaScript від початку потребував можливості відповідати на асинхронні взаємодії користувачів, як от кліки та натискання клавіш. Node.js ще більше популяризував асинхронне програмування у JavaScript з допомогою функцій зворотнього виклику в якості альтернативи подіям. З тим, як все більше і більше програм починають використовувати асинхронне програмування, події та зворотні виклики більше не є достатньо потужними для підтримки всього того, що хочуть робити розробники. Про́міси (Promises) є вирішенням цієї проблеми.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/11-Promises.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/11-Promises.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Проксі та АРІ рефлексії]]></title>
+            <description><![CDATA[ECMAScript 5 та ECMAScript 6 розроблялись таким чином, щоб демістифікувати фунціональність JavaScript. Наприклад, до ECMAScript 5 середовища JavaScript містили неперелічувані властивості, які неможливо було змінювати, проте розробники не могли створити власних неперелічуваних і незмінюваних властивостей. ECMAScript 5 вводив метод Object.defineProperty() щоб дозволити розробникам робити те, що рушії JavaScript вже вміли робити.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/12-Proxies-and-Reflection.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/12-Proxies-and-Reflection.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
