@@ -1,7 +1,7 @@
 {
-  "gitbook": "2.x.x",
+  "gitbook": "3.x.x",
   "plugins": [
-    "edit-link", "github", "yametrika", "ga", "rss"
+    "edit-link", "github", "yametrika", "ga", "rss", "github-buttons"
   ],
   "pluginsConfig": {
     "edit-link": {
@@ -12,7 +12,7 @@
       "url": "https://github.com/denysdovhan/understandinges6ua"
     },
     "yametrika": {
-      "number": "34703815"
+      "number": "41711034"
     },
     "ga": {
       "token": "UA-40496885-6"
@@ -33,6 +33,13 @@
         "es2015",
         "ecmascript"
       ]
+    },
+    "github-buttons": {
+      "repo": "denysdovhan/understandinges6ua",
+      "types": [
+        "star"
+      ],
+      "size": "small"
     }
   }
 }

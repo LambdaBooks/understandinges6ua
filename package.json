@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "Ukrainian translation of “Understanding ES6”",
   "scripts": {
-    "start": "gitbook install",
-    "serve": "npm start && gitbook serve",
-    "build": "npm start && gitbook build",
+    "install": "gitbook install",
+    "start": "npm run install && gitbook serve",
+    "build": "npm run install && gitbook build",
     "deploy": "npm run build && gh-pages -d _book -m \"Updated at $(date +'%a, %d %b %Y, %T, %Z')\" --add"
   },
   "repository": {
@@ -17,17 +17,14 @@
     "documentation",
     "guide"
   ],
-  "authors": [
-    "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
-    "Terry Sahaidak <terrysahaidak@gmail.com> (https://github.com/terrysahaidak)"
-  ],
+  "authors": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
   "license": "CC BY-NC-ND 3.0",
   "bugs": {
     "url": "https://github.com/denysdovhan/understandinges6ua/issues"
   },
   "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
   "devDependencies": {
-    "gh-pages": "^0.11.0",
+    "gh-pages": "^0.12.0",
     "gitbook-cli": "^2.1.3"
   }
 }
