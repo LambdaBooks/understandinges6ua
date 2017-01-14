@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Tue, 10 Jan 2017 20:59:54 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 14 Jan 2017 13:49:42 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -117,6 +117,13 @@ Stars]]></description>
             <description><![CDATA[ECMAScript 5 та ECMAScript 6 розроблялись таким чином, щоб демістифікувати фунціональність JavaScript. Наприклад, до ECMAScript 5 середовища JavaScript містили неперелічувані властивості, які неможливо було змінювати, проте розробники не могли створити власних неперелічуваних і незмінюваних властивостей. ECMAScript 5 вводив метод Object.defineProperty() щоб дозволити розробникам робити те, що рушії JavaScript вже вміли робити.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/12-Proxies-and-Reflection.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/12-Proxies-and-Reflection.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Інкапсуляція коду за допомогою модулів]]></title>
+            <description><![CDATA[Одним з найбільш схильних до помилок і заплутаних аспектів JavaScript вже давно є shared everything-підхід до завантаження коду. В той час як інші мови мають такі поняття як пакети, JavaScript відстав і все, що визначається в кожному файлі поділяє єдину глобальну область видимості. Тоді, коли веб-додатки стали більш складними, а частота використання JavaScript зросла, shared everything-підхід почав виявляти проблеми з конфліктами імен, проблеми безпеки та багато іншого. Однією з цілей ECMAScript 6 було вирішення цієї проблеми і наведення порядку в додатках JavaScript. Ось тут і з’являються модулі.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/13-Modules.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/13-Modules.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
