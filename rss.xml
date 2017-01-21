@@ -4,7 +4,7 @@
         <description><![CDATA[Український переклад книги «Understanding ES6».]]></description>
         <link>http://understandinges6.denysdovhan.com/</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Sat, 21 Jan 2017 10:16:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 21 Jan 2017 15:00:29 GMT</lastBuildDate>
         <atom:link href="http://understandinges6.denysdovhan.com/rss.xml" rel="self" type="application/rss+xml"/>
         <author><![CDATA[Denys Dovhan and Terry Sahaidak]]></author>
         <managingEditor><![CDATA[email@denysdovhan.com (Denys Dovhan)]]></managingEditor>
@@ -124,6 +124,20 @@ Stars]]></description>
             <description><![CDATA[Одним з найбільш схильних до помилок і заплутаних аспектів JavaScript вже давно є shared everything-підхід до завантаження коду. В той час як інші мови мають такі поняття як пакети, JavaScript відстав і все, що визначається в кожному файлі поділяє єдину глобальну область видимості. Тоді, коли веб-додатки стали більш складними, а частота використання JavaScript зросла, shared everything-підхід почав виявляти проблеми з конфліктами імен, проблеми безпеки та багато іншого. Однією з цілей ECMAScript 6 було вирішення цієї проблеми і наведення порядку в додатках JavaScript. Ось тут і з’являються модулі.]]></description>
             <link>http://understandinges6.denysdovhan.com/manuscript/13-Modules.html</link>
             <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/13-Modules.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Додаток А: Дрібніші зміни]]></title>
+            <description><![CDATA[Поруч з масштабними змінами, про які вже розповідалось у цій книзі, ECMAScript 6 вводить ряд інших змін, які є менш важливими, проте такими ж корисними для покращення JavaScript. Ці зміни включають покращення цілих чисел, введення нових методів для обчислень, вдосконалення Unicode–ідентифікаторів та формалізація властивості __proto__. Я опишу їх у цьому додатку.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/A-Other-Changes.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/A-Other-Changes.html</guid>
+            <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
+        </item>
+        <item>
+            <title><![CDATA[Розуміння ECMAScript 7 (2016)]]></title>
+            <description><![CDATA[Розробка ECMAScript 6 зайняла близько чотирьох років, і пілся цього, TC-39 вирішив, що такий довгий процес розробки є неприйнятним. Замість цього, вони перейшли до щорічного релізного циклу, щоб забезпечити швидше надходження нововведень мови у розробку.]]></description>
+            <link>http://understandinges6.denysdovhan.com/manuscript/B-ECMAScript-7.html</link>
+            <guid isPermaLink="true">http://understandinges6.denysdovhan.com/manuscript/B-ECMAScript-7.html</guid>
             <dc:creator><![CDATA[Denys Dovhan and Terry Sahaidak]]></dc:creator>
         </item>
     </channel>
