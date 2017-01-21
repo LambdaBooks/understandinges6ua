@@ -1,4 +1,4 @@
-# Рoзуміння ECMAScript 6 
+# Рoзуміння ECMAScript 6
 
 [![PDF][pdf-image]](https://www.gitbook.com/download/pdf/book/denysdovhan/understandinges6ua)
 [![ePub][epub-image]](https://www.gitbook.com/download/epub/book/denysdovhan/understandinges6ua)
@@ -28,7 +28,7 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 ## Де читати
 
-Переклад доступний для завантаження у форматах [PDF][pdf-url], [ePub][epub-url] та [Mobi][mobi-url]. Онлайн-версія перекладу [доступна для читання](#) безкоштовно та містить найсвіжіші зміни. Розділи можуть бути незакінченими, проте переклад має бути правильним. Переклад оновлюється кілька разів на місяць. 
+Переклад доступний для завантаження у форматах [PDF][pdf-url], [ePub][epub-url] та [Mobi][mobi-url]. Онлайн-версія перекладу [доступна для читання][site-url]безкоштовно та містить найсвіжіші зміни. Розділи можуть бути незакінченими, проте переклад має бути правильним. Переклад оновлюється кілька разів на місяць.
 
 Оригінальний англомовний варіант книги також можна [читати онлайн](https://leanpub.com/understandinges6/read/).
 
@@ -50,15 +50,9 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 ### Написати нам
 
-Якщо Ви помітили яку-небудь помилку, [повідомте нас](https://github.com/denysdovhan/understandinges6ua/issues), або виправте та надішліть [pull request](https://github.com/denysdovhan/understandinges6ua/compare).
+Якщо Ви помітили яку-небудь помилку, [повідомте нас](https://github.com/denysdovhan/understandinges6ua/issues), або виправте та надішліть [пул–реквест](https://github.com/denysdovhan/understandinges6ua/compare).
 
 Не соромтесь надсилати запитання та побажання, які стосуються перекладу книги. Ми обов’язково візьмемо до уваги конструктивну критику з вашого боку.
-
-### Перекласти розділ
-
-Ви можете [обрати один з досі неперекладених розділів](https://git.io/vznFT) і спробувати перекласти його. Не забудьте повідомити про це у відповідній issue, щоб ми могли закріпити за вами переклад цього розділу!
-
-Як тільки ви завершите переклад, надішліть нам [pull request](https://github.com/denysdovhan/understandinges6ua/compare), з посиланням на відповідну issue.
 
 ### Підтримати матеріально
 
@@ -66,11 +60,34 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 **4149 4378 5069 5501**
 
+## Команда перекладачів
+
+Цей переклад результат наполегливої та злагодженої роботи нашої команди:
+
+* [_Денис Довгань_](https://twitter.com/denysdovhan) — автор перекладу.
+* [_Маріанна Чуприна_](https://twitter.com/marianna_ch_a) — коректор.
+* [_Олександр Мандаринов_](https://twitter.com/nevusnews) — коректор.
+
+## Подяки
+
+Ми дякуємо всім небайдужим, які допомагали вичитувати текст, знаходити у ньому помилки та шукати найбільш точні відповідники для термінів, зокрема:
+
+* _Віктор Павлов_ — переклад глав про рядки, регулярні вирази, класи, масиви та модулі.
+* _Террі Сагайдак_ — переклад глави про блочні зв’язування.
+* _Антон Трофименко_ — переклад глави про модулі.
+* _Олена Совин_ — численні корекції.
+* _Богдан Денисюк_ — виправлення опечаток.
+* _Сергій Гіба_ — допомога з главою про проксі та рефлексії.
+* _Олексій Швайка_ — численні зауваження та виправлення.
+* [та інші…](https://github.com/denysdovhan/understandinges6ua/graphs/contributors)
+
 ## Ліцензія
 
 [CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com)
 
 <!-- Download links -->
+
+[site-url]: http://understandinges6.denysdovhan.com/
 
 [pdf-url]: https://www.gitbook.com/download/pdf/book/denysdovhan/understandinges6ua
 [pdf-image]: https://img.shields.io/badge/get-PDF-EB4E33.svg?style=flat-square
