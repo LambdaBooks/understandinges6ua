@@ -66,7 +66,7 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 * [_Денис Довгань_](https://twitter.com/denysdovhan) — автор перекладу.
 * [_Маріанна Чуприна_](https://twitter.com/marianna_ch_a) — коректор.
-* [_Олександр Мандаринов_](https://twitter.com/nevusnews) — коректор.
+* [_Олександр Закритий](https://twitter.com/nevusnews) — коректор.
 
 ## Подяки
 
