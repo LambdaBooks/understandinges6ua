@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/denysdovhan/understandinges6ua.git"
+    "url": "git+https://github.com/LambdaBooks/understandinges6ua.git"
   },
   "keywords": [
     "book",
@@ -31,9 +31,9 @@
   ],
   "license": "CC BY-NC-ND 3.0",
   "bugs": {
-    "url": "https://github.com/denysdovhan/understandinges6ua/issues"
+    "url": "https://github.com/LambdaBooks/understandinges6ua/issues"
   },
-  "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
+  "homepage": "https://github.com/LambdaBooks/understandinges6ua#readme",
   "devDependencies": {
     "gh-pages": "^0.12.0",
     "gitbook-cli": "^2.1.3"

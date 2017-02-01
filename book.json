@@ -5,11 +5,11 @@
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/denysdovhan/understandinges6ua/tree/master",
+      "base": "https://github.com/LambdaBooks/understandinges6ua/tree/master",
       "label": "Редагувати"
     },
     "github": {
-      "url": "https://github.com/denysdovhan/understandinges6ua"
+      "url": "https://github.com/LambdaBooks/understandinges6ua"
     },
     "yametrika": {
       "number": "41711034"
@@ -35,7 +35,7 @@
       ]
     },
     "github-buttons": {
-      "repo": "denysdovhan/understandinges6ua",
+      "repo": "LambdaBooks/understandinges6ua",
       "types": [
         "star"
       ],

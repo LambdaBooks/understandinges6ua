@@ -1,12 +1,12 @@
 # Рoзуміння ECMAScript 6
 
-[![PDF][pdf-image]](https://www.gitbook.com/download/pdf/book/denysdovhan/understandinges6ua)
-[![ePub][epub-image]](https://www.gitbook.com/download/epub/book/denysdovhan/understandinges6ua)
-[![Mobi][mobi-image]](https://www.gitbook.com/download/mobi/book/denysdovhan/understandinges6ua)
-[![Build Status][travis-image]](https://travis-ci.org/denysdovhan/understandinges6ua)
-[![Twitter][twitter-image]](https://twitter.com/es6ua)
+[![PDF][pdf-image]](https://www.gitbook.com/download/pdf/book/LambdaBooks/understandinges6ua)
+[![ePub][epub-image]](https://www.gitbook.com/download/epub/book/LambdaBooks/understandinges6ua)
+[![Mobi][mobi-image]](https://www.gitbook.com/download/mobi/book/LambdaBooks/understandinges6ua)
+[![Build Status][travis-image]](https://travis-ci.org/LambdaBooks/understandinges6ua)
+[![Twitter][twitter-image]](https://twitter.com/LambdaBooks)
 [![RSS][rss-image]](http://understandinges6.denysdovhan.com/rss.xml)
-[![Stars][github-image]](https://github.com/denysdovhan/understandinges6ua)
+[![Stars][github-image]](https://github.com/LambdaBooks/understandinges6ua)
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
 > Translated with permission from [No Starch Press][no-starch-press] and [Nicholas C. Zakas](https://www.nczonline.net/).
@@ -50,7 +50,7 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 ### Написати нам
 
-Якщо Ви помітили яку-небудь помилку, [повідомте нас](https://github.com/denysdovhan/understandinges6ua/issues), або виправте та надішліть [пул–реквест](https://github.com/denysdovhan/understandinges6ua/compare).
+Якщо Ви помітили яку-небудь помилку, [повідомте нас](https://github.com/LambdaBooks/understandinges6ua/issues), або виправте та надішліть [пул–реквест](https://github.com/LambdaBooks/understandinges6ua/compare).
 
 Не соромтесь надсилати запитання та побажання, які стосуються перекладу книги. Ми обов’язково візьмемо до уваги конструктивну критику з вашого боку.
 
@@ -89,13 +89,13 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 
 [site-url]: http://understandinges6.denysdovhan.com/
 
-[pdf-url]: https://www.gitbook.com/download/pdf/book/denysdovhan/understandinges6ua
+[pdf-url]: https://www.gitbook.com/download/pdf/book/LambdaBooks/understandinges6ua
 [pdf-image]: https://img.shields.io/badge/get-PDF-EB4E33.svg?style=flat-square
 
-[epub-url]: https://www.gitbook.com/download/epub/book/denysdovhan/understandinges6ua
+[epub-url]: https://www.gitbook.com/download/epub/book/LambdaBooks/understandinges6ua
 [epub-image]: https://img.shields.io/badge/get-ePub-85B916.svg?style=flat-square
 
-[mobi-url]: https://www.gitbook.com/download/mobi/book/denysdovhan/understandinges6ua
+[mobi-url]: https://www.gitbook.com/download/mobi/book/LambdaBooks/understandinges6ua
 [mobi-image]: https://img.shields.io/badge/get-Mobi-E8A138.svg?style=flat-square
 
 <!-- References -->
@@ -103,10 +103,10 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 [cc-by-nc-nd-3.0]: http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_US
 [no-starch-press]: https://www.nostarch.com/
 
-[travis-image]: https://img.shields.io/travis/denysdovhan/understandinges6ua.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/LambdaBooks/understandinges6ua.svg?style=flat-square
 
-[twitter-image]: https://img.shields.io/badge/twitter-%40es6ua-00ACEE.svg?style=flat-square
+[twitter-image]: https://img.shields.io/badge/twitter-%40LambdaBooks-00ACEE.svg?style=flat-square
 
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
 
-[github-image]: https://img.shields.io/github/stars/denysdovhan/understandinges6ua.svg?style=social&label=Star
+[github-image]: https://img.shields.io/github/stars/LambdaBooks/understandinges6ua.svg?style=social&label=Star
