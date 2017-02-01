@@ -17,7 +17,7 @@
     "rss": {
       "title": "Рoзуміння ECMAScript 6",
       "description": "Український переклад книги «Understanding ES6».",
-      "author": "Denys Dovhan and Terry Sahaidak",
+      "author": "Denys Dovhan",
       "site_url": "http://understandinges6.denysdovhan.com/",
       "feed_url": "http://understandinges6.denysdovhan.com/rss.xml",
       "managingEditor": "email@denysdovhan.com (Denys Dovhan)",
