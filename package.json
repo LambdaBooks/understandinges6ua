@@ -1,7 +1,19 @@
 {
+  "private": true,
   "name": "understandinges6ua",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Ukrainian translation of “Understanding ES6”",
+  "author": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
+  "contributors": [
+    {
+      "name": "Mariannna Chupryna",
+      "email": "marianna2398an@gmail.com"
+    },
+    {
+      "name": "Alex Zakrytyi",
+      "email": "nevusdance@gmail.com"
+    }
+  ],
   "scripts": {
     "install": "gitbook install",
     "start": "npm run install && gitbook serve",
@@ -17,7 +29,6 @@
     "documentation",
     "guide"
   ],
-  "authors": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
   "license": "CC BY-NC-ND 3.0",
   "bugs": {
     "url": "https://github.com/denysdovhan/understandinges6ua/issues"
