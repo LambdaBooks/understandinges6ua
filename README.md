@@ -1,12 +1,12 @@
 # Рoзуміння ECMAScript 6
 
-[![PDF][pdf-image]](https://www.gitbook.com/download/pdf/book/LambdaBooks/understandinges6ua)
-[![ePub][epub-image]](https://www.gitbook.com/download/epub/book/LambdaBooks/understandinges6ua)
-[![Mobi][mobi-image]](https://www.gitbook.com/download/mobi/book/LambdaBooks/understandinges6ua)
-[![Build Status][travis-image]](https://travis-ci.org/LambdaBooks/understandinges6ua)
-[![Twitter][twitter-image]](https://twitter.com/LambdaBooks)
-[![RSS][rss-image]](http://understandinges6.denysdovhan.com/rss.xml)
-[![Stars][github-image]](https://github.com/LambdaBooks/understandinges6ua)
+[![PDF][pdf-image]][pdf-url]
+[![ePub][epub-image]][epub-url]
+[![Mobi][mobi-image]][mobi-url]
+[![Build Status][travis-image]][travis-url]
+[![Twitter][twitter-image]][twitter-url]
+[![RSS][rss-image]][rss-url]
+[![Stars][github-image]][github-url]
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
 > Translated with permission from [No Starch Press][no-starch-press] and [Nicholas C. Zakas](https://www.nczonline.net/).
@@ -103,10 +103,14 @@ ECMASctipt 6 відображає найбільші зміни ядра JavaScr
 [cc-by-nc-nd-3.0]: http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_US
 [no-starch-press]: https://www.nostarch.com/
 
+[travis-url]: https://travis-ci.org/LambdaBooks/understandinges6ua
 [travis-image]: https://img.shields.io/travis/LambdaBooks/understandinges6ua.svg?style=flat-square
 
+[twitter-url]: https://twitter.com/LambdaBooks
 [twitter-image]: https://img.shields.io/badge/twitter-%40LambdaBooks-00ACEE.svg?style=flat-square
 
+[rss-url]: http://understandinges6.denysdovhan.com/rss.xml
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
 
+[github-url]: https://github.com/LambdaBooks/understandinges6ua
 [github-image]: https://img.shields.io/github/stars/LambdaBooks/understandinges6ua.svg?style=social&label=Star
