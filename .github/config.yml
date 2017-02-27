@@ -1,0 +1,42 @@
+# Labels: define labels for Issues and Pull Requests
+labels:
+  # Bug with site or building system
+  - name: bug
+    color: ee0701
+
+  # Chapter related label
+  - name: chapter
+    color: fbca04
+
+  # Finished chapters
+  - name: done
+    color: c7def8
+
+  # A pull request for corresponding chapter's issue
+  - name: pr
+    color: cccccc
+    oldname: duplicate
+
+  # Fix the typo in chapter, other fixes
+  - name: fix
+    color: eb6420
+
+  # Chapters under translation process
+  - name: in progress
+    color: 5319e7
+
+  # Meta related issues (for discussion)
+  - name: meta
+    color: 006b75
+
+  # Questions by readers, other questions
+  - name: question
+    color: cc317c
+
+  # Chapters under review process
+  - name: review
+    color: 0092cc
+
+  # Tasks to do
+  - name: to-do
+    color: 009800
