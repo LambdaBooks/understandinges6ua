@@ -1,7 +1,7 @@
 {
   "gitbook": "3.x.x",
   "plugins": [
-    "edit-link", "github", "yametrika", "ga", "rss", "github-buttons"
+    "edit-link", "github", "ga", "rss", "github-buttons"
   ],
   "pluginsConfig": {
     "edit-link": {
