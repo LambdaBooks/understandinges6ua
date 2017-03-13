@@ -106,7 +106,7 @@ if (condition) {
 
     let count = 40;
 
-    // more code
+    // ще якийсь код
 }
 ```
 
