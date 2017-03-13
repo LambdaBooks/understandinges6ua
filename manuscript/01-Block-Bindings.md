@@ -74,12 +74,12 @@ function getValue(condition) {
         return value;
     } else {
 
-        // value doesn't exist here
+        // змінна value не буде існувати в цьому блоці
 
         return null;
     }
 
-    // value doesn't exist here
+    // змінна value не буде існувати в цьому блоці
 }
 ```
 
