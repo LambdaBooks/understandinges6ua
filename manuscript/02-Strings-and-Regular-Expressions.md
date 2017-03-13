@@ -373,7 +373,7 @@ var re1 = /ab/i,
 ```js
 var re1 = /ab/i,
 
-    // видає помилку в ES5 , працює в ES6
+    // видає помилку в ES5, працює в ES6
     re2 = new RegExp(re1, "g");
 ```
 
@@ -382,7 +382,7 @@ var re1 = /ab/i,
 ```js
 var re1 = /ab/i,
 
-    // видає помилку в ES5 , працює в ES6
+    // видає помилку в ES5, працює в ES6
     re2 = new RegExp(re1, "g");
 
 
