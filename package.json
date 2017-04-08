@@ -1,28 +1,39 @@
 {
+  "private": true,
   "name": "understandinges6ua",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Ukrainian translation of “Understanding ES6”",
+  "author": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
+  "contributors": [
+    {
+      "name": "Mariannna Chupryna",
+      "email": "marianna2398an@gmail.com"
+    },
+    {
+      "name": "Alex Zakrytyi",
+      "email": "nevusdance@gmail.com"
+    }
+  ],
   "scripts": {
     "install": "gitbook install",
-    "start": "npm run install && gitbook serve",
-    "build": "npm run install && gitbook build",
+    "start": "gitbook serve",
+    "build": "gitbook build",
     "deploy": "npm run build && gh-pages -d _book -m \"Updated at $(date +'%a, %d %b %Y, %T, %Z')\" --add"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/denysdovhan/understandinges6ua.git"
+    "url": "git+https://github.com/LambdaBooks/understandinges6ua.git"
   },
   "keywords": [
     "book",
     "documentation",
     "guide"
   ],
-  "authors": "Denys Dovhan <email@denysdovhan.com> (http://denysdovhan.com)",
   "license": "CC BY-NC-ND 3.0",
   "bugs": {
-    "url": "https://github.com/denysdovhan/understandinges6ua/issues"
+    "url": "https://github.com/LambdaBooks/understandinges6ua/issues"
   },
-  "homepage": "https://github.com/denysdovhan/understandinges6ua#readme",
+  "homepage": "https://github.com/LambdaBooks/understandinges6ua#readme",
   "devDependencies": {
     "gh-pages": "^0.12.0",
     "gitbook-cli": "^2.1.3"

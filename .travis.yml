@@ -1,15 +1,18 @@
 language: node_js
 node_js:
-- v6
+- node
 branches:
   only: master
 before_script:
 - git config --global user.email "email@denysdovhan.com"
-- git config --global user.name "Travis Builder"
+- git config --global user.name "Denys Dovhan"
 - git remote rm origin
-- git remote add origin https://denysdovhan:${GH_TOKEN}@github.com/denysdovhan/understandinges6ua.git
+- git remote add origin https://denysdovhan:${GH_TOKEN}@github.com/LambdaBooks/understandinges6ua.git
 script:
-- npm run deploy
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && npm run deploy || npm run build'
 env:
   global:
     secure: YGdeZcRc7Wvlgo916Vdbc9Oa/3CTUhqQbfjQcTtpGYZSuO3vRqweRdcU0dt4m2HelyDqQ6dTt37TGZrY+zOTEWYX84TfHAgGV5FLU+hR1PhL+h8kvker2lK+TfnU0sOkD/939j5j1Lpe7dqaJODR1cN+UQ1R/IM0DT2oH73kHpmOmjNHrxGMr9AgUOUXaPrErc/qUmmkiLrLd7BH4pjdZcnmh8EhKvF5nd34Q6/+mjYMsO3DALcvh7GJReTjGG6qwiZy6OZbE7voh83+IMxkR0VBMumzEumZSaqdx9oUzDfxDZ8cOGKLTlMNGcloABLiHlurRDbSHO2gy02RcRiHwTgQkPCWL/sHD1/t12BgdGK+nUv+8IWyK0br6dw6sbBTStu/X5w9uEkKSPElfU5Otdmuc/hEt0aX5NwfrKYJy4W1K7F9zZs3At8DXJoy1G1oQghwr1C45xKXLt3Ztp4TSmHj+hpxyVNSXmahU9Mj00O0jUWot19apBtLf8BXr76ZtXktOJh3ubOEgoORpM762s3Xk0iYf5lFOUhrtTm7MAD6QqmG5fTMPNMT/BLlzxIWeK1LfXv64llVXAeVHSJ6raIDfJXUdV4MtNqgPapTy2ZkDtQ08OcvD2JFzZlqr5KL4bo5rLURbAlctsG9mn1nx/ElDCbQ+hwq1jyNNNCqG14=
+notifications:
+  slack:
+    secure: GCSAxiQTigMmMMjQ23nAPR8CwIOEA4Iqmlm34KFT0Kqtvt5Gu0BA4bklI7brF0PqNz66gmarUEW4YcIHJXYXla6GRZaxAGMSHgu55TjTmBkXbL6Eto3AJT7mPDU4lZEkC2Ec3ezF2Kb/3DoJpBvXZC3jysEQvZxXEsGTrMOi2oNCRvBHNmxqSpcIpuXEzGDh5VFRA5AmlSvChQzAyEEWswaCAU+w5EA6jb1F6iYrJINaAyiw1N755/er6VV5K6fO6ddZg4IMdc2tNkeb3DPHkS6eAx5O/sGbU5XCfWUdF5y0MlpMAfGvgc2+vhv8HhJZrA3gvnorKgvN/XXYYN8RQ9QRybvPm1YzJVdAsMHKm3ZIQ5GMcm0Z9R/OTi6fKTjhllvw4mSkiD5vBzj9lYTPG5xPKgpyFlJxLCK8naByVSxk5TYTEYSWt6ILRP6lp//M9rUX9871EgiwDYwWSdnP60tPMhUU7xP2pxZcO2aPxYCpH8Lh0xaPrv7HrqDGmZgDdUJnDVSmyza6jF5u0/W3QtDMNUHNvyJszpKyUSXBED+dIFC5S5/nikqMMx4qnGurTx1UN8uudVqkoPeBaOJ+08o43BqdM7auMZgOoHhtEC0vXpos69z3+5cmHe3bhTeFZ38d/Ts2eNyWHDcGaXnAIlXW/w1kiGlMrqFX5JQQpog=

@@ -1,18 +1,15 @@
 {
   "gitbook": "3.x.x",
   "plugins": [
-    "edit-link", "github", "yametrika", "ga", "rss", "github-buttons"
+    "edit-link", "github", "ga", "rss", "github-buttons"
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/denysdovhan/understandinges6ua/tree/master",
+      "base": "https://github.com/LambdaBooks/understandinges6ua/tree/master",
       "label": "Редагувати"
     },
     "github": {
-      "url": "https://github.com/denysdovhan/understandinges6ua"
-    },
-    "yametrika": {
-      "number": "41711034"
+      "url": "https://github.com/LambdaBooks/understandinges6ua"
     },
     "ga": {
       "token": "UA-40496885-6"
@@ -20,7 +17,7 @@
     "rss": {
       "title": "Рoзуміння ECMAScript 6",
       "description": "Український переклад книги «Understanding ES6».",
-      "author": "Denys Dovhan and Terry Sahaidak",
+      "author": "Denys Dovhan",
       "site_url": "http://understandinges6.denysdovhan.com/",
       "feed_url": "http://understandinges6.denysdovhan.com/rss.xml",
       "managingEditor": "email@denysdovhan.com (Denys Dovhan)",
@@ -35,7 +32,7 @@
       ]
     },
     "github-buttons": {
-      "repo": "denysdovhan/understandinges6ua",
+      "repo": "LambdaBooks/understandinges6ua",
       "types": [
         "star"
       ],

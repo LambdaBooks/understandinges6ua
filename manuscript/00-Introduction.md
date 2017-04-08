@@ -87,7 +87,7 @@ doSomething();          // помилка!
 
 Ви можете написати про помилку, порадити зміни та відкрити пул–реквест до цієї книги, завітавши сюди:
 
-* [https://github.com/denysdovhan/understandinges6ua](https://github.com/denysdovhan/understandinges6ua) (Переклад)
+* [https://github.com/LambdaBooks/understandinges6ua](https://github.com/LambdaBooks/understandinges6ua) (Переклад)
 * [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6) (Оригінал)
 
 Стосовно будь-чого іншого, будь ласка, надсилайте повідомлення сюди: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
