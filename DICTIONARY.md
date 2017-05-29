@@ -40,7 +40,7 @@
 * **default** — за замовчуванням
 * **deferreds** — де́фереди
 * **derived objects** — похідні об’єкти
-* **Destructuring assigment** — Деструктивне присвоєння
+* **Destructuring assigment** — Деструктуруюче присвоєння
 * **Destructuring** — деструктурування
 * **Document Object Model (DOM)** — об’єктна модель документа
 
