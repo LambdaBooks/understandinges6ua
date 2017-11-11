@@ -280,7 +280,7 @@ console.log(color);         // "red"
 
 ```js
 // еквівалентно попередньому прикладу
-import { default as sum, color } from "example";
+import { default as sum, color } from "./example.js";
 
 console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
