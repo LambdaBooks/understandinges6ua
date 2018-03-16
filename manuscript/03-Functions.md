@@ -670,7 +670,7 @@ var notAPerson = Person.call(person, "Michael");    // помилка!
 
 ```js
 function Person(name) {
-    if (typeof new.target === Person) {
+    if (new.target === Person) {
         this.name = name;   // використовуючи new
     } else {
         throw new Error("You must use new with Person.")
