@@ -6,8 +6,8 @@
 [![Build Status][travis-image]][travis-url]
 [![Twitter][twitter-image]][twitter-url]
 [![Facebook][facebook-image]][facebook-url]
-[![RSS][rss-image]][rss-url]
 [![Slack][slack-image]][slack-url]
+[![RSS][rss-image]][rss-url]
 [![Stars][github-image]][github-url]
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
