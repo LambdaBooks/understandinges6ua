@@ -7,6 +7,7 @@
 [![Twitter][twitter-image]][twitter-url]
 [![Facebook][facebook-image]][facebook-url]
 [![RSS][rss-image]][rss-url]
+[![Slack][slack-image]][slack-url]
 [![Stars][github-image]][github-url]
 
 > Перекладенo з дoзвoлу [No Starch Press][no-starch-press] та [Нікoласа Закаса](https://www.nczonline.net/).  
@@ -110,11 +111,14 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 [twitter-url]: https://twitter.com/LambdaBooks
 [twitter-image]: https://img.shields.io/badge/twitter-%40LambdaBooks-00ACEE.svg?style=flat-square
 
+[facebook-url]: https://facebook.com/lambdabooks
+[facebook-image]: https://img.shields.io/badge/facebook-%40LambdaBooks-4267b2.svg?style=flat-square
+
+[slack-url]:  http://slack.lambdabooks.com
+[slack-image]: https://img.shields.io/badge/slack-LambdaBooks-red.svg?style=flat-square
+
 [rss-url]: http://understandinges6.denysdovhan.com/rss.xml
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
 
 [github-url]: https://github.com/LambdaBooks/understandinges6ua
 [github-image]: https://img.shields.io/github/stars/LambdaBooks/understandinges6ua.svg?style=social&label=Star
-
-[facebook-url]: https://facebook.com/lambdabooks
-[facebook-image]: https://img.shields.io/badge/facebook-%40LambdaBooks-4267b2.svg?style=flat-square
