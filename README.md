@@ -5,6 +5,7 @@
 [![Mobi][mobi-image]][mobi-url]
 [![Build Status][travis-image]][travis-url]
 [![Twitter][twitter-image]][twitter-url]
+[![Facebook][facebook-image]][facebook-url]
 [![RSS][rss-image]][rss-url]
 [![Stars][github-image]][github-url]
 
@@ -114,3 +115,6 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 
 [github-url]: https://github.com/LambdaBooks/understandinges6ua
 [github-image]: https://img.shields.io/github/stars/LambdaBooks/understandinges6ua.svg?style=social&label=Star
+
+[facebook-url]: https://facebook.com/lambdabooks
+[facebook-image]: https://img.shields.io/badge/facebook-%40LambdaBooks-4267b2.svg?style=flat-square
