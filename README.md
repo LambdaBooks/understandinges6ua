@@ -116,6 +116,6 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 [github-url]: https://github.com/LambdaBooks/understandinges6ua
 [github-image]: https://img.shields.io/github/stars/LambdaBooks/understandinges6ua.svg?style=social&label=Star
 
-[slack-url]:  
+[slack-url]:  http://slack.lambdabooks.com
 [slack-image]: https://img.shields.io/badge/slack-Lambda%20Books-red.svg?style=flat-square
 
