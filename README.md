@@ -5,6 +5,8 @@
 [![Mobi][mobi-image]][mobi-url]
 [![Build Status][travis-image]][travis-url]
 [![Twitter][twitter-image]][twitter-url]
+[![Facebook][facebook-image]][facebook-url]
+[![Slack][slack-image]][slack-url]
 [![RSS][rss-image]][rss-url]
 [![Stars][github-image]][github-url]
 
@@ -83,7 +85,7 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 
 ## Ліцензія
 
-[CC BY-NC-ND 3.0][cc-by-nc-nd-3.0] © [Denys Dovhan](http://denysdovhan.com)
+[CC BY-NC-SA 4.0][cc-by-nc-sa-4.0] © [Denys Dovhan](http://denysdovhan.com)
 
 <!-- Download links -->
 
@@ -100,7 +102,7 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 
 <!-- References -->
 
-[cc-by-nc-nd-3.0]: http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_US
+[cc-by-nc-sa-3.0]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [no-starch-press]: https://www.nostarch.com/
 
 [travis-url]: https://travis-ci.org/LambdaBooks/understandinges6ua
@@ -108,6 +110,12 @@ ECMAScript 6 відображає найбільші зміни ядра JavaScr
 
 [twitter-url]: https://twitter.com/LambdaBooks
 [twitter-image]: https://img.shields.io/badge/twitter-%40LambdaBooks-00ACEE.svg?style=flat-square
+
+[facebook-url]: https://facebook.com/lambdabooks
+[facebook-image]: https://img.shields.io/badge/facebook-%40LambdaBooks-4267b2.svg?style=flat-square
+
+[slack-url]:  http://slack.lambdabooks.com
+[slack-image]: https://img.shields.io/badge/slack-LambdaBooks-red.svg?style=flat-square
 
 [rss-url]: http://understandinges6.denysdovhan.com/rss.xml
 [rss-image]: https://img.shields.io/badge/rss-subscribe-F4B83F.svg?style=flat-square
