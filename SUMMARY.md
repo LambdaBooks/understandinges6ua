@@ -1,6 +1,6 @@
 # Зміст
 
-* [Рoзуміння ECMAScript 6](/README.md)
+* [Розуміння ECMAScript 6](/README.md)
 * [Вступ](/manuscript/00-Introduction.md)
 * [Глава 1: Блочне зв’язування](/manuscript/01-Block-Bindings.md)
 * [Глава 2: Рядки та регулярні вирази](/manuscript/02-Strings-and-Regular-Expressions.md)
